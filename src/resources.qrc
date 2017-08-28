@@ -98,13 +98,13 @@
     </qresource>
     <qresource prefix="/images">
         <file alias="splash">images/splash.png</file>
-        <file alias="bytecoin_lin">images/bytecoin.png</file>
+        <file alias="Karbovanets_lin">images/Karbovanets.png</file>
         <file alias="add_address_helper">images/add_address_helper.png</file>
-        <file alias="bytecoin_mac">images/bytecoin.icns</file>
-        <file alias="bytecoin_win">images/bytecoin.ico</file>
+        <file alias="Karbovanets_mac">images/Karbovanets.icns</file>
+        <file alias="Karbovanets_win">images/Karbovanets.ico</file>
     </qresource>
     <qresource prefix="/style">
-        <file alias="qss">bytecoinwallet.qss</file>
+        <file alias="qss">karbowanecwallet.qss</file>
     </qresource>
     <qresource prefix="/font">
         <file alias="Bold">font/OpenSans-Bold.ttf</file>

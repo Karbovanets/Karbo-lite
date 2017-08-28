@@ -1,19 +1,19 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Bytecoin.
+// This file is part of Karbovanets.
 //
-// Bytecoin is free software: you can redistribute it and/or modify
+// Karbovanets is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Bytecoin is distributed in the hope that it will be useful,
+// Karbovanets is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Karbovanets.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QEvent>
 #include <QFileOpenEvent>
@@ -38,15 +38,15 @@
 #include "ApplicationEventHandler.h"
 #include "BlogReader.h"
 #include "CommandLineParser.h"
-#include "Common/ExitWidget.h"
-#include "Common/P2pBindPortErrorDialog.h"
-#include "Common/QuestionDialog.h"
-#include "Common/WalletOkButton.h"
+#include "Gui/Common/ExitWidget.h"
+#include "Gui/Common/P2pBindPortErrorDialog.h"
+#include "Gui/Common/QuestionDialog.h"
+#include "Gui/Common/WalletOkButton.h"
 #include "CryptoNoteWrapper/CryptoNoteAdapter.h"
 #include "IBlockChainExplorerAdapter.h"
 #include "LogFileWatcher.h"
 #include "WalletLogger/WalletLogger.h"
-#include "MainWindow/MainWindow.h"
+#include "Gui/MainWindow/MainWindow.h"
 #include "MiningManager.h"
 #include "OptimizationManager.h"
 #include "QJsonRpc/JsonRpcServer.h"
@@ -59,7 +59,7 @@ namespace WalletGui {
 
 namespace {
 
-const char BYTECOIN_URI_SCHEME_NAME[] = "bytecoin";
+const char BYTECOIN_URI_SCHEME_NAME[] = "karbowanec";
 const QRegularExpression LOG_SPLASH_REG_EXP("\\[Core\\] Imported block with index");
 
 quint16 findPort() {
@@ -262,9 +262,9 @@ bool WalletApplication::initCryptoNoteAdapter() {
       okButton->setText(QObject::tr("Ok"));
       dlg.addButton(okButton, QMessageBox::AcceptRole);
       dlg.setText(QObject::tr("The database is currently used by another application or service.\n"
-      "If you have bytecoind with non-default RPC port, you should terminate it and relaunch BytecoinWallet\n"
+      "If you have karbowanecd with non-default RPC port, you should terminate it and relaunch KarboWallet\n"
       "or\n"
-      "Set the Local deamon required port in BytecoinWallet Menu/Preferences/Connection settings."));
+      "Set the Local deamon required port in KarboWallet Menu/Preferences/Connection settings."));
       dlg.exec();
       return false;
     }

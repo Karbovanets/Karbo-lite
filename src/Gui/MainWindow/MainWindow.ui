@@ -33,7 +33,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>:/images/bytecoin</normaloff>:/images/bytecoin</iconset>
+    <normaloff>:/images/Karbovanets</normaloff>:/images/Karbovanets</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -620,7 +620,7 @@
             <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
-            <string>SEND BYTECOINS</string>
+            <string>SEND</string>
            </property>
            <property name="checkable">
             <bool>true</bool>
@@ -642,7 +642,7 @@
             <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
-            <string>TRANSACTIONS</string>
+            <string>HISTORY</string>
            </property>
            <property name="checkable">
             <bool>true</bool>
@@ -858,7 +858,7 @@
     </property>
     <addaction name="m_communityForumAction"/>
     <addaction name="m_reportIssueAction"/>
-    <addaction name="m_aboutBytecoinAction"/>
+    <addaction name="m_aboutKarbovanetsAction"/>
     <addaction name="m_aboutQtAction"/>
    </widget>
    <addaction name="menuFile"/>
@@ -915,12 +915,12 @@
     <string>Change password</string>
    </property>
   </action>
-  <action name="m_aboutBytecoinAction">
+  <action name="m_aboutKarbovanetsAction">
    <property name="enabled">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>About Bytecoin</string>
+    <string>About Karbovanets</string>
    </property>
   </action>
   <action name="m_aboutQtAction">
@@ -1188,7 +1188,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>m_aboutBytecoinAction</sender>
+   <sender>m_aboutKarbovanetsAction</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>about()</slot>

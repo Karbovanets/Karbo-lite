@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Karbovanets Wallet
+Comment=Karbovanets wallet
+Exec=karbowanecwallet %U
+Terminal=false
+Type=Application
+Icon=Karbovanets
+MimeType=x-scheme-handler/Karbovanets;
+Categories=Office;Finance;

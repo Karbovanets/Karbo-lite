@@ -2,18 +2,18 @@
 //
 // This file is part of Bytecoin.
 //
-// Bytecoin is free software: you can redistribute it and/or modify
+// Karbovanets is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Bytecoin is distributed in the hope that it will be useful,
+// Karbovanets is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Karbovanets.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QFileDialog>
 #include <QLabel>
@@ -23,12 +23,12 @@
 
 #include "TransactionsFrame.h"
 #include "Settings/Settings.h"
-#include "Common/RightAlignmentColumnDelegate.h"
-#include "Common/NewTransactionDelegate.h"
-#include "Common/TransactionsAmountDelegate.h"
-#include "Common/TransactionDetailsDialog.h"
-#include "Common/TransactionsHeaderView.h"
-#include "Common/TransactionsTimeDelegate.h"
+#include "Gui/Common/RightAlignmentColumnDelegate.h"
+#include "Gui/Common/NewTransactionDelegate.h"
+#include "Gui/Common/TransactionsAmountDelegate.h"
+#include "Gui/Common/TransactionDetailsDialog.h"
+#include "Gui/Common/TransactionsHeaderView.h"
+#include "Gui/Common/TransactionsTimeDelegate.h"
 #include "FilteredByAddressTransactionsModel.h"
 #include "FilteredByAgeTransactionsModel.h"
 #include "FilteredByHashTransactionsModel.h"

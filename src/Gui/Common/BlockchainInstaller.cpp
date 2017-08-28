@@ -2,18 +2,18 @@
 //
 // This file is part of Bytecoin.
 //
-// Bytecoin is free software: you can redistribute it and/or modify
+// Karbovanets is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Bytecoin is distributed in the hope that it will be useful,
+// Karbovanets is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Karbovanets.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QDir>
@@ -27,7 +27,7 @@
 #include <Common/Util.h>
 
 #include "BlockchainInstaller.h"
-#include "Common/QuestionDialog.h"
+#include "Gui/Common/QuestionDialog.h"
 #include "Settings/Settings.h"
 
 #include "ui_QuestionDialog.h"
@@ -56,7 +56,7 @@ const quint32 BYTECOIN_BLOCK_SIZE = 0xd5;
 }
 
 BlockchainInstaller::BlockchainInstaller(QObject* _parent) : QObject(_parent), m_blockIndexesFileName("blockindexes.dat"), m_blocksFileName("blocks.dat"),
-  m_bytecoinDir(Settings::instance().getDataDir().absolutePath()), m_applicationDir(QDir::current()) {
+  m_KarbovanetsDir(Settings::instance().getDataDir().absolutePath()), m_applicationDir(QDir::current()) {
 }
 
 BlockchainInstaller::~BlockchainInstaller() {
@@ -67,20 +67,20 @@ void BlockchainInstaller::exec() {
     return;
   }
 
-  if (!checkIfBytecoinBlockchainExists()) {
+  if (!checkIfKarbovanetsBlockchainExists()) {
     installBlockchain();
     return;
   }
 
   quint64 currentHeight;
-  quint64 bytecoinHeight;
-  if (!checkIfBlockchainOutdated(currentHeight, bytecoinHeight)) {
+  quint64 KarbovanetsHeight;
+  if (!checkIfBlockchainOutdated(currentHeight, KarbovanetsHeight)) {
     return;
   }
 
   QString questionStringTemplate = tr("Would you like to replace your current blockchain (height: %1)\nwith the one in your GUI wallet folder (height: %2)?");
 
-  QuestionDialog dlg(tr("Blockchain installation"), QString(questionStringTemplate).arg(bytecoinHeight).arg(currentHeight), nullptr);
+  QuestionDialog dlg(tr("Blockchain installation"), QString(questionStringTemplate).arg(KarbovanetsHeight).arg(currentHeight), nullptr);
   if (dlg.exec() == QDialog::Accepted) {
     installBlockchain();
   }
@@ -134,15 +134,15 @@ bool BlockchainInstaller::getGenesisBlockFromBlockchain(char** _genesisBlockData
   return true;
 }
 
-bool BlockchainInstaller::checkIfBytecoinBlockchainExists() const {
-  return m_bytecoinDir.exists() && m_bytecoinDir.exists(m_blocksFileName);
+bool BlockchainInstaller::checkIfKarbovanetsBlockchainExists() const {
+  return m_KarbovanetsDir.exists() && m_KarbovanetsDir.exists(m_blocksFileName);
 }
 
 bool BlockchainInstaller::checkIfBlockchainOutdated(quint64& _sourceHeight, quint64& _targetHeight) const {
   quint32 sourceHeight(0);
   quint32 targetHeight(0);
   QFile sourceBlockIndexesFile(m_applicationDir.absoluteFilePath(m_blockIndexesFileName));
-  QFile targetBlockIndexesFile(m_bytecoinDir.absoluteFilePath(m_blockIndexesFileName));
+  QFile targetBlockIndexesFile(m_KarbovanetsDir.absoluteFilePath(m_blockIndexesFileName));
   if (!sourceBlockIndexesFile.open(QIODevice::ReadOnly) || !targetBlockIndexesFile.open(QIODevice::ReadOnly)) {
     return false;
   }
@@ -162,8 +162,8 @@ QFileInfo BlockchainInstaller::currentBlockchainInfo() const {
   return QFileInfo(m_applicationDir.absoluteFilePath(m_blocksFileName));
 }
 
-QFileInfo BlockchainInstaller::bytecoinBlockchainInfo() const {
-  return QFileInfo(m_bytecoinDir.absoluteFilePath(m_blocksFileName));
+QFileInfo BlockchainInstaller::KarbovanetsBlockchainInfo() const {
+  return QFileInfo(m_KarbovanetsDir.absoluteFilePath(m_blocksFileName));
 }
 
 void BlockchainInstaller::copyProgress(quint64 _copied, quint64 _total) {
@@ -172,7 +172,7 @@ void BlockchainInstaller::copyProgress(quint64 _copied, quint64 _total) {
 
 void BlockchainInstaller::installBlockchain() {
   Q_EMIT showMessageSignal(tr("Copying blockchain files..."));
-  m_bytecoinDir.mkpath(".");
+  m_KarbovanetsDir.mkpath(".");
   QThread workerThread;
   AsyncFileProcessor fp;
   fp.moveToThread(&workerThread);
@@ -184,14 +184,14 @@ void BlockchainInstaller::installBlockchain() {
   connect(&fp, &AsyncFileProcessor::errorSignal, &waitLoop, &QEventLoop::exit);
 
   Q_EMIT copyFileSignal(m_applicationDir.absoluteFilePath(m_blockIndexesFileName),
-    m_bytecoinDir.absoluteFilePath(m_blockIndexesFileName));
+    m_KarbovanetsDir.absoluteFilePath(m_blockIndexesFileName));
   if (waitLoop.exec() != 0) {
     workerThread.quit();
     workerThread.wait();
     return;
   }
 
-  Q_EMIT copyFileSignal(m_applicationDir.absoluteFilePath(m_blocksFileName), m_bytecoinDir.absoluteFilePath(m_blocksFileName));
+  Q_EMIT copyFileSignal(m_applicationDir.absoluteFilePath(m_blocksFileName), m_KarbovanetsDir.absoluteFilePath(m_blocksFileName));
   if (waitLoop.exec() != 0) {
     workerThread.quit();
     workerThread.wait();
