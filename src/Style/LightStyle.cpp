@@ -48,15 +48,15 @@ QString LightStyle::balanceFontColor() const {
 }
 
 QString LightStyle::toolButtonBackgroundColorNormal() const {
-  return "#CBD6E5";
+  return "#DFECFC";
 }
 
 QString LightStyle::toolButtonBackgroundColorHover() const {
-  return "#8BA4C7";
+  return "#C1D5ED";
 }
 
 QString LightStyle::toolButtonBackgroundColorPressed() const {
-  return "#6582AA";
+  return "#00A0E3";
 }
 
 QString LightStyle::toolButtonFontColorNormal() const {
@@ -80,7 +80,7 @@ QPixmap LightStyle::getLogoPixmap() const {
 }
 
 QPixmap LightStyle::getBalanceIcon() const {
-  return QPixmap(QString(":icons/light/balance"));
+  return QPixmap(QString(":icons/total_balance"));
 }
 
 QPixmap LightStyle::getConnectedIcon() const {
