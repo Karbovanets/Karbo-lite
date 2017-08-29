@@ -69,7 +69,7 @@ const quint64 DEFAULT_OPTIMIZATION_PERIOD = 1000 * 60 * 30; // 30 minutes
 const quint64 DEFAULT_OPTIMIZATION_THRESHOLD = 10000000000000;
 const quint64 DEFAULT_OPTIMIZATION_MIXIN = 6;
 
-const quint64 VERSION_MAJOR = 1;
+const quint64 VERSION_MAJOR = 2;
 const quint64 VERSION_MINOR = 0;
 const quint64 VERSION_PATCH = 0;
 
@@ -82,7 +82,7 @@ Settings& Settings::instance() {
 
 
 Settings::Settings() : m_p2pBindPort(0), m_cmdLineParser(nullptr) {
-  m_defaultPoolList << "pool.democats.org:45500";
+  m_defaultPoolList << "pool.karbowanec.com:3333" << "pool2.democats.org:45570" << "krb.sberex.com:3333" << "mine.krb.mypool.online:32350";
 
   Style* lightStyle = new LightStyle();
   Style* darkStyle = new DarkStyle();
