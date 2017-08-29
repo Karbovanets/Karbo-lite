@@ -111,7 +111,7 @@ IWalletAdapter::WalletInitStatus WalletGreenWorker::create(const QString& _walle
     SemaphoreUnlocker unlocker(m_walletSemaphore);
     int errorCode = 0;
     try {
-      m_wallet->initialize(_walletPath.toStdString(), _password.toStdString());
+      m_wallet->initialize(std::string(_walletPath.toLocal8Bit().data()), _password.toStdString());
       m_wallet->createAddress();
     } catch (const std::system_error& _error) {
       WalletLogger::critical(tr("[Wallet] Generate wallet error: %1").arg(_error.code().message().data()));
@@ -147,7 +147,7 @@ IWalletAdapter::WalletInitStatus WalletGreenWorker::load(const QString& _walletP
     int errorCode = 0;
     try {
       std::string userData;
-      m_wallet->load(_walletPath.toStdString(), _password.toStdString(), userData);
+      m_wallet->load(std::string(_walletPath.toLocal8Bit().data()), _password.toStdString(), userData);
 #if QT_VERSION <  0x050400
       m_userData = QByteArray(userData.data(), userData.size());
 #else
@@ -194,11 +194,11 @@ IWalletAdapter::WalletInitStatus WalletGreenWorker::loadLegacyKeys(const QString
     SemaphoreUnlocker unlocker(m_walletSemaphore);
     int errorCode = 0;
     try {
-      std::ofstream outputStream(_walletPath.toStdString(), std::ios::binary | std::ios::trunc);
-      CryptoNote::importLegacyKeys(_legacyKeysFile.toStdString(), _password.toStdString(), outputStream);
+      std::ofstream outputStream(_walletPath.toStdWString(), std::ios::binary | std::ios::trunc);
+      CryptoNote::importLegacyKeys(std::string(_legacyKeysFile.toLocal8Bit().data()), _password.toStdString(), outputStream);
       outputStream.flush();
       outputStream.close();
-      m_wallet->load(_walletPath.toStdString(), _password.toStdString());
+      m_wallet->load(std::string(_walletPath.toLocal8Bit().data()), _password.toStdString());
     } catch (const std::system_error& _error) {
       WalletLogger::critical(tr("[Wallet] Import keys from file error: %1").arg(_error.code().message().data()));
       errorCode = _error.code().value();
@@ -239,7 +239,7 @@ IWalletAdapter::WalletInitStatus WalletGreenWorker::createWithKeys(const QString
     SemaphoreUnlocker unlocker(m_walletSemaphore);
     int errorCode = 0;
     try {
-      m_wallet->initializeWithViewKey(_walletPath.toStdString(), "", _accountKeys.viewKeys.secretKey);
+      m_wallet->initializeWithViewKey(std::string(_walletPath.toLocal8Bit().data()), "", _accountKeys.viewKeys.secretKey);
       if (std::memcmp(&_accountKeys.spendKeys.secretKey, &CryptoNote::NULL_SECRET_KEY, sizeof(Crypto::SecretKey)) == 0) {
         m_wallet->createAddress(_accountKeys.spendKeys.publicKey);
       } else {
@@ -322,7 +322,7 @@ IWalletAdapter::WalletSaveStatus WalletGreenWorker::exportWallet(const QString& 
     int errorCode = 0;
     try {
 #if QT_VERSION < 0x050400
-      m_wallet->exportWallet(_path.toStdString(), _encrypt, _saveLevel, std::string(m_userData.data(), m_userData.size()));
+      m_wallet->exportWallet(std::string(_path.toLocal8Bit().data()), _encrypt, _saveLevel, std::string(m_userData.data(), m_userData.size()));
 #else
       m_wallet->exportWallet(_path.toStdString(), _encrypt, _saveLevel, m_userData.toStdString());
 #endif

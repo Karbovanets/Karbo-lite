@@ -396,7 +396,7 @@ void CryptoNoteAdapter::configureLogger(Logging::LoggerManager& _logger, const Q
   Common::JsonValue& cfgLoggers = loggerConfiguration.insert("loggers", Common::JsonValue::ARRAY);
   Common::JsonValue& fileLogger = cfgLoggers.pushBack(Common::JsonValue::OBJECT);
   fileLogger.insert("type", "file");
-  fileLogger.insert("filename", _logFilePath.toStdString());
+  fileLogger.insert("filename", std::string(_logFilePath.toLocal8Bit().data()));
   fileLogger.insert("level", static_cast<int64_t>(level));
   _logger.configure(loggerConfiguration);
 }
