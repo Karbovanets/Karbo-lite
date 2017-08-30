@@ -33,7 +33,7 @@ WalletStateModel::WalletStateModel(ICryptoNoteAdapter* m_cryptoNoteAdapter, QObj
   m_cryptoNoteAdapter(m_cryptoNoteAdapter), m_isOpen(m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->isOpen()),
   m_isEncrypted(m_isOpen ? m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->isEncrypted() : false),
   m_address(m_isOpen ? m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAddress(0) : ""),
-  m_actualBalance(0), m_pendingBalance(0), m_totalBalance(0), m_currentHeight(0), m_totalHeight(0), m_isSynchronized(false),
+  m_actualBalance(0), m_pendingBalance(0), m_totalBalance(0), m_totalShortBalance(0), m_currentHeight(0), m_totalHeight(0), m_isSynchronized(false),
   m_columnCount(WalletStateModel::staticMetaObject.enumerator(WalletStateModel::staticMetaObject.indexOfEnumerator("Columns")).keyCount()) {
   m_cryptoNoteAdapter->addObserver(this);
   m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->addObserver(this);
@@ -75,6 +75,8 @@ QVariant WalletStateModel::headerData(int _section, Qt::Orientation _orientation
   case COLUMN_PENDING_BALANCE:
     return tr("Locked amount");
   case COLUMN_TOTAL_BALANCE:
+    return tr("Total balance");
+  case COLUMN_TOTAL_SHORT_BALANCE:
     return tr("Total balance");
   }
 
@@ -119,6 +121,7 @@ void WalletStateModel::walletOpened() {
   m_actualBalance = walletAdapter->getActualBalance();
   m_pendingBalance = walletAdapter->getPendingBalance();
   m_totalBalance = m_actualBalance + m_pendingBalance;
+  m_totalShortBalance = m_cryptoNoteAdapter->parseAmount(m_cryptoNoteAdapter->formatAmountToShort(m_totalBalance));
   Q_EMIT dataChanged(index(0, 0), index(0, columnCount() - 1));
   Q_EMIT dataChanged(index(0, COLUMN_IS_SYNCHRONIZED), index(0, COLUMN_IS_SYNCHRONIZED));
   Q_EMIT dataChanged(index(0, COLUMN_ABOUT_TO_BE_SYNCHRONIZED), index(0, COLUMN_ABOUT_TO_BE_SYNCHRONIZED));
@@ -135,6 +138,7 @@ void WalletStateModel::walletClosed() {
   m_actualBalance = 0;
   m_pendingBalance = 0;
   m_totalBalance = 0;
+  m_totalShortBalance = 0;
   m_currentHeight = 0;
   m_totalHeight = 0;
   m_isSynchronized = false;
@@ -170,6 +174,7 @@ void WalletStateModel::balanceUpdated(quint64 _actualBalance, quint64 _pendingBa
   m_actualBalance = _actualBalance;
   m_pendingBalance = _pendingBalance;
   m_totalBalance = m_actualBalance + m_pendingBalance;
+  m_totalShortBalance = m_cryptoNoteAdapter->parseAmount(m_cryptoNoteAdapter->formatAmountToShort(m_totalBalance));
   Q_EMIT dataChanged(index(0, 0), index(0, columnCount() - 1));
 }
 
@@ -209,6 +214,8 @@ QVariant WalletStateModel::getDisplayRole(const QModelIndex& _index) const {
     return m_cryptoNoteAdapter->formatUnsignedAmount(_index.data(ROLE_PENDING_BALANCE).value<quint64>());
   case COLUMN_TOTAL_BALANCE:
     return m_cryptoNoteAdapter->formatUnsignedAmount(_index.data(ROLE_TOTAL_BALANCE).value<quint64>());
+  case COLUMN_TOTAL_SHORT_BALANCE:
+    return m_cryptoNoteAdapter->formatUnsignedAmount(_index.data(ROLE_TOTAL_SHORT_BALANCE).value<quint64>());
   case COLUMN_IS_SYNCHRONIZED:
     return _index.data(ROLE_IS_SYNCHRONIZED);
   case COLUMN_IS_NOT_SYNCHRONIZED:
@@ -234,6 +241,8 @@ QVariant WalletStateModel::getUserRoleRole(const QModelIndex& _index, int _role)
     return m_pendingBalance;
   case ROLE_TOTAL_BALANCE:
     return m_totalBalance;
+  case ROLE_TOTAL_SHORT_BALANCE:
+    return m_totalShortBalance;
   case ROLE_IS_SYNCHRONIZED:
     return m_isSynchronized;
   case ROLE_ABOUT_TO_BE_SYNCHRONIZED:

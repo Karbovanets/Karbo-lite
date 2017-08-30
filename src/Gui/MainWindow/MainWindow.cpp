@@ -165,7 +165,7 @@ MainWindow::MainWindow(ICryptoNoteAdapter* _cryptoNoteAdapter, IAddressBookManag
   m_walletStateMapper->addMapping(m_ui->m_noWalletLabel, WalletStateModel::COLUMN_IS_CLOSED, "visible");
   m_walletStateMapper->addMapping(m_ui->m_notEncryptedFrame, WalletStateModel::COLUMN_IS_NOT_ENCRYPTED, "visible");
   m_walletStateMapper->addMapping(m_ui->m_addressLabel, WalletStateModel::COLUMN_ADDRESS, "text");
-  m_walletStateMapper->addMapping(m_ui->m_balanceLabel, WalletStateModel::COLUMN_TOTAL_BALANCE, "text");
+  m_walletStateMapper->addMapping(m_ui->m_balanceLabel, WalletStateModel::COLUMN_TOTAL_SHORT_BALANCE, "text");
   m_walletStateMapper->setCurrentIndex(0);
 
   setClosedState();
@@ -423,7 +423,7 @@ void MainWindow::walletStateModelDataChanged(const QModelIndex& _topLeft, const 
   } else {
       m_syncMovie->stop();
       m_ui->m_balanceLabel->setMovie(nullptr);
-      m_walletStateMapper->addMapping(m_ui->m_balanceLabel, WalletStateModel::COLUMN_TOTAL_BALANCE, "text");
+      m_walletStateMapper->addMapping(m_ui->m_balanceLabel, WalletStateModel::COLUMN_TOTAL_SHORT_BALANCE, "text");
       m_walletStateMapper->revert();
       m_ui->m_balanceLabel->setCursor(Qt::PointingHandCursor);
       m_ui->m_balanceLabel->installEventFilter(this);
