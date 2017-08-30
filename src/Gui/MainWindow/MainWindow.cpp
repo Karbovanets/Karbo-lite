@@ -273,7 +273,7 @@ void MainWindow::balanceUpdated(quint64 _actualBalance, quint64 _pendingBalance)
 }
 
 void MainWindow::externalTransactionCreated(quintptr _transactionId, const FullTransactionInfo& _transaction) {
-  // Do nothing
+  QApplication::alert(this);
 }
 
 void MainWindow::transactionUpdated(quintptr _transactionId, const FullTransactionInfo& _transaction) {
