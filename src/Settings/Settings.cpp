@@ -458,6 +458,10 @@ QStringList Settings::getMiningPoolList() const {
   return res;
 }
 
+quint64 Settings::getAddressPrefix() const {
+  return CryptoNote::parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX;
+}
+
 bool Settings::isStartOnLoginEnabled() const {
   QReadLocker lock(&m_lock);
   bool res = false;

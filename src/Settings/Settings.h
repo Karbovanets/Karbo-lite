@@ -82,6 +82,7 @@ public:
   quint64 getOptimizationInterval() const;
   quint64 getOptimizationThreshold() const;
   quint64 getOptimizationMixin() const;
+  quint64 getAddressPrefix() const;
 
   bool isNewsEnabled() const;
 

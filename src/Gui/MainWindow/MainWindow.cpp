@@ -30,6 +30,7 @@
 #include <QSystemTrayIcon>
 #include <QUrlQuery>
 
+#include <Common/Base58.h>
 #include "MainWindow.h"
 #include "Settings/Settings.h"
 #include "WalletLogger/WalletLogger.h"
@@ -687,8 +688,8 @@ void MainWindow::importKey() {
   KeyDialog dlg(this);
   if (dlg.exec() == QDialog::Accepted) {
     QByteArray key = dlg.getKey();
-    if (key.size() != sizeof(CryptoNote::AccountKeys)) {
-      QMessageBox::warning(this, tr("Warning"), tr("Incorrect tracking key size"));
+    QString keyString = dlg.getKeyString();
+    if (keyString.isEmpty()) {
       return;
     }
 
@@ -699,7 +700,7 @@ void MainWindow::importKey() {
     QDir::homePath(),
 #endif
     tr("Wallets (*.wallet)"));
-    if (filePath.isEmpty()) {
+    if (filePath.isEmpty() || keyString.isEmpty()) {
       return;
     }
 
@@ -713,6 +714,20 @@ void MainWindow::importKey() {
       return;
     }
 
+    uint64_t addressPrefix;
+    std::string data;
+    AccountKeys accountKeys;
+
+    if (Tools::Base58::decode_addr(keyString.toStdString(), addressPrefix, data) && addressPrefix == Settings::instance().getAddressPrefix() &&
+      data.size() == sizeof(accountKeys)) {
+      accountKeys = convertByteArrayToAccountKeys(QByteArray::fromStdString(data));
+    } else if (key.size() == sizeof(CryptoNote::AccountKeys)) {
+      accountKeys = convertByteArrayToAccountKeys(key);
+    } else {
+      QMessageBox::warning(this, tr("Warning"), tr("The keys are not valid."), QMessageBox::Ok);
+      return;
+    }
+
     IWalletAdapter* walletAdapter = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter();
     if (walletAdapter->isOpen()) {
       walletAdapter->removeObserver(this);
@@ -720,7 +735,6 @@ void MainWindow::importKey() {
       walletAdapter->addObserver(this);
     }
 
-    AccountKeys accountKeys = convertByteArrayToAccountKeys(key);
     QString oldWalletFile = Settings::instance().getWalletFile();
     Settings::instance().setWalletFile(filePath);
     if (walletAdapter->createWithKeys(filePath, accountKeys) == IWalletAdapter::INIT_SUCCESS) {

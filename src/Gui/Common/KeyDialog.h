@@ -36,6 +36,7 @@ public:
   ~KeyDialog();
 
   QByteArray getKey() const;
+  QString getKeyString() const;
 
 private:
   QScopedPointer<Ui::KeyDialog> m_ui;
