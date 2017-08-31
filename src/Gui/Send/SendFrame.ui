@@ -175,6 +175,12 @@
    </item>
    <item>
     <widget class="QFrame" name="m_sendFeeFrame">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="frameShape">
       <enum>QFrame::Box</enum>
      </property>
@@ -197,33 +203,31 @@
       <property name="horizontalSpacing">
        <number>18</number>
       </property>
-      <item row="0" column="0">
-       <widget class="WalletGui::WalletNormalGrayTextLabel" name="label_3">
-        <property name="text">
-         <string>FEE</string>
+      <item row="2" column="1">
+       <widget class="WalletGui::ClearableLineEdit" name="m_paymentIdEdit">
+        <property name="styleSheet">
+         <string notr="true">[errorState=&quot;true&quot;] {
+  border-color: #ef3131;
+}</string>
+        </property>
+        <property name="placeholderText">
+         <string>Payment identifier issued by payee (market, exchange or other entity)</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="WalletGui::WalletNormalGrayTextLabel" name="m_paymentIdTextLabel">
-        <property name="text">
-         <string>PAYMENT ID</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QDoubleSpinBox" name="m_feeSpin">
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::UpDownArrows</enum>
         </property>
         <property name="suffix">
-         <string notr="true">BCN</string>
+         <string notr="true">KRB</string>
         </property>
         <property name="decimals">
-         <number>8</number>
+         <number>12</number>
         </property>
         <property name="minimum">
-         <double>0.010000000000000</double>
+         <double>0.000100000000000</double>
         </property>
         <property name="maximum">
          <double>999999999.000000000000000</double>
@@ -236,17 +240,92 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="WalletGui::ClearableLineEdit" name="m_paymentIdEdit">
-        <property name="styleSheet">
-         <string notr="true">[errorState=&quot;true&quot;] {
-  border-color: #ef3131;
-}</string>
+      <item row="0" column="0">
+       <widget class="WalletGui::WalletNormalGrayTextLabel" name="label_3">
+        <property name="text">
+         <string>FEE</string>
         </property>
-        <property name="placeholderText">
-         <string>Payment identifier issued by payee (market, exchange or other entity)</string>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
        </widget>
+      </item>
+      <item row="0" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="WalletGui::WalletNormalGrayTextLabel" name="m_paymentIdTextLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>PAYMENT ID</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <property name="indent">
+           <number>0</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_6">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>10</width>
+            <height>10</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="WalletGui::WalletTinyLinkLikeButton" name="m_generatePaymentIdButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
+          <property name="text">
+           <string>Generate</string>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>10</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
@@ -432,6 +511,11 @@
    <extends>QLabel</extends>
    <header>Gui/Common/WalletTextLabel.h</header>
   </customwidget>
+  <customwidget>
+   <class>WalletGui::WalletTinyLinkLikeButton</class>
+   <extends>QPushButton</extends>
+   <header>Gui/Common/WalletLinkLikeButton.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>m_paymentIdEdit</tabstop>
@@ -520,6 +604,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>m_generatePaymentIdButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SendFrame</receiver>
+   <slot>generatePaymentIdClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>314</x>
+     <y>494</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>432</x>
+     <y>318</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>sendClicked()</slot>
@@ -527,5 +627,6 @@
   <slot>addRecipientClicked()</slot>
   <slot>mixinValueChanged(int)</slot>
   <slot>validatePaymentId(QString)</slot>
+  <slot>generatePaymentIdClicked()</slot>
  </slots>
 </ui>

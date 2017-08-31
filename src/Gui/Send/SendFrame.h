@@ -101,6 +101,7 @@ private:
   Q_SLOT void sendClicked();
   Q_SLOT void mixinValueChanged(int _value);
   Q_SLOT void validatePaymentId(const QString& _paymentId);
+  Q_SLOT void generatePaymentIdClicked();
 
 Q_SIGNALS:
   void showTransactionsFrameSignal();

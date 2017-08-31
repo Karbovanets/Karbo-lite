@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'SendFrame.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -46,10 +46,14 @@ public:
     QSpacerItem *verticalSpacer_2;
     QFrame *m_sendFeeFrame;
     QGridLayout *gridLayout_2;
-    WalletGui::WalletNormalGrayTextLabel *label_3;
-    WalletGui::WalletNormalGrayTextLabel *m_paymentIdTextLabel;
-    QDoubleSpinBox *m_feeSpin;
     WalletGui::ClearableLineEdit *m_paymentIdEdit;
+    QDoubleSpinBox *m_feeSpin;
+    WalletGui::WalletNormalGrayTextLabel *label_3;
+    QHBoxLayout *horizontalLayout_3;
+    WalletGui::WalletNormalGrayTextLabel *m_paymentIdTextLabel;
+    QSpacerItem *horizontalSpacer_6;
+    WalletGui::WalletTinyLinkLikeButton *m_generatePaymentIdButton;
+    QSpacerItem *horizontalSpacer_5;
     QFrame *m_mixinFrame;
     QGridLayout *gridLayout;
     QLabel *label;
@@ -133,41 +137,75 @@ public:
 
         m_sendFeeFrame = new QFrame(SendFrame);
         m_sendFeeFrame->setObjectName(QStringLiteral("m_sendFeeFrame"));
+        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(m_sendFeeFrame->sizePolicy().hasHeightForWidth());
+        m_sendFeeFrame->setSizePolicy(sizePolicy2);
         m_sendFeeFrame->setFrameShape(QFrame::Box);
         m_sendFeeFrame->setFrameShadow(QFrame::Plain);
         gridLayout_2 = new QGridLayout(m_sendFeeFrame);
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
         gridLayout_2->setHorizontalSpacing(18);
         gridLayout_2->setContentsMargins(25, 20, 25, 17);
-        label_3 = new WalletGui::WalletNormalGrayTextLabel(m_sendFeeFrame);
-        label_3->setObjectName(QStringLiteral("label_3"));
-
-        gridLayout_2->addWidget(label_3, 0, 0, 1, 1);
-
-        m_paymentIdTextLabel = new WalletGui::WalletNormalGrayTextLabel(m_sendFeeFrame);
-        m_paymentIdTextLabel->setObjectName(QStringLiteral("m_paymentIdTextLabel"));
-
-        gridLayout_2->addWidget(m_paymentIdTextLabel, 0, 1, 1, 1);
-
-        m_feeSpin = new QDoubleSpinBox(m_sendFeeFrame);
-        m_feeSpin->setObjectName(QStringLiteral("m_feeSpin"));
-        m_feeSpin->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
-        m_feeSpin->setSuffix(QStringLiteral("BCN"));
-        m_feeSpin->setDecimals(8);
-        m_feeSpin->setMinimum(0.01);
-        m_feeSpin->setMaximum(1e+09);
-        m_feeSpin->setSingleStep(0.01);
-        m_feeSpin->setValue(0.01);
-
-        gridLayout_2->addWidget(m_feeSpin, 1, 0, 1, 1);
-
         m_paymentIdEdit = new WalletGui::ClearableLineEdit(m_sendFeeFrame);
         m_paymentIdEdit->setObjectName(QStringLiteral("m_paymentIdEdit"));
         m_paymentIdEdit->setStyleSheet(QLatin1String("[errorState=\"true\"] {\n"
 "  border-color: #ef3131;\n"
 "}"));
 
-        gridLayout_2->addWidget(m_paymentIdEdit, 1, 1, 1, 1);
+        gridLayout_2->addWidget(m_paymentIdEdit, 2, 1, 1, 1);
+
+        m_feeSpin = new QDoubleSpinBox(m_sendFeeFrame);
+        m_feeSpin->setObjectName(QStringLiteral("m_feeSpin"));
+        m_feeSpin->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
+        m_feeSpin->setSuffix(QStringLiteral("KRB"));
+        m_feeSpin->setDecimals(12);
+        m_feeSpin->setMinimum(0.0001);
+        m_feeSpin->setMaximum(1e+09);
+        m_feeSpin->setSingleStep(0.01);
+        m_feeSpin->setValue(0.01);
+
+        gridLayout_2->addWidget(m_feeSpin, 2, 0, 1, 1);
+
+        label_3 = new WalletGui::WalletNormalGrayTextLabel(m_sendFeeFrame);
+        label_3->setObjectName(QStringLiteral("label_3"));
+        label_3->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+
+        gridLayout_2->addWidget(label_3, 0, 0, 1, 1);
+
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        m_paymentIdTextLabel = new WalletGui::WalletNormalGrayTextLabel(m_sendFeeFrame);
+        m_paymentIdTextLabel->setObjectName(QStringLiteral("m_paymentIdTextLabel"));
+        sizePolicy2.setHeightForWidth(m_paymentIdTextLabel->sizePolicy().hasHeightForWidth());
+        m_paymentIdTextLabel->setSizePolicy(sizePolicy2);
+        m_paymentIdTextLabel->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+        m_paymentIdTextLabel->setMargin(0);
+        m_paymentIdTextLabel->setIndent(0);
+
+        horizontalLayout_3->addWidget(m_paymentIdTextLabel);
+
+        horizontalSpacer_6 = new QSpacerItem(10, 10, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_6);
+
+        m_generatePaymentIdButton = new WalletGui::WalletTinyLinkLikeButton(m_sendFeeFrame);
+        m_generatePaymentIdButton->setObjectName(QStringLiteral("m_generatePaymentIdButton"));
+        sizePolicy2.setHeightForWidth(m_generatePaymentIdButton->sizePolicy().hasHeightForWidth());
+        m_generatePaymentIdButton->setSizePolicy(sizePolicy2);
+        m_generatePaymentIdButton->setCursor(QCursor(Qt::PointingHandCursor));
+        m_generatePaymentIdButton->setFocusPolicy(Qt::NoFocus);
+        m_generatePaymentIdButton->setFlat(true);
+
+        horizontalLayout_3->addWidget(m_generatePaymentIdButton);
+
+        horizontalSpacer_5 = new QSpacerItem(40, 10, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_5);
+
+
+        gridLayout_2->addLayout(horizontalLayout_3, 0, 1, 1, 1);
 
 
         verticalLayout->addWidget(m_sendFeeFrame);
@@ -213,11 +251,11 @@ public:
 
         m_sendButton = new WalletGui::WalletLargeBlueButton(m_mixinFrame);
         m_sendButton->setObjectName(QStringLiteral("m_sendButton"));
-        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(m_sendButton->sizePolicy().hasHeightForWidth());
-        m_sendButton->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy3(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(m_sendButton->sizePolicy().hasHeightForWidth());
+        m_sendButton->setSizePolicy(sizePolicy3);
         m_sendButton->setMinimumSize(QSize(218, 40));
         m_sendButton->setMaximumSize(QSize(218, 40));
         m_sendButton->setFocusPolicy(Qt::NoFocus);
@@ -250,6 +288,7 @@ public:
         QObject::connect(m_addRecipientButton, SIGNAL(clicked()), SendFrame, SLOT(addRecipientClicked()));
         QObject::connect(m_paymentIdEdit, SIGNAL(textChanged(QString)), SendFrame, SLOT(validatePaymentId(QString)));
         QObject::connect(m_mixinSpin, SIGNAL(valueChanged(int)), SendFrame, SLOT(mixinValueChanged(int)));
+        QObject::connect(m_generatePaymentIdButton, SIGNAL(clicked()), SendFrame, SLOT(generatePaymentIdClicked()));
 
         QMetaObject::connectSlotsByName(SendFrame);
     } // setupUi
@@ -258,9 +297,10 @@ public:
     {
         SendFrame->setWindowTitle(QApplication::translate("SendFrame", "Frame", 0));
         m_addRecipientButton->setText(QApplication::translate("SendFrame", "+ ADD RECIPIENT", 0));
+        m_paymentIdEdit->setPlaceholderText(QApplication::translate("SendFrame", "Payment identifier issued by payee (market, exchange or other entity)", 0));
         label_3->setText(QApplication::translate("SendFrame", "FEE", 0));
         m_paymentIdTextLabel->setText(QApplication::translate("SendFrame", "PAYMENT ID", 0));
-        m_paymentIdEdit->setPlaceholderText(QApplication::translate("SendFrame", "Payment identifier issued by payee (market, exchange or other entity)", 0));
+        m_generatePaymentIdButton->setText(QApplication::translate("SendFrame", "Generate", 0));
         label->setText(QString());
         m_totalAmountLabel->setText(QApplication::translate("SendFrame", "AMOUNT", 0));
         m_sendButton->setText(QApplication::translate("SendFrame", "Send", 0));

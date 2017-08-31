@@ -15,9 +15,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Karbovanets.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <QMetaMethod>
 #include <QUrl>
+#include <QTime>
 #include <QUrlQuery>
+#include <QMetaMethod>
 
 #include <Wallet/WalletErrors.h>
 
@@ -525,6 +526,21 @@ bool SendFrame::readyToSend() const {
 
   readyToSend = readyToSend && isValidPaymentId(m_ui->m_paymentIdEdit->text());
   return readyToSend;
+}
+
+void SendFrame::generatePaymentIdClicked() {
+  QTime time = QTime::currentTime();
+  qsrand((uint)time.msec());
+  const QString possibleCharacters("ABCDEF0123456789");
+  const int randomStringLength = 64;
+  QString randomString;
+  for(int i=0; i<randomStringLength; ++i)
+  {
+    int index = qrand() % possibleCharacters.length();
+    QChar nextChar = possibleCharacters.at(index);
+    randomString.append(nextChar);
+  }
+  m_ui->m_paymentIdEdit->setText(randomString);
 }
 
 }

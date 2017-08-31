@@ -209,10 +209,10 @@
         <enum>QAbstractSpinBox::UpDownArrows</enum>
        </property>
        <property name="suffix">
-        <string notr="true">BCN</string>
+        <string notr="true">KRB</string>
        </property>
        <property name="decimals">
-        <number>8</number>
+        <number>12</number>
        </property>
        <property name="maximum">
         <double>1000000000000.000000000000000</double>
@@ -255,14 +255,14 @@
    <header>Gui/Common/WalletTextLabel.h</header>
   </customwidget>
   <customwidget>
-   <class>WalletGui::WalletTinyLinkLikeButton</class>
-   <extends>QPushButton</extends>
-   <header>Gui/Common/WalletLinkLikeButton.h</header>
-  </customwidget>
-  <customwidget>
    <class>WalletGui::ClearableLineEdit</class>
    <extends>QLineEdit</extends>
    <header>Gui/Common/ClearableLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>WalletGui::WalletTinyLinkLikeButton</class>
+   <extends>QPushButton</extends>
+   <header>Gui/Common/WalletLinkLikeButton.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
