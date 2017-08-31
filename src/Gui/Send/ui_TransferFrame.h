@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'TransferFrame.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -146,8 +146,8 @@ public:
 "  border-color: #ef3131;\n"
 "}"));
         m_sendAmountSpin->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
-        m_sendAmountSpin->setSuffix(QStringLiteral("BCN"));
-        m_sendAmountSpin->setDecimals(8);
+        m_sendAmountSpin->setSuffix(QStringLiteral("KRB"));
+        m_sendAmountSpin->setDecimals(12);
         m_sendAmountSpin->setMaximum(1e+12);
 
         gridLayout_2->addWidget(m_sendAmountSpin, 1, 0, 1, 1);
