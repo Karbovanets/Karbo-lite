@@ -250,6 +250,9 @@ void TransferFrame::addressBookClicked() {
   AddressBookDialog dlg(m_addressBookModel, m_mainWindow);
   if (dlg.exec() == QDialog::Accepted) {
     m_ui->m_sendAddressEdit->setText(dlg.getAddress());
+    if(!dlg.getPaymentId().isEmpty()) {
+      Q_EMIT insertPaymentIdSignal(dlg.getPaymentId());
+    }
   }
 }
 

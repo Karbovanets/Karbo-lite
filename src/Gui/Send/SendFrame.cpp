@@ -17,6 +17,7 @@
 
 #include <QUrl>
 #include <QTime>
+#include <QPair>
 #include <QUrlQuery>
 #include <QMetaMethod>
 
@@ -115,15 +116,16 @@ SendFrame::~SendFrame() {
   m_glassFrame->deleteLater();
 }
 
-void SendFrame::addRecipient(const QString& _address) {
+void SendFrame::addRecipient(const RecepientPair &_data) {
   if (m_transfers.size() == 1 && m_transfers[0]->getAddress().isEmpty()) {
-    m_transfers[0]->setAddress(_address);
+    m_transfers[0]->setAddress(_data.first);
   } else {
     addRecipientClicked();
     m_ui->m_sendScrollarea->widget()->updateGeometry();
     m_ui->m_sendScrollarea->updateGeometry();
-    m_transfers.last()->setAddress(_address);
+    m_transfers.last()->setAddress(_data.first);
   }
+  m_ui->m_paymentIdEdit->setText(_data.second);
 }
 
 void SendFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAdapter) {
@@ -231,7 +233,7 @@ void SendFrame::urlReceived(const QUrl& _url) {
 
   QUrlQuery urlQuery(_url);
   QString address = _url.path();
-  qreal amount = QLocale(QLocale::English).toDouble(m_cryptoNoteAdapter->formatUnsignedAmount(urlQuery.queryItemValue(PAYMENT_URL_AMOUNT_TAG).toULongLong()));
+  qreal amount = QLocale(QLocale::English).toDouble(urlQuery.queryItemValue(PAYMENT_URL_AMOUNT_TAG));
   QString paymentId = urlQuery.queryItemValue(PAYMENT_URL_PAYMENT_ID_TAG);
   QString message = urlQuery.queryItemValue(PAYMENT_URL_MESSAGE_TAG);
   Q_UNUSED(message)
@@ -302,6 +304,7 @@ void SendFrame::addRecipientClicked() {
     amountStringChanged(QString());
     m_ui->m_sendButton->setEnabled(readyToSend());
   });
+  connect(newTransfer, &TransferFrame::insertPaymentIdSignal, this, &SendFrame::insertPaymentIdReceived);
 
   m_ui->m_sendScrollarea->widget()->adjustSize();
   m_ui->m_sendScrollarea->widget()->updateGeometry();
@@ -365,7 +368,7 @@ void SendFrame::sendClicked() {
     QString label = transfer->getLabel();
     if (!label.isEmpty() && m_addressBookManager->findAddressByAddress(address) == INVALID_ADDRESS_INDEX &&
       m_addressBookManager->findAddressByLabel(label) == INVALID_ADDRESS_INDEX) {
-      m_addressBookManager->addAddress(label, address, false);
+      m_addressBookManager->addAddress(label, address, m_ui->m_paymentIdEdit->text(), false);
     }
   }
 
@@ -541,6 +544,10 @@ void SendFrame::generatePaymentIdClicked() {
     randomString.append(nextChar);
   }
   m_ui->m_paymentIdEdit->setText(randomString);
+}
+
+void SendFrame::insertPaymentIdReceived(const QString& _paymentId) {
+  m_ui->m_paymentIdEdit->setText(_paymentId);
 }
 
 }

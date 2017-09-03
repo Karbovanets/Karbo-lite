@@ -86,6 +86,7 @@ private:
 Q_SIGNALS:
   void amountStringChangedSignal(const QString& _amountString);
   void addressChangedSignal(const QString& _address);
+  void insertPaymentIdSignal(QString _paymentid);
 };
 
 }

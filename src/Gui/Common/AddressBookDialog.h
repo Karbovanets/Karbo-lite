@@ -36,6 +36,7 @@ public:
   ~AddressBookDialog();
 
   QString getAddress() const;
+  QString getPaymentId() const;
 
 private:
   QScopedPointer<Ui::AddressBookDialog> m_ui;

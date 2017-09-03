@@ -33,7 +33,7 @@ public:
   void updateEditorGeometry(QWidget* _editor, const QStyleOptionViewItem& _option, const QModelIndex& _index) const override;
 
 Q_SIGNALS:
-  void sendToSignal(const QString& _address) const;
+  void sendToSignal(const QString& _address, const QString& _paymentid) const;
   void editSignal(const QPersistentModelIndex& _index) const;
   void deleteSignal(const QPersistentModelIndex& _index) const;
 };

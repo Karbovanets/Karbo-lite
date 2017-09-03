@@ -34,11 +34,11 @@ class AddressBookModel : public QAbstractItemModel, public IAddressBookManagerOb
 
 public:
   enum Columns {
-    COLUMN_LABEL = 0, COLUMN_ADDRESS, COLUMN_DONATION, COLUMN_ACTION
+    COLUMN_LABEL = 0, COLUMN_ADDRESS, COLUMN_PAYMENT_ID, COLUMN_DONATION, COLUMN_ACTION
   };
 
   enum Roles {
-    ROLE_LABEL = Qt::UserRole, ROLE_ADDRESS, ROLE_IS_DONATION_ADDRESS, ROLE_COLUMN, ROLE_ROW
+    ROLE_LABEL = Qt::UserRole, ROLE_ADDRESS, ROLE_PAYMENT_ID, ROLE_IS_DONATION_ADDRESS, ROLE_COLUMN, ROLE_ROW
   };
 
   explicit AddressBookModel(IAddressBookManager* _addressBookManager, QObject* _parent);

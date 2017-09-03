@@ -43,24 +43,29 @@ QWidget* AddressBookDelegate::createEditor(QWidget* _parent, const QStyleOptionV
   menu->setObjectName("m_addressBookMenu");
   QAction* sendAction = new QAction(tr("Send"), menu);
   QAction* editAction = new QAction(tr("Edit"), menu);
-  QAction* copyAction = new QAction(tr("Copy to clipboard"), menu);
+  QAction* copyAction = new QAction(tr("Copy address to clipboard"), menu);
+  QAction* copyPaymentIdAction = new QAction(tr("Copy Payment ID to clipboard"), menu);
   QAction* delAction = new QAction(tr("Delete"), menu);
   menu->addAction(sendAction);
   menu->addAction(editAction);
   menu->addAction(copyAction);
+  menu->addAction(copyPaymentIdAction);
   menu->addAction(delAction);
 
   editor->setMenu(menu);
   editor->setCursor(Qt::PointingHandCursor);
   QPersistentModelIndex index(_index);
   connect(sendAction, &QAction::triggered, [this, index]() {
-      Q_EMIT sendToSignal(index.data(AddressBookModel::ROLE_ADDRESS).toString());
+      Q_EMIT sendToSignal(index.data(AddressBookModel::ROLE_ADDRESS).toString(), index.data(AddressBookModel::ROLE_PAYMENT_ID).toString());
     });
   connect(editAction, &QAction::triggered, [this, index]() {
       Q_EMIT editSignal(index);
     });
   connect(copyAction, &QAction::triggered, [index]() {
       QApplication::clipboard()->setText(index.data(AddressBookModel::ROLE_ADDRESS).toString());
+    });
+  connect(copyPaymentIdAction, &QAction::triggered, [index]() {
+      QApplication::clipboard()->setText(index.data(AddressBookModel::ROLE_PAYMENT_ID).toString());
     });
   connect(delAction, &QAction::triggered, [this, index]() {
       Q_EMIT deleteSignal(index);

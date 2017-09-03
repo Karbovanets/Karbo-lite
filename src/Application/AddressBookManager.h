@@ -41,11 +41,12 @@ public:
   virtual quintptr getAddressCount() const override;
   virtual AddressItem getAddress(quintptr _addressIndex) const override;
   virtual quintptr findAddressByAddress(const QString& _address) const override;
+  virtual quintptr findAddressByPaymentId(const QString& _paymentid) const override;
   virtual quintptr findAddressByLabel(const QString& _label) const override;
-  virtual quintptr findAddress(const QString& _label, const QString& _address) const override;
+  virtual quintptr findAddress(const QString& _label, const QString& _address, const QString &_paymentid) const override;
   virtual quintptr findAddress(const QString& _label, const QString& _address, bool _isDonationAddress) const override;
-  virtual void addAddress(const QString& _label, const QString& _address, bool _isDonationAddress) override;
-  virtual void editAddress(quintptr _addressIndex, const QString& _label, const QString& _address, bool _isDonationAddress) override;
+  virtual void addAddress(const QString& _label, const QString& _address, const QString &_paymentid, bool _isDonationAddress) override;
+  virtual void editAddress(quintptr _addressIndex, const QString& _label, const QString& _address, const QString &_paymentid, bool _isDonationAddress) override;
   virtual void removeAddress(quintptr _addressIndex) override;
   virtual void addObserver(IAddressBookManagerObserver* _observer) override;
   virtual void removeObserver(IAddressBookManagerObserver* _observer) override;
@@ -86,6 +87,7 @@ private:
   QJsonObject m_addressBookObject;
   QHash<QString, quintptr> m_addressIndexes;
   QHash<QString, quintptr> m_labelIndexes;
+  QHash<QString, quintptr> m_paymentIdIndexes;
 
   void saveAddressBook();
   void buildIndexes();

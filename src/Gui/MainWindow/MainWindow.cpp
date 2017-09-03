@@ -34,6 +34,7 @@
 #include "MainWindow.h"
 #include "Settings/Settings.h"
 #include "WalletLogger/WalletLogger.h"
+#include "Gui/AddressBook/AddressBookFrame.h"
 #include "Gui/Common/AboutDialog.h"
 #include "Gui/Common/ChangePasswordDialog.h"
 #include "Gui/Common/NewPasswordDialog.h"
@@ -292,8 +293,9 @@ void MainWindow::urlReceived(const QUrl& _url) {
   if (isDonationUrl(_url)) {
     QUrlQuery urlQuery(_url);
     QString address = _url.path();
+    QString paymentid = urlQuery.queryItemValue("payment_id");
     QString label = urlQuery.queryItemValue(DONATION_URL_LABEL_TAG);
-    m_addressBookManager->addAddress(label, address, true);
+    m_addressBookManager->addAddress(label, address, paymentid, true);
 
     OptionsDialog dlg(m_cryptoNoteAdapter, m_donationManager, m_optimizationManager, m_addressBookModel, this);
     dlg.setDonationAddress(label, address);
@@ -396,7 +398,8 @@ void MainWindow::setClosedState() {
 }
 
 void MainWindow::addRecipientTriggered() {
-  m_ui->m_sendFrame->addRecipient(m_addRecipientAction->data().toString());
+  RecepientPair recepient_pair = m_addRecipientAction->data().value<RecepientPair>();
+  m_ui->m_sendFrame->addRecipient(recepient_pair);
   m_ui->m_sendButton->click();
 }
 

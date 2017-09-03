@@ -23,6 +23,7 @@
 #include "Application/IWalletUiItem.h"
 #include "IAddressBookManager.h"
 #include "IApplicationEventHandler.h"
+#include "Gui/AddressBook/AddressBookFrame.h"
 #include "ICryptoNoteAdapter.h"
 #include "IWalletAdapter.h"
 
@@ -45,7 +46,7 @@ public:
   explicit SendFrame(QWidget* _parent);
   ~SendFrame();
 
-  void addRecipient(const QString& _address);
+  void addRecipient(const RecepientPair& _data);
 
   // IWalletUiItem
   virtual void setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAdapter) override;
@@ -102,6 +103,7 @@ private:
   Q_SLOT void mixinValueChanged(int _value);
   Q_SLOT void validatePaymentId(const QString& _paymentId);
   Q_SLOT void generatePaymentIdClicked();
+  Q_SLOT void insertPaymentIdReceived(const QString& _paymentId);
 
 Q_SIGNALS:
   void showTransactionsFrameSignal();

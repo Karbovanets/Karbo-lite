@@ -18,6 +18,7 @@
 #pragma once
 
 #include <QFrame>
+#include <QPair>
 
 #include "Application/IWalletUiItem.h"
 
@@ -29,6 +30,9 @@ class AddressBookFrame;
 }
 
 namespace WalletGui {
+
+typedef QPair<QString, QString> RecepientPair;
+Q_DECLARE_METATYPE(RecepientPair);
 
 class AddressBookDelegate;
 
@@ -64,7 +68,7 @@ private:
 
   void rowsInserted(const QModelIndex& _parent, int _first, int _last);
   void rowsRemoved(const QModelIndex& _parent, int _first, int _last);
-  void sendToClicked(const QString& _address);
+  void sendToClicked(const QString& _address, const QString& _paymentid);
 
   Q_SLOT void addClicked();
   Q_SLOT void editClicked(const QPersistentModelIndex& _index);
@@ -72,7 +76,7 @@ private:
   Q_SLOT void contextMenu(const QPoint& _pos);
 
 Q_SIGNALS:
-  void sendToSignal(const QString& _address);
+  void sendToSignal(const QString& _address, const QString& _paymentid);
 };
 
 }

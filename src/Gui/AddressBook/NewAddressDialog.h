@@ -44,10 +44,13 @@ public:
 
   QString getAddress() const;
   QString getLabel() const;
+  QString getPaymentId() const;
   bool hasDonationFlag() const;
 
   void setAddressError(bool _error);
   void setAddressDuplicationError(bool _error);
+  void setPaymentIdError(bool _error);
+  void setPaymentIdDuplicationError(bool _error);
   void setLabelDuplicationError(bool _error);
 
 private:
@@ -59,6 +62,7 @@ private:
   bool checkForErrors() const;
 
   Q_SLOT void validateAddress(const QString& _address);
+  Q_SLOT void validatePaymentId(const QString& _paymentid);
   Q_SLOT void validateLabel(const QString& _label);
   Q_SLOT void donationCheckStateChanged(int _checkState);
 };

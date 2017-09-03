@@ -80,6 +80,8 @@ QVariant AddressBookModel::headerData(int _section, Qt::Orientation _orientation
       return tr("Label");
     case COLUMN_ADDRESS:
       return tr("Address");
+    case COLUMN_PAYMENT_ID:
+      return tr("Payment ID");
     case COLUMN_DONATION:
       return tr("Donation");
     }
@@ -92,6 +94,8 @@ QVariant AddressBookModel::headerData(int _section, Qt::Orientation _orientation
     case COLUMN_LABEL:
       return static_cast<int>(Qt::AlignLeft | Qt::AlignVCenter);
     case COLUMN_ADDRESS:
+      return static_cast<int>(Qt::AlignRight | Qt::AlignVCenter);
+    case COLUMN_PAYMENT_ID:
       return static_cast<int>(Qt::AlignRight | Qt::AlignVCenter);
     case COLUMN_DONATION:
       return static_cast<int>(Qt::AlignCenter);
@@ -166,6 +170,8 @@ QVariant AddressBookModel::getDisplayRole(const QModelIndex& _index) const {
     return _index.data(ROLE_LABEL);
   case COLUMN_ADDRESS:
     return _index.data(ROLE_ADDRESS);
+  case COLUMN_PAYMENT_ID:
+    return _index.data(ROLE_PAYMENT_ID);
   default:
     break;
   }
@@ -188,6 +194,8 @@ QVariant AddressBookModel::getUserRole(const QModelIndex& _index, int _role) con
     return addressItem.label;
   case ROLE_ADDRESS:
     return addressItem.address;
+  case ROLE_PAYMENT_ID:
+    return addressItem.paymentId;
   case ROLE_IS_DONATION_ADDRESS:
     return addressItem.isDonationAddress;
   case ROLE_COLUMN:

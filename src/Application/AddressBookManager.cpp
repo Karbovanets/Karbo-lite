@@ -32,6 +32,7 @@ const char ADDRESS_BOOK_TAG_NAME[] = "addressBook";
 const char ADDRESS_ITEM_LABEL_TAG_NAME[] = "label";
 const char ADDRESS_ITEM_ADDRESS_TAG_NAME[] = "address";
 const char ADDRESS_ITEM_DONATION_TAG_NAME[] = "donation";
+const char ADDRESS_ITEM_PAYMENT_ID_TAG_NAME[] = "paymentId";
 
 const char ADDRESS_URL_DONATION_TAG_NAME[] = "donation";
 const char ADDRESS_URL_LABEL_TAG_NAME[] = "label";
@@ -67,6 +68,7 @@ AddressItem AddressBookManager::getAddress(quintptr _addressIndex) const {
   AddressItem result {
     addressObject.value(ADDRESS_ITEM_LABEL_TAG_NAME).toString(),
     addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString(),
+    addressObject.value(ADDRESS_ITEM_PAYMENT_ID_TAG_NAME).toString(),
     addressObject.value(ADDRESS_ITEM_DONATION_TAG_NAME).toBool()
   };
 
@@ -81,12 +83,17 @@ quintptr AddressBookManager::findAddressByLabel(const QString& _label) const {
   return m_labelIndexes.value(_label, INVALID_ADDRESS_INDEX);
 }
 
-quintptr AddressBookManager::findAddress(const QString& _label, const QString& _address) const {
+quintptr AddressBookManager::findAddressByPaymentId(const QString& _paymentid) const {
+  return m_paymentIdIndexes.value(_paymentid, INVALID_ADDRESS_INDEX);
+}
+
+quintptr AddressBookManager::findAddress(const QString& _label, const QString& _address, const QString& _paymentid) const {
   QJsonArray addressArray = m_addressBookObject[ADDRESS_BOOK_TAG_NAME].toArray();
   for (int i = 0; i < addressArray.size(); ++i) {
     QJsonObject addressObject = addressArray[i].toObject();
     if (addressObject.value(ADDRESS_ITEM_LABEL_TAG_NAME).toString() == _label &&
-      addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString() == _address) {
+      addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString() == _address &&
+      addressObject.value(ADDRESS_ITEM_PAYMENT_ID_TAG_NAME).toString() == _paymentid) {
       return i;
     }
   }
@@ -108,9 +115,9 @@ quintptr AddressBookManager::findAddress(const QString& _label, const QString& _
   return INVALID_ADDRESS_INDEX;
 }
 
-void AddressBookManager::addAddress(const QString& _label, const QString& _address, bool _isDonationAddress) {
-  WalletLogger::debug(tr("[AddressBook] Add address: label=\"%1\" address=\"%2\" donation=\"%3\"").arg(_label).
-    arg(_address).arg(_isDonationAddress));
+void AddressBookManager::addAddress(const QString& _label, const QString& _address, const QString& _paymentid, bool _isDonationAddress) {
+  WalletLogger::debug(tr("[AddressBook] Add address: label=\"%1\" address=\"%2\" payment_id=\"%3\" donation=\"%4\"").arg(_label).
+    arg(_address).arg(_paymentid).arg(_isDonationAddress));
   if (findAddressByLabel(_label.trimmed()) != INVALID_ADDRESS_INDEX) {
     WalletLogger::critical(tr("[AddressBook] Add address error. Label already exists: label=\"%1\"").arg(_label));
     return;
@@ -125,18 +132,20 @@ void AddressBookManager::addAddress(const QString& _label, const QString& _addre
   QJsonObject newAddressObject;
   newAddressObject.insert(ADDRESS_ITEM_LABEL_TAG_NAME, _label);
   newAddressObject.insert(ADDRESS_ITEM_ADDRESS_TAG_NAME, _address);
+  newAddressObject.insert(ADDRESS_ITEM_PAYMENT_ID_TAG_NAME, _paymentid);
   newAddressObject.insert(ADDRESS_ITEM_DONATION_TAG_NAME, _isDonationAddress);
   addressArray.append(newAddressObject);
   m_addressBookObject.insert(ADDRESS_BOOK_TAG_NAME, addressArray);
   m_addressIndexes.insert(_address, addressArray.size() - 1);
+  m_paymentIdIndexes.insert(_paymentid, addressArray.size() - 1);
   m_labelIndexes.insert(_label, addressArray.size() - 1);
   saveAddressBook();
   Q_EMIT addressAddedSignal(addressArray.size() - 1);
 }
 
-void AddressBookManager::editAddress(quintptr _addressIndex, const QString& _label, const QString& _address, bool _isDonationAddress) {
-  WalletLogger::debug(tr("[AddressBook] Edit address: label=\"%1\" address=\"%2\" donation=\"%3\"").arg(_label).
-    arg(_address).arg(_isDonationAddress));
+void AddressBookManager::editAddress(quintptr _addressIndex, const QString& _label, const QString& _address, const QString& _paymentid, bool _isDonationAddress) {
+  WalletLogger::debug(tr("[AddressBook] Edit address: label=\"%1\" address=\"%2\" payment_id=\"%3\" donation=\"%4\"").arg(_label).
+    arg(_address).arg(_paymentid).arg(_isDonationAddress));
   Q_ASSERT(_addressIndex < m_addressBookObject[ADDRESS_BOOK_TAG_NAME].toArray().size());
   QJsonArray addressArray = m_addressBookObject[ADDRESS_BOOK_TAG_NAME].toArray();
   QJsonObject addressObject = addressArray[_addressIndex].toObject();
@@ -154,14 +163,18 @@ void AddressBookManager::editAddress(quintptr _addressIndex, const QString& _lab
 
   QString oldAddress = addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString();
   QString oldLabel = addressObject.value(ADDRESS_ITEM_LABEL_TAG_NAME).toString();
+  QString oldpaymentId = addressObject.value(ADDRESS_ITEM_PAYMENT_ID_TAG_NAME).toString();
   addressObject.insert(ADDRESS_ITEM_LABEL_TAG_NAME, _label);
   addressObject.insert(ADDRESS_ITEM_ADDRESS_TAG_NAME, _address);
+  addressObject.insert(ADDRESS_ITEM_PAYMENT_ID_TAG_NAME, _paymentid);
   addressObject.insert(ADDRESS_ITEM_DONATION_TAG_NAME, _isDonationAddress);
   addressArray[_addressIndex] = addressObject;
   m_addressBookObject.insert(ADDRESS_BOOK_TAG_NAME, addressArray);
   m_addressIndexes.remove(oldAddress);
+  m_paymentIdIndexes.remove(oldpaymentId);
   m_labelIndexes.remove(oldLabel);
   m_addressIndexes.insert(_address, _addressIndex);
+  m_paymentIdIndexes.insert(_paymentid, _addressIndex);
   m_labelIndexes.insert(_label, _addressIndex);
   saveAddressBook();
   Q_EMIT addressEditedSignal(_addressIndex);
@@ -171,9 +184,10 @@ void AddressBookManager::removeAddress(quintptr _addressIndex) {
   Q_ASSERT(_addressIndex < m_addressBookObject[ADDRESS_BOOK_TAG_NAME].toArray().size());
   QJsonArray addressArray = m_addressBookObject[ADDRESS_BOOK_TAG_NAME].toArray();
   QJsonObject addressObject = addressArray[_addressIndex].toObject();
-  WalletLogger::debug(tr("[AddressBook] Remove address: label=\"%1\" address=\"%2\" donation=\"%3\"").
+  WalletLogger::debug(tr("[AddressBook] Remove address: label=\"%1\" address=\"%2\" payment_id=\"%3\" donation=\"%4\"").
     arg(addressObject.value(ADDRESS_ITEM_LABEL_TAG_NAME).toString()).
     arg(addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString()).
+    arg(addressObject.value(ADDRESS_ITEM_PAYMENT_ID_TAG_NAME).toString()).
     arg(addressObject.value(ADDRESS_ITEM_DONATION_TAG_NAME).toBool()));
   if (getDonationMiningAddress() == addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString()) {
     setDonationMiningEnabled(false);
@@ -187,10 +201,12 @@ void AddressBookManager::removeAddress(quintptr _addressIndex) {
 
   addressArray.removeAt(_addressIndex);
   m_addressIndexes.remove(addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString());
+  m_addressIndexes.remove(addressObject.value(ADDRESS_ITEM_PAYMENT_ID_TAG_NAME).toString());
   m_labelIndexes.remove(addressObject.value(ADDRESS_ITEM_LABEL_TAG_NAME).toString());
   for (quintptr i = _addressIndex; i < addressArray.size(); ++i) {
     QJsonObject addressObject = addressArray[i].toObject();
     m_addressIndexes[addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString()] = i;
+    m_addressIndexes[addressObject.value(ADDRESS_ITEM_PAYMENT_ID_TAG_NAME).toString()] = i;
     m_labelIndexes[addressObject.value(ADDRESS_ITEM_LABEL_TAG_NAME).toString()] = i;
   }
 
