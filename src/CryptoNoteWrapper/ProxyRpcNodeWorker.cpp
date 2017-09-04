@@ -115,7 +115,7 @@ IWalletAdapter* ProxyRpcNodeWorker::getWalletAdapter() {
 }
 
 void ProxyRpcNodeWorker::peerCountUpdated(size_t _count) {
-  WalletLogger::info(tr("[RPC node] Event: Peer count updated: %1").arg(_count));
+  //WalletLogger::info(tr("[RPC node] Event: Peer count updated: %1").arg(_count));
   Q_EMIT peerCountUpdatedSignal(_count);
 }
 
