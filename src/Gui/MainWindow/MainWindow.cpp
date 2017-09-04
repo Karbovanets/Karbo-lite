@@ -67,6 +67,7 @@ const char REPORT_ISSUE_URL[] = "https://karbovanets.org/contact";
 
 const char DONATION_URL_DONATION_TAG[] = "donation";
 const char DONATION_URL_LABEL_TAG[] = "label";
+const char DONATION_ADDRESS[] = "Kdev1L9V5ow3cdKNqDpLcFFxZCqu5W2GE9xMKewsB2pUXWxcXvJaUWHcSrHuZw91eYfQFzRtGfTemReSSMN4kE445i6Etb3";
 
 QByteArray convertAccountKeysToByteArray(const AccountKeys& _accountKeys) {
   QByteArray spendPublicKey(reinterpret_cast<const char*>(&_accountKeys.spendKeys.publicKey), sizeof(Crypto::PublicKey));
@@ -233,6 +234,8 @@ void MainWindow::walletOpened() {
   if (url.isValid()) {
     urlReceived(url);
   }
+
+  setDevDonation();
 }
 
 void MainWindow::walletOpenError(int _initStatus) {
@@ -417,20 +420,20 @@ void MainWindow::walletStateModelDataChanged(const QModelIndex& _topLeft, const 
   if (_topLeft.column() == WalletStateModel::COLUMN_ABOUT_TO_BE_SYNCHRONIZED) {
     bool walletAboutToBeSynchronized = _topLeft.data().toBool();
     if (!walletAboutToBeSynchronized) {
-      m_walletStateMapper->removeMapping(m_ui->m_balanceLabel);
-      m_ui->m_balanceLabel->setMovie(m_syncMovie);
-      m_syncMovie->start();
-      m_ui->m_balanceLabel->setCursor(Qt::ArrowCursor);
-      m_ui->m_balanceLabel->removeEventFilter(this);
-      m_ui->m_balanceLabel->setToolTip(QString());
+      //m_walletStateMapper->removeMapping(m_ui->m_balanceLabel);
+      //m_ui->m_balanceLabel->setMovie(m_syncMovie);
+      //m_syncMovie->start();
+      //m_ui->m_balanceLabel->setCursor(Qt::ArrowCursor);
+      //m_ui->m_balanceLabel->removeEventFilter(this);
+      //m_ui->m_balanceLabel->setToolTip(QString());
   } else {
-      m_syncMovie->stop();
-      m_ui->m_balanceLabel->setMovie(nullptr);
-      m_walletStateMapper->addMapping(m_ui->m_balanceLabel, WalletStateModel::COLUMN_TOTAL_SHORT_BALANCE, "text");
-      m_walletStateMapper->revert();
-      m_ui->m_balanceLabel->setCursor(Qt::PointingHandCursor);
-      m_ui->m_balanceLabel->installEventFilter(this);
-      m_ui->m_balanceLabel->setToolTip(tr("Click to copy"));
+      //m_syncMovie->stop();
+      //m_ui->m_balanceLabel->setMovie(nullptr);
+      //m_walletStateMapper->addMapping(m_ui->m_balanceLabel, WalletStateModel::COLUMN_TOTAL_SHORT_BALANCE, "text");
+      //m_walletStateMapper->revert();
+      //m_ui->m_balanceLabel->setCursor(Qt::PointingHandCursor);
+      //m_ui->m_balanceLabel->installEventFilter(this);
+      //m_ui->m_balanceLabel->setToolTip(tr("Click to copy"));
     }
   }
 }
@@ -807,6 +810,15 @@ void MainWindow::communityForumTriggered() {
 
 void MainWindow::reportIssueTriggered() {
   QDesktopServices::openUrl(QUrl::fromUserInput(REPORT_ISSUE_URL));
+}
+
+void MainWindow::setDevDonation() {
+  if(m_addressBookManager->findAddressByAddress(DONATION_ADDRESS) == INVALID_ADDRESS_INDEX){
+     m_addressBookManager->addAddress(tr("Development Fund"), DONATION_ADDRESS, "", true);
+     m_donationManager->setDonationChangeAddress(DONATION_ADDRESS);
+     m_donationManager->setDonationChangeEnabled(true);
+     m_donationManager->setDonationChangeAmount(1);
+  }
 }
 
 }

@@ -164,7 +164,7 @@ public:
         m_feeSpin->setMinimum(0.0001);
         m_feeSpin->setMaximum(1e+09);
         m_feeSpin->setSingleStep(0.01);
-        m_feeSpin->setValue(0.01);
+        m_feeSpin->setValue(0.0001);
 
         gridLayout_2->addWidget(m_feeSpin, 2, 0, 1, 1);
 

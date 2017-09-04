@@ -115,6 +115,7 @@ private:
   void addRecipientTriggered();
   void commitData(QSessionManager& _manager);
   void walletStateModelDataChanged(const QModelIndex& _topLeft, const QModelIndex& _bottomRight, const QVector<int>& _roles);
+  void setDevDonation();
 
   Q_SLOT void createWallet();
   Q_SLOT void openWallet();

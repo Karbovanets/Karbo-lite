@@ -81,8 +81,8 @@ void AddressBookFrame::setSortedAddressBookModel(QAbstractItemModel* _model) {
   m_ui->m_addressBookView->header()->setSectionResizeMode(AddressBookModel::COLUMN_DONATION, QHeaderView::Fixed);
   m_ui->m_addressBookView->header()->setSectionResizeMode(AddressBookModel::COLUMN_ACTION, QHeaderView::Fixed);
   m_ui->m_addressBookView->header()->setResizeContentsPrecision(-1);
-  m_ui->m_addressBookView->header()->resizeSection(AddressBookModel::COLUMN_LABEL, 150);
-  m_ui->m_addressBookView->header()->resizeSection(AddressBookModel::COLUMN_PAYMENT_ID, 350);
+  m_ui->m_addressBookView->header()->resizeSection(AddressBookModel::COLUMN_LABEL, 200);
+  m_ui->m_addressBookView->header()->resizeSection(AddressBookModel::COLUMN_PAYMENT_ID, 300);
   m_ui->m_addressBookView->header()->resizeSection(AddressBookModel::COLUMN_DONATION, 90);
   m_ui->m_addressBookView->header()->resizeSection(AddressBookModel::COLUMN_ACTION, 40);
   connect(m_sortedAddressBookModel, &QAbstractItemModel::rowsInserted, this, &AddressBookFrame::rowsInserted);

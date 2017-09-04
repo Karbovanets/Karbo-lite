@@ -83,6 +83,7 @@ void DonationOptionsFrame::load() {
     m_donationManager->isDonationChangeEnabled());
   m_ui->m_enableDonationMiningCheck->setEnabled(m_donationAddressesModel->rowCount() > 0);
   m_ui->m_enableDonationChangeCheck->setEnabled(m_donationAddressesModel->rowCount() > 0);
+  m_ui->m_enableDonationChangeCheck->setChecked(m_donationManager->isDonationChangeEnabled());
   m_ui->m_donationMiningAddressCombo->setModel(m_donationAddressesModel);
   m_ui->m_donationChangeAddressCombo->setModel(m_donationAddressesModel);
   m_ui->m_donationMiningAddressCombo->setCurrentIndex(findDonationAddress(m_donationManager->getDonationMiningAddress()));

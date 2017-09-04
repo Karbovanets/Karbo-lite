@@ -130,9 +130,9 @@ OverviewHeaderFrame::OverviewHeaderFrame(QWidget* _parent) : QFrame(_parent), m_
   m_transactionPoolGlassFrame(new OverviewHeaderGlassFrame(m_syncMovie, nullptr)) {
   m_ui->setupUi(this);
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(OVERVIEW_HEADER_STYLE_SHEET_TEMPLATE));
-  m_ui->m_overviewAvailableBalanceLabel->installEventFilter(this);
-  m_ui->m_overviewLockedBalanceLabel->installEventFilter(this);
-  m_ui->m_overviewTotalBalanceLabel->installEventFilter(this);
+ // m_ui->m_overviewAvailableBalanceLabel->installEventFilter(this);
+ // m_ui->m_overviewLockedBalanceLabel->installEventFilter(this);
+ // m_ui->m_overviewTotalBalanceLabel->installEventFilter(this);
 }
 
 OverviewHeaderFrame::~OverviewHeaderFrame() {
@@ -336,15 +336,15 @@ void OverviewHeaderFrame::walletStateModelDataChanged(const QModelIndex& _topLef
   if (_topLeft.column() == WalletStateModel::COLUMN_ABOUT_TO_BE_SYNCHRONIZED) {
     bool walletAboutToBeSynchronized = _topLeft.data().toBool();
     if (!walletAboutToBeSynchronized) {
-      m_balancesGlassFrame->install(m_ui->m_overviewBalanceFrame);
-      m_miningStatsGlassFrame->install(m_ui->m_overviewMiningFrame);
-      m_transactionPoolGlassFrame->install(m_ui->m_overviewPoolFrame);
-      m_syncMovie->start();
+    //  m_balancesGlassFrame->install(m_ui->m_overviewBalanceFrame);
+    //  m_miningStatsGlassFrame->install(m_ui->m_overviewMiningFrame);
+    //  m_transactionPoolGlassFrame->install(m_ui->m_overviewPoolFrame);
+    //  m_syncMovie->start();
     } else {
-      m_balancesGlassFrame->remove();
-      m_miningStatsGlassFrame->remove();
-      m_transactionPoolGlassFrame->remove();
-      m_syncMovie->stop();
+    //  m_balancesGlassFrame->remove();
+    //  m_miningStatsGlassFrame->remove();
+    //  m_transactionPoolGlassFrame->remove();
+    //  m_syncMovie->stop();
     }
   }
 }
