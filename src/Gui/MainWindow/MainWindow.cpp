@@ -40,6 +40,7 @@
 #include "Gui/Common/NewPasswordDialog.h"
 #include "Gui/Common/KeyDialog.h"
 #include "Gui/Common/QuestionDialog.h"
+#include "Gui/Common/QRCodeDialog.h"
 #include "ICryptoNoteAdapter.h"
 #include "INodeAdapter.h"
 #include "Models/AddressBookModel.h"
@@ -802,6 +803,11 @@ void MainWindow::showPreferences() {
       Q_EMIT reinitCryptoNoteAdapterSignal();
     }
   }
+}
+
+void MainWindow::showQrCode() {
+  QRCodeDialog dlg(tr("QR Code"), m_walletStateModel->index(0, WalletStateModel::COLUMN_ADDRESS).data().toString(), this);
+  dlg.exec();
 }
 
 void MainWindow::communityForumTriggered() {

@@ -105,6 +105,7 @@ private:
   QString m_styleSheetTemplate;
   QDataWidgetMapper* m_walletStateMapper;
   QMovie* m_syncMovie;
+  QString m_address;
 
   void createRecentWalletMenu();
   void updateRecentWalletActions();
@@ -136,6 +137,7 @@ private:
   Q_SLOT void showPreferences();
   Q_SLOT void communityForumTriggered();
   Q_SLOT void reportIssueTriggered();
+  Q_SLOT void showQrCode();
 
 Q_SIGNALS:
   void reinitCryptoNoteAdapterSignal();

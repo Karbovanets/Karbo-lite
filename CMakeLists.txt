@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.6)
 include(CryptoNoteWallet.cmake)
+include(QREncode.cmake)
 
 project(${CN_PROJECT_NAME})
 
@@ -16,6 +17,7 @@ include_directories(${CMAKE_BINARY_DIR}
   cryptonote/external/rocksdb/include/
   cryptonote/include
   cryptonote/src
+  libqrencode
 )
 
 find_package(Qt5Gui REQUIRED)
@@ -238,7 +240,7 @@ target_link_libraries(${CRYPTONOTE_LIB} ${Boost_LIBRARIES} ${Qt5DBus_LIBRARIES} 
 add_executable(${PROJECT_NAME} ${BUILD_PLATFORM} ${BUILD_RESOURCES} ${SOURCES} ${HEADERS} ${UIS} ${RCC})
   
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS _GNU_SOURCE)
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${QTMAIN} ${CRYPTONOTE_LIB} ${Qt5DBus_LIBRARIES} Wtsapi32.lib)
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${QTMAIN} ${CRYPTONOTE_LIB} ${Qt5DBus_LIBRARIES} ${QRENCODE_LIB} Wtsapi32.lib)
 
 if (APPLE)
   qt5_use_modules(${PROJECT_NAME} PrintSupport)

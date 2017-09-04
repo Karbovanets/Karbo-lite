@@ -213,6 +213,24 @@
             </property>
             <item alignment="Qt::AlignTop">
              <widget class="QFrame" name="m_notEncryptedFrame">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="frameShape">
                <enum>QFrame::NoFrame</enum>
               </property>
@@ -237,6 +255,24 @@
                </property>
                <item alignment="Qt::AlignVCenter">
                 <widget class="QLabel" name="m_notEncryptedIconLabel">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>20</height>
+                  </size>
+                 </property>
                  <property name="text">
                   <string/>
                  </property>
@@ -266,6 +302,24 @@
                </item>
                <item alignment="Qt::AlignVCenter">
                 <widget class="WalletGui::WalletTinyGrayTextLabel" name="m_notEncryptedTextLabel">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>20</height>
+                  </size>
+                 </property>
                  <property name="text">
                   <string>Wallet not encrypted!</string>
                  </property>
@@ -293,7 +347,7 @@
                <item alignment="Qt::AlignVCenter">
                 <widget class="WalletGui::WalletTinyLinkLikeButton" name="m_encryptButton">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -301,7 +355,7 @@
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
-                   <height>3</height>
+                   <height>20</height>
                   </size>
                  </property>
                  <property name="cursor">
@@ -316,7 +370,7 @@
                 </widget>
                </item>
                <item>
-                <spacer name="horizontalSpacer_10">
+                <spacer name="horizontalSpacer_4">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -334,10 +388,10 @@
               </layout>
              </widget>
             </item>
-            <item alignment="Qt::AlignVCenter">
-             <widget class="WalletGui::WalletTinyLinkLikeButton" name="m_copyAddressButton">
+            <item>
+             <widget class="WalletGui::WalletTinyLinkLikeButton" name="m_showQrCodeButton">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -345,7 +399,66 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Show QR Code</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_10">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
                 <height>3</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="WalletGui::WalletTinyLinkLikeButton" name="m_copyAddressButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>20</height>
                </size>
               </property>
               <property name="cursor">
@@ -383,6 +496,24 @@
             </item>
             <item alignment="Qt::AlignVCenter">
              <widget class="WalletGui::CopyMagicLabel" name="m_copyAddressLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>20</height>
+               </size>
+              </property>
               <property name="text">
                <string>Address copied to clipboard</string>
               </property>
@@ -1025,14 +1156,14 @@
    <header>Gui/Common/WalletTextLabel.h</header>
   </customwidget>
   <customwidget>
-   <class>WalletGui::CopyMagicLabel</class>
-   <extends>QLabel</extends>
-   <header>Gui/Common/CopyMagicLabel.h</header>
-  </customwidget>
-  <customwidget>
    <class>WalletGui::WalletTinyLinkLikeButton</class>
    <extends>QPushButton</extends>
    <header>Gui/Common/WalletLinkLikeButton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>WalletGui::CopyMagicLabel</class>
+   <extends>QLabel</extends>
+   <header>Gui/Common/CopyMagicLabel.h</header>
   </customwidget>
   <customwidget>
    <class>WalletGui::OverviewFrame</class>
@@ -1500,6 +1631,22 @@
     <hint type="sourcelabel">
      <x>-1</x>
      <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>636</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_showQrCodeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showQrCode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>400</x>
+     <y>97</y>
     </hint>
     <hint type="destinationlabel">
      <x>636</x>

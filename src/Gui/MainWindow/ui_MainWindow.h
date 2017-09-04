@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainWindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -84,6 +84,8 @@ public:
     WalletGui::WalletTinyGrayTextLabel *m_notEncryptedTextLabel;
     QSpacerItem *horizontalSpacer_9;
     WalletGui::WalletTinyLinkLikeButton *m_encryptButton;
+    QSpacerItem *horizontalSpacer_4;
+    WalletGui::WalletTinyLinkLikeButton *m_showQrCodeButton;
     QSpacerItem *horizontalSpacer_10;
     WalletGui::WalletTinyLinkLikeButton *m_copyAddressButton;
     QSpacerItem *horizontalSpacer_7;
@@ -260,6 +262,10 @@ public:
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
         m_notEncryptedFrame = new QFrame(m_walletFrame);
         m_notEncryptedFrame->setObjectName(QStringLiteral("m_notEncryptedFrame"));
+        sizePolicy.setHeightForWidth(m_notEncryptedFrame->sizePolicy().hasHeightForWidth());
+        m_notEncryptedFrame->setSizePolicy(sizePolicy);
+        m_notEncryptedFrame->setMaximumSize(QSize(16777215, 20));
+        m_notEncryptedFrame->setBaseSize(QSize(0, 0));
         m_notEncryptedFrame->setFrameShape(QFrame::NoFrame);
         m_notEncryptedFrame->setFrameShadow(QFrame::Raised);
         horizontalLayout_4 = new QHBoxLayout(m_notEncryptedFrame);
@@ -268,6 +274,13 @@ public:
         horizontalLayout_4->setContentsMargins(0, 0, 0, 0);
         m_notEncryptedIconLabel = new QLabel(m_notEncryptedFrame);
         m_notEncryptedIconLabel->setObjectName(QStringLiteral("m_notEncryptedIconLabel"));
+        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(m_notEncryptedIconLabel->sizePolicy().hasHeightForWidth());
+        m_notEncryptedIconLabel->setSizePolicy(sizePolicy1);
+        m_notEncryptedIconLabel->setMinimumSize(QSize(0, 20));
+        m_notEncryptedIconLabel->setMaximumSize(QSize(16777215, 20));
         m_notEncryptedIconLabel->setPixmap(QPixmap(QString::fromUtf8(":/icons/lock_open_gray")));
         m_notEncryptedIconLabel->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
@@ -279,6 +292,13 @@ public:
 
         m_notEncryptedTextLabel = new WalletGui::WalletTinyGrayTextLabel(m_notEncryptedFrame);
         m_notEncryptedTextLabel->setObjectName(QStringLiteral("m_notEncryptedTextLabel"));
+        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(m_notEncryptedTextLabel->sizePolicy().hasHeightForWidth());
+        m_notEncryptedTextLabel->setSizePolicy(sizePolicy2);
+        m_notEncryptedTextLabel->setMinimumSize(QSize(0, 20));
+        m_notEncryptedTextLabel->setMaximumSize(QSize(16777215, 20));
         m_notEncryptedTextLabel->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
         horizontalLayout_4->addWidget(m_notEncryptedTextLabel, 0, Qt::AlignVCenter);
@@ -289,35 +309,50 @@ public:
 
         m_encryptButton = new WalletGui::WalletTinyLinkLikeButton(m_notEncryptedFrame);
         m_encryptButton->setObjectName(QStringLiteral("m_encryptButton"));
-        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Minimum);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(m_encryptButton->sizePolicy().hasHeightForWidth());
         m_encryptButton->setSizePolicy(sizePolicy1);
-        m_encryptButton->setMinimumSize(QSize(0, 3));
+        m_encryptButton->setMinimumSize(QSize(0, 20));
         m_encryptButton->setCursor(QCursor(Qt::PointingHandCursor));
         m_encryptButton->setFlat(true);
 
         horizontalLayout_4->addWidget(m_encryptButton, 0, Qt::AlignVCenter);
 
-        horizontalSpacer_10 = new QSpacerItem(20, 3, QSizePolicy::Fixed, QSizePolicy::Minimum);
+        horizontalSpacer_4 = new QSpacerItem(20, 3, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
-        horizontalLayout_4->addItem(horizontalSpacer_10);
+        horizontalLayout_4->addItem(horizontalSpacer_4);
 
 
         horizontalLayout_2->addWidget(m_notEncryptedFrame, 0, Qt::AlignTop);
+
+        m_showQrCodeButton = new WalletGui::WalletTinyLinkLikeButton(m_walletFrame);
+        m_showQrCodeButton->setObjectName(QStringLiteral("m_showQrCodeButton"));
+        sizePolicy1.setHeightForWidth(m_showQrCodeButton->sizePolicy().hasHeightForWidth());
+        m_showQrCodeButton->setSizePolicy(sizePolicy1);
+        m_showQrCodeButton->setMinimumSize(QSize(0, 20));
+        m_showQrCodeButton->setMaximumSize(QSize(16777215, 20));
+        m_showQrCodeButton->setCursor(QCursor(Qt::PointingHandCursor));
+        m_showQrCodeButton->setFocusPolicy(Qt::NoFocus);
+        m_showQrCodeButton->setAutoFillBackground(true);
+        m_showQrCodeButton->setFlat(true);
+
+        horizontalLayout_2->addWidget(m_showQrCodeButton);
+
+        horizontalSpacer_10 = new QSpacerItem(20, 3, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer_10);
 
         m_copyAddressButton = new WalletGui::WalletTinyLinkLikeButton(m_walletFrame);
         m_copyAddressButton->setObjectName(QStringLiteral("m_copyAddressButton"));
         sizePolicy1.setHeightForWidth(m_copyAddressButton->sizePolicy().hasHeightForWidth());
         m_copyAddressButton->setSizePolicy(sizePolicy1);
-        m_copyAddressButton->setMinimumSize(QSize(0, 3));
+        m_copyAddressButton->setMinimumSize(QSize(0, 20));
+        m_copyAddressButton->setMaximumSize(QSize(16777215, 20));
         m_copyAddressButton->setCursor(QCursor(Qt::PointingHandCursor));
         m_copyAddressButton->setFocusPolicy(Qt::NoFocus);
         m_copyAddressButton->setAutoFillBackground(true);
         m_copyAddressButton->setFlat(true);
 
-        horizontalLayout_2->addWidget(m_copyAddressButton, 0, Qt::AlignVCenter);
+        horizontalLayout_2->addWidget(m_copyAddressButton);
 
         horizontalSpacer_7 = new QSpacerItem(13, 3, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
@@ -325,6 +360,10 @@ public:
 
         m_copyAddressLabel = new WalletGui::CopyMagicLabel(m_walletFrame);
         m_copyAddressLabel->setObjectName(QStringLiteral("m_copyAddressLabel"));
+        sizePolicy2.setHeightForWidth(m_copyAddressLabel->sizePolicy().hasHeightForWidth());
+        m_copyAddressLabel->setSizePolicy(sizePolicy2);
+        m_copyAddressLabel->setMinimumSize(QSize(0, 20));
+        m_copyAddressLabel->setMaximumSize(QSize(16777215, 20));
         m_copyAddressLabel->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
         horizontalLayout_2->addWidget(m_copyAddressLabel, 0, Qt::AlignVCenter);
@@ -416,11 +455,8 @@ public:
         m_toolButtonGroup->setExclusive(true);
         m_toolButtonGroup->addButton(m_overviewButton);
         m_overviewButton->setObjectName(QStringLiteral("m_overviewButton"));
-        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(m_overviewButton->sizePolicy().hasHeightForWidth());
-        m_overviewButton->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(m_overviewButton->sizePolicy().hasHeightForWidth());
+        m_overviewButton->setSizePolicy(sizePolicy1);
         m_overviewButton->setFocusPolicy(Qt::NoFocus);
         m_overviewButton->setCheckable(true);
 
@@ -429,8 +465,8 @@ public:
         m_sendButton = new QPushButton(m_toolFrame);
         m_toolButtonGroup->addButton(m_sendButton);
         m_sendButton->setObjectName(QStringLiteral("m_sendButton"));
-        sizePolicy2.setHeightForWidth(m_sendButton->sizePolicy().hasHeightForWidth());
-        m_sendButton->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(m_sendButton->sizePolicy().hasHeightForWidth());
+        m_sendButton->setSizePolicy(sizePolicy1);
         m_sendButton->setFocusPolicy(Qt::NoFocus);
         m_sendButton->setCheckable(true);
 
@@ -439,8 +475,8 @@ public:
         m_transactionsButton = new QPushButton(m_toolFrame);
         m_toolButtonGroup->addButton(m_transactionsButton);
         m_transactionsButton->setObjectName(QStringLiteral("m_transactionsButton"));
-        sizePolicy2.setHeightForWidth(m_transactionsButton->sizePolicy().hasHeightForWidth());
-        m_transactionsButton->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(m_transactionsButton->sizePolicy().hasHeightForWidth());
+        m_transactionsButton->setSizePolicy(sizePolicy1);
         m_transactionsButton->setFocusPolicy(Qt::NoFocus);
         m_transactionsButton->setCheckable(true);
 
@@ -457,8 +493,8 @@ public:
         m_addressBookButton = new QPushButton(m_toolFrame);
         m_toolButtonGroup->addButton(m_addressBookButton);
         m_addressBookButton->setObjectName(QStringLiteral("m_addressBookButton"));
-        sizePolicy2.setHeightForWidth(m_addressBookButton->sizePolicy().hasHeightForWidth());
-        m_addressBookButton->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(m_addressBookButton->sizePolicy().hasHeightForWidth());
+        m_addressBookButton->setSizePolicy(sizePolicy1);
         m_addressBookButton->setFocusPolicy(Qt::NoFocus);
         m_addressBookButton->setCheckable(true);
 
@@ -610,6 +646,7 @@ public:
         QObject::connect(m_resetAction, SIGNAL(triggered()), MainWindow, SLOT(resetWallet()));
         QObject::connect(m_saveKeysAction, SIGNAL(triggered()), MainWindow, SLOT(saveWalletKeys()));
         QObject::connect(m_exportKeyAction, SIGNAL(triggered()), MainWindow, SLOT(exportKey()));
+        QObject::connect(m_showQrCodeButton, SIGNAL(clicked()), MainWindow, SLOT(showQrCode()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -660,6 +697,7 @@ public:
         m_notEncryptedIconLabel->setText(QString());
         m_notEncryptedTextLabel->setText(QApplication::translate("MainWindow", "Wallet not encrypted!", 0));
         m_encryptButton->setText(QApplication::translate("MainWindow", "Set password", 0));
+        m_showQrCodeButton->setText(QApplication::translate("MainWindow", "Show QR Code", 0));
         m_copyAddressButton->setText(QApplication::translate("MainWindow", "Copy address", 0));
         m_copyAddressLabel->setText(QApplication::translate("MainWindow", "Address copied to clipboard", 0));
         m_balanceTextLabel->setText(QApplication::translate("MainWindow", "Total balance", 0));
