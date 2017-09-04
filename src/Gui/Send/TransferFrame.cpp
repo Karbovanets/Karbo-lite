@@ -32,6 +32,7 @@ namespace WalletGui {
 
 namespace {
 
+Q_DECL_CONSTEXPR quint32 ADDRESS_INPUT_INTERVAL = 1500;
 const char TRANSFER_FRAME_STYLE_SHEET_TEMPLATE[] =
   "WalletGui--TransferFrame {"
     "background-color: %backgroundColorGray%;"
@@ -55,10 +56,12 @@ const char TRANSFER_FRAME_STYLE_SHEET_TEMPLATE[] =
 }
 
 TransferFrame::TransferFrame(QWidget* _parent) : QFrame(_parent), m_ui(new Ui::TransferFrame),
-  m_cryptoNoteAdapter(nullptr), m_mainWindow(nullptr), m_addressBookModel(nullptr), m_addressCompleter(new QCompleter(this)) {
+  m_cryptoNoteAdapter(nullptr), m_mainWindow(nullptr), m_addressBookModel(nullptr), m_addressCompleter(new QCompleter(this)),
+  m_aliasProvider(new DnsManager(this)), m_addressInputTimer(-1) {
   m_ui->setupUi(this);
   m_ui->m_sendAmountSpin->installEventFilter(this);
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(TRANSFER_FRAME_STYLE_SHEET_TEMPLATE));
+  connect(m_aliasProvider, &DnsManager::aliasFoundSignal, this, &TransferFrame::onAliasFound);
 }
 
 TransferFrame::~TransferFrame() {
@@ -70,7 +73,13 @@ bool TransferFrame::readyToSend() const {
 }
 
 QString TransferFrame::getAddress() const {
-  return m_ui->m_sendAddressEdit->text().trimmed();
+  QString _address = m_ui->m_sendAddressEdit->text().trimmed();
+  if (_address.contains('<')) {
+    int startPos = _address.indexOf('<');
+    int endPos = _address.indexOf('>');
+    _address = _address.mid(startPos + 1, endPos - startPos - 1);
+  }
+  return _address;
 }
 
 QString TransferFrame::getAmountString() const {
@@ -262,8 +271,15 @@ void TransferFrame::pasteClicked() {
 
 void TransferFrame::addressChanged(const QString& _address) {
   setAddressError(m_addressCompleter->currentCompletion().isEmpty() && !_address.isEmpty() &&
-    !m_cryptoNoteAdapter->isValidAddress(_address));
+    !m_cryptoNoteAdapter->isValidAddress(getAddress()));
   Q_EMIT addressChangedSignal(_address);
+
+  if(!_address.isEmpty() && _address.contains('.')) {
+    if (m_addressInputTimer != -1) {
+      killTimer(m_addressInputTimer);
+    }
+    m_addressInputTimer = startTimer(ADDRESS_INPUT_INTERVAL);
+  }
 }
 
 void TransferFrame::labelOrAddressChanged(const QString& _text) {
@@ -289,6 +305,19 @@ void TransferFrame::validateAmount(double _amount) {
 
 void TransferFrame::amountStringChanged(const QString& _amountString) {
   Q_EMIT amountStringChangedSignal(m_ui->m_sendAmountSpin->cleanText());
+}
+
+void TransferFrame::timerEvent(QTimerEvent* _event) {
+  if (_event->timerId() == m_addressInputTimer) {
+    m_aliasProvider->getAddresses(m_ui->m_sendAddressEdit->text().trimmed());
+    return;
+  }
+
+  QFrame::timerEvent(_event);
+}
+
+void TransferFrame::onAliasFound(const QString& _name, const QString& _address) {
+  m_ui->m_sendAddressEdit->setText(QString("%1 <%2>").arg(_name).arg(_address));
 }
 
 }

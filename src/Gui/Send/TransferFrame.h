@@ -20,6 +20,7 @@
 #include <QFrame>
 
 #include "Application/IWalletUiItem.h"
+#include "OpenAlias/DnsLookup.h"
 
 class QCompleter;
 
@@ -67,6 +68,9 @@ public:
   virtual void setMainWindow(QWidget* _mainWindow) override;
   virtual void setAddressBookModel(QAbstractItemModel* _model) override;
 
+protected:
+  void timerEvent(QTimerEvent* _event) Q_DECL_OVERRIDE;
+
 private:
   QScopedPointer<Ui::TransferFrame> m_ui;
   ICryptoNoteAdapter* m_cryptoNoteAdapter;
@@ -74,7 +78,10 @@ private:
   QWidget* m_mainWindow;
   QAbstractItemModel* m_addressBookModel;
   QCompleter* m_addressCompleter;
+  DnsManager* m_aliasProvider;
+  int m_addressInputTimer;
 
+  void onAliasFound(const QString& _name, const QString& _address);
   void validateAmount(double _amount);
 
   Q_SLOT void amountStringChanged(const QString& _amountString);
