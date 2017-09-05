@@ -183,7 +183,7 @@ void TransactionsFrame::transactionDoubleClicked(const QModelIndex& _index) {
     return;
   }
 
-  if (_index.data(TransactionsModel::ROLE_COLUMN).toInt() == TransactionsModel::COLUMN_HASH) {
+  if (_index.data(TransactionsModel::ROLE_COLUMN).toInt() != TransactionsModel::COLUMN_SHOW_TRANSFERS) {
     TransactionDetailsDialog dlg(m_cryptoNoteAdapter, m_transactionsModel, _index, m_mainWindow);
     dlg.exec();
   }
