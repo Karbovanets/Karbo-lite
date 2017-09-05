@@ -327,6 +327,7 @@ void SendFrame::clearAll() {
   m_ui->m_sendScrollarea->widget()->adjustSize();
   m_ui->m_sendScrollarea->widget()->updateGeometry();
   m_ui->m_sendScrollarea->updateGeometry();
+  amountStringChanged(QString());
 }
 
 
@@ -397,6 +398,17 @@ void SendFrame::sendClicked() {
     qreal donationCoeff = donationAmount / 100. / 10.;
     transactionParameters.donation.address = donationAddress.toStdString();
     transactionParameters.donation.threshold = transferSum * donationCoeff;
+  }
+
+  QuestionDialog confirmDlg(QString(tr("Confirm sending %1 KRB")).arg(m_cryptoNoteAdapter->formatUnsignedAmount(transferSum)),
+    m_ui->m_paymentIdEdit->text().isEmpty() ? QString(tr("<html><head/><body><p>Are you sure you want to send <strong>%1 KRB</strong> "
+    "<strong>without Payment ID?</strong></p></body></html>")).arg(m_cryptoNoteAdapter->formatUnsignedAmount(transferSum)) :
+    QString(tr("<html><head/><body><p>Are you sure you want to send <strong>%1 KRB</strong> with Payment ID:</p>"
+    "<p><strong>%2</strong>?</p></body></html>")).arg(m_cryptoNoteAdapter->formatUnsignedAmount(transferSum)).arg(m_ui->m_paymentIdEdit->text()),
+    m_mainWindow);
+  confirmDlg.setMinimumHeight(100);
+  if (confirmDlg.exec() == QDialog::Rejected) {
+    return;
   }
 
   IWalletAdapter::SendTransactionStatus status = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->sendTransaction(transactionParameters);
