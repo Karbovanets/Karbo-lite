@@ -18,6 +18,8 @@
 #pragma once
 
 #include <QFrame>
+#include <QMenu>
+#include <QSortFilterProxyModel>
 
 #include "Application/IWalletUiItem.h"
 
@@ -36,6 +38,7 @@ class TransactionsFrame : public QFrame, public IWalletUiItem {
 public:
   explicit TransactionsFrame(QWidget* _parent);
   ~TransactionsFrame();
+  QModelIndex index;
 
   // IWalletUiItem
   virtual void setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAdapter) override;
@@ -44,6 +47,15 @@ public:
   virtual void setWalletStateModel(QAbstractItemModel* _model) override;
   virtual void setTransactionsModel(QAbstractItemModel* _model) override;
   virtual void setSortedTransactionsModel(QAbstractItemModel* _model) override;
+
+public slots:
+  void onCustomContextMenu(const QPoint &point);
+
+public Q_SLOTS:
+  void copyTxHash();
+  void copyAmount();
+  void copyPaymentID();
+  void showTxDetails();
 
 private:
   QScopedPointer<Ui::TransactionsFrame> m_ui;
@@ -57,6 +69,7 @@ private:
   QAbstractItemModel* m_filterByHashModel;
   QAbstractItemModel* m_filterByAddressModel;
   QPropertyAnimation* m_animation;
+  QMenu* contextMenu;
 
   void rowsInserted(const QModelIndex& _parent, int _first, int _last);
   void resetFilter();
