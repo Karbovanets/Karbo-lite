@@ -183,8 +183,10 @@ void TransactionsFrame::transactionDoubleClicked(const QModelIndex& _index) {
     return;
   }
 
-  TransactionDetailsDialog dlg(m_cryptoNoteAdapter, m_transactionsModel, _index, m_mainWindow);
-  dlg.exec();
+  if (_index.data(TransactionsModel::ROLE_COLUMN).toInt() == TransactionsModel::COLUMN_HASH) {
+    TransactionDetailsDialog dlg(m_cryptoNoteAdapter, m_transactionsModel, _index, m_mainWindow);
+    dlg.exec();
+  }
 }
 
 void TransactionsFrame::transactionClicked(const QModelIndex& _index) {
@@ -300,7 +302,12 @@ void TransactionsFrame::copyPaymentID() {
 }
 
 void TransactionsFrame::showTxDetails() {
-  transactionDoubleClicked(index);
+  if (!index.isValid()) {
+    return;
+  }
+
+  TransactionDetailsDialog dlg(m_cryptoNoteAdapter, m_transactionsModel, index, m_mainWindow);
+  dlg.exec();
 }
 
 }
