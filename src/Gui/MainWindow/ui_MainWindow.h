@@ -63,6 +63,8 @@ public:
     QAction *m_resetAction;
     QAction *m_saveKeysAction;
     QAction *m_exportKeyAction;
+    QAction *m_showSeedAction;
+    QAction *m_importSeedAction;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout_2;
     QFrame *m_headerFrame;
@@ -196,6 +198,10 @@ public:
         m_saveKeysAction->setObjectName(QStringLiteral("m_saveKeysAction"));
         m_exportKeyAction = new QAction(MainWindow);
         m_exportKeyAction->setObjectName(QStringLiteral("m_exportKeyAction"));
+        m_showSeedAction = new QAction(MainWindow);
+        m_showSeedAction->setObjectName(QStringLiteral("m_showSeedAction"));
+        m_importSeedAction = new QAction(MainWindow);
+        m_importSeedAction->setObjectName(QStringLiteral("m_importSeedAction"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         verticalLayout_2 = new QVBoxLayout(centralwidget);
@@ -604,6 +610,9 @@ public:
         menuFile->addAction(m_importKeyAction);
         menuFile->addAction(m_exportKeyAction);
         menuFile->addAction(m_exportTrackingKeyAction);
+        menuFile->addAction(m_showSeedAction);
+        menuFile->addAction(m_importSeedAction);
+        menuFile->addSeparator();
         menuFile->addAction(m_exitAction);
         menuSettings->addAction(m_encryptWalletAction);
         menuSettings->addAction(m_changePasswordAction);
@@ -647,6 +656,8 @@ public:
         QObject::connect(m_saveKeysAction, SIGNAL(triggered()), MainWindow, SLOT(saveWalletKeys()));
         QObject::connect(m_exportKeyAction, SIGNAL(triggered()), MainWindow, SLOT(exportKey()));
         QObject::connect(m_showQrCodeButton, SIGNAL(clicked()), MainWindow, SLOT(showQrCode()));
+        QObject::connect(m_showSeedAction, SIGNAL(triggered()), MainWindow, SLOT(showMnemonicSeed()));
+        QObject::connect(m_importSeedAction, SIGNAL(triggered()), MainWindow, SLOT(restoreFromMnemonicSeed()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -687,6 +698,8 @@ public:
 #ifndef QT_NO_TOOLTIP
         m_exportKeyAction->setToolTip(QApplication::translate("MainWindow", "Export key", 0));
 #endif // QT_NO_TOOLTIP
+        m_showSeedAction->setText(QApplication::translate("MainWindow", "Show mnemonic seed", 0));
+        m_importSeedAction->setText(QApplication::translate("MainWindow", "Import mnemonic seed", 0));
         m_logoLabel->setText(QString());
         m_noWalletLabel->setText(QApplication::translate("MainWindow", "No active wallet", 0));
         m_walletLabel->setText(QApplication::translate("MainWindow", "Your wallet:", 0));

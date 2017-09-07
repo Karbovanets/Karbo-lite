@@ -29,6 +29,7 @@
 #include <QSessionManager>
 #include <QSystemTrayIcon>
 #include <QUrlQuery>
+#include <QDebug>
 
 #include <Common/Base58.h>
 #include "MainWindow.h"
@@ -41,8 +42,10 @@
 #include "Gui/Common/KeyDialog.h"
 #include "Gui/Common/QuestionDialog.h"
 #include "Gui/Common/QRCodeDialog.h"
+#include "Gui/Common/MnemonicDialog.h"
 #include "ICryptoNoteAdapter.h"
 #include "INodeAdapter.h"
+#include "IWalletAdapter.h"
 #include "Models/AddressBookModel.h"
 #include "Models/BlockchainModel.h"
 #include "Models/FusionTransactionsFilterModel.h"
@@ -55,6 +58,15 @@
 #include "Models/WalletStateModel.h"
 #include "Gui/Options/OptionsDialog.h"
 #include "Style/Style.h"
+#include "Gui/Common/RestoreFromMnemonicSeedDialog.h"
+#include "mnemonics/electrum-words.h"
+#include "CryptoNote.h"
+#include "crypto/crypto.h"
+extern "C"
+{
+#include "crypto/keccak.h"
+#include "crypto/crypto-ops.h"
+}
 
 #include "ui_MainWindow.h"
 
@@ -172,10 +184,26 @@ MainWindow::MainWindow(ICryptoNoteAdapter* _cryptoNoteAdapter, IAddressBookManag
   m_walletStateMapper->setCurrentIndex(0);
 
   setClosedState();
+
+ /*!
+  * \brief Open the wallet if it exists or create a new one.
+  *
+  * When application starts, the wallet file which is set in settings is opened here
+  * if it exists, or if wallet doesn't exist, we create a new wallet.
+  */
   if (QFile::exists(Settings::instance().getWalletFile())) {
     m_ui->m_noWalletFrame->openWallet(Settings::instance().getWalletFile(), QString());
   } else {
-    m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->create(Settings::instance().getWalletFile(), "");
+ /*!
+  * This is the original behavior:
+  * m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->create(Settings::instance().getWalletFile(), "");
+  *
+  * Instead of silent creation of the new wallet in default location we just show the Welcome Screen,
+  * and let users create wallet themselves where they want or open existing wallet.
+  * At least they will know it's location...
+  *
+  * createWallet();
+  */
   }
 
   m_ui->m_balanceIconLabel->setPixmap(Settings::instance().getCurrentStyle().getBalanceIcon());
@@ -194,7 +222,6 @@ MainWindow::MainWindow(ICryptoNoteAdapter* _cryptoNoteAdapter, IAddressBookManag
     themeActionGroup->addAction(styleAction);
     connect(styleAction, &QAction::triggered, this, &MainWindow::themeChanged);
   }
-
   connect(m_walletStateModel, &QAbstractItemModel::dataChanged, this, &MainWindow::walletStateModelDataChanged);
   connect(m_addRecipientAction, &QAction::triggered, this, &MainWindow::addRecipientTriggered);
   connect(m_ui->m_exitAction, &QAction::triggered, qApp, &QApplication::quit);
@@ -368,6 +395,8 @@ void MainWindow::setOpenedState() {
   m_ui->m_backupWalletAction->setEnabled(true);
   m_ui->m_resetAction->setEnabled(true);
   m_ui->m_exportTrackingKeyAction->setEnabled(true);
+  m_ui->m_exportKeyAction->setEnabled(true);
+  m_ui->m_showSeedAction->setEnabled(true);
   m_ui->m_encryptWalletAction->setEnabled(!walletAdapter->isEncrypted());
   m_ui->m_changePasswordAction->setEnabled(walletAdapter->isEncrypted());
 
@@ -388,8 +417,10 @@ void MainWindow::setClosedState() {
   m_ui->m_backupWalletAction->setEnabled(false);
   m_ui->m_resetAction->setEnabled(false);
   m_ui->m_exportTrackingKeyAction->setEnabled(false);
+  m_ui->m_exportKeyAction->setEnabled(false);
   m_ui->m_encryptWalletAction->setEnabled(false);
   m_ui->m_changePasswordAction->setEnabled(false);
+  m_ui->m_showSeedAction->setEnabled(false);
 
   m_ui->m_overviewFrame->hide();
   m_ui->m_sendFrame->hide();
@@ -503,7 +534,8 @@ void MainWindow::themeChanged() {
   }
 }
 
-void MainWindow::createWallet() {
+// This is original createWallet() function renamed and used to create nondeterminisctic wallets
+void MainWindow::createNonDeterministicWallet() {
   QString filePath = QFileDialog::getSaveFileName(this, tr("New wallet file"),
 #ifdef Q_OS_WIN
     QApplication::applicationDirPath(),
@@ -536,6 +568,51 @@ void MainWindow::createWallet() {
     Settings::instance().setWalletFile(filePath);
     if (walletAdapter->create(filePath, "") == IWalletAdapter::INIT_SUCCESS) {
       walletAdapter->save(CryptoNote::WalletSaveLevel::SAVE_ALL, true);
+    } else {
+      Settings::instance().setWalletFile(oldWalletFile);
+    }
+  }
+}
+
+void MainWindow::createWallet() {
+  QString filePath = QFileDialog::getSaveFileName(this, tr("New wallet file"),
+#ifdef Q_OS_WIN
+    QApplication::applicationDirPath(),
+#else
+    QDir::homePath(),
+#endif
+    tr("Wallets (*.wallet)")
+    );
+
+  if (!filePath.isEmpty() && !filePath.endsWith(".wallet")) {
+    filePath.append(".wallet");
+  }
+
+  if (QFile::exists(filePath)) {
+    QMessageBox::warning(this, tr("Warning"),
+      tr("Can't overwrite existing %1 because it may lead to loss of private keys").arg(QFileInfo(filePath).fileName()));
+    return;
+  }
+
+  IWalletAdapter* walletAdapter = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter();
+  if (!filePath.isEmpty()) {
+    if (walletAdapter->isOpen()) {
+      walletAdapter->save(CryptoNote::WalletSaveLevel::SAVE_ALL, true);
+      walletAdapter->removeObserver(this);
+      walletAdapter->close();
+      walletAdapter->addObserver(this);
+    }
+
+    QString oldWalletFile = Settings::instance().getWalletFile();
+    Settings::instance().setWalletFile(filePath);
+
+    AccountKeys accountKeys = m_deterministicAdapter.generateDeterministicKeys();
+
+    if (walletAdapter->createWithKeys(filePath, accountKeys) == IWalletAdapter::INIT_SUCCESS) {
+      walletAdapter->save(CryptoNote::WalletSaveLevel::SAVE_ALL, true);
+
+      showMnemonicSeed();
+
     } else {
       Settings::instance().setWalletFile(oldWalletFile);
     }
@@ -700,7 +777,7 @@ void MainWindow::importKey() {
       return;
     }
 
-    QString filePath = QFileDialog::getSaveFileName(this, tr("Save tracking wallet to..."),
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Save wallet to..."),
 #ifdef Q_OS_WIN
     QApplication::applicationDirPath(),
 #else
@@ -721,6 +798,15 @@ void MainWindow::importKey() {
       return;
     }
 
+    IWalletAdapter* walletAdapter = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter();
+    if (walletAdapter->isOpen()) {
+      walletAdapter->removeObserver(this);
+      walletAdapter->close();
+      walletAdapter->addObserver(this);
+    }
+
+    QString oldWalletFile = Settings::instance().getWalletFile();
+
     uint64_t addressPrefix;
     std::string data;
     AccountKeys accountKeys;
@@ -735,6 +821,62 @@ void MainWindow::importKey() {
       return;
     }
 
+    Settings::instance().setWalletFile(filePath);
+    if (walletAdapter->createWithKeys(filePath, accountKeys) == IWalletAdapter::INIT_SUCCESS) {
+      walletAdapter->save(CryptoNote::WalletSaveLevel::SAVE_ALL, true);
+    } else {
+      Settings::instance().setWalletFile(oldWalletFile);
+    }
+  }
+}
+
+void MainWindow::restoreFromMnemonicSeed() {
+    RestoreFromMnemonicSeedDialog dlg(this);
+    if (dlg.exec() == QDialog::Accepted) {
+      QString mnemonicString = dlg.getSeedString().trimmed();
+      if (mnemonicString.isEmpty()) {
+        return;
+      }
+
+      QString filePath = QFileDialog::getSaveFileName(this, tr("Save wallet to..."),
+  #ifdef Q_OS_WIN
+      QApplication::applicationDirPath(),
+  #else
+      QDir::homePath(),
+  #endif
+      tr("Wallets (*.wallet)"));
+      if (filePath.isEmpty()) {
+        return;
+      }
+
+      if (!filePath.endsWith(".wallet")) {
+        filePath.append(".wallet");
+      }
+
+    if (QFile::exists(filePath)) {
+      QMessageBox::warning(this, tr("Warning"),
+        tr("Can't overwrite existing %1 because it may lead to loss of private keys").arg(QFileInfo(filePath).fileName()));
+      return;
+    }
+
+    QString oldWalletFile = Settings::instance().getWalletFile();
+
+    AccountKeys _keys;
+    std::string seed_language;
+    std::string seed = mnemonicString.toUtf8().constData();
+
+    if(!Crypto::ElectrumWords::words_to_bytes(seed, _keys.spendKeys.secretKey, seed_language)) {
+      QMessageBox::critical(nullptr, tr("Mnemonic seed is invalid"),
+                            tr("Mnemonic seed is invalid. "
+                               "Make sure you entered it correctly."), QMessageBox::Ok);
+      return;
+    }
+
+    Crypto::secret_key_to_public_key(_keys.spendKeys.secretKey, _keys.spendKeys.publicKey);
+    Crypto::SecretKey second;
+    keccak((uint8_t *)&_keys.spendKeys.secretKey, sizeof(Crypto::SecretKey), (uint8_t *)&second, sizeof(Crypto::SecretKey));
+    Crypto::generate_deterministic_keys(_keys.viewKeys.publicKey, _keys.viewKeys.secretKey, second);
+
     IWalletAdapter* walletAdapter = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter();
     if (walletAdapter->isOpen()) {
       walletAdapter->removeObserver(this);
@@ -742,9 +884,8 @@ void MainWindow::importKey() {
       walletAdapter->addObserver(this);
     }
 
-    QString oldWalletFile = Settings::instance().getWalletFile();
     Settings::instance().setWalletFile(filePath);
-    if (walletAdapter->createWithKeys(filePath, accountKeys) == IWalletAdapter::INIT_SUCCESS) {
+    if (walletAdapter->createWithKeys(filePath, _keys) == IWalletAdapter::INIT_SUCCESS) {
       walletAdapter->save(CryptoNote::WalletSaveLevel::SAVE_ALL, true);
     } else {
       Settings::instance().setWalletFile(oldWalletFile);
@@ -807,6 +948,26 @@ void MainWindow::showPreferences() {
 
 void MainWindow::showQrCode() {
   QRCodeDialog dlg(tr("QR Code"), m_walletStateModel->index(0, WalletStateModel::COLUMN_ADDRESS).data().toString(), this);
+  dlg.exec();
+}
+
+void MainWindow::showMnemonicSeed() {
+  AccountKeys accountKeys = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAccountKeys(0);
+
+  if (m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->isTrackingWallet()) {
+    WalletLogger::info(tr("[Deterministic Wallet Adapter] Wallet is watch-only and has no seed."));
+    QMessageBox::critical(nullptr, tr("This is tracking wallet"),
+                          tr("Wallet is watch-only and has no seed."), QMessageBox::Ok);
+    return;
+  }
+  if(!m_deterministicAdapter.isDeterministic(accountKeys)) {
+    WalletLogger::info(tr("[Deterministic Wallet Adapter] Wallet is non-deterministic and has no seed."));
+    QMessageBox::critical(nullptr, tr("This is non-deterministic wallet"),
+                          tr("Wallet is non-deterministic and has no seed."), QMessageBox::Ok);
+    return;
+  }
+
+  MnemonicDialog dlg(accountKeys, this);
   dlg.exec();
 }
 

@@ -19,6 +19,7 @@
 
 #include <QMainWindow>
 
+#include "CryptoNoteWrapper/DeterministicWalletAdapter.h"
 #include "IApplicationEventHandler.h"
 #include "ICryptoNoteAdapter.h"
 #include "IWalletAdapter.h"
@@ -89,6 +90,7 @@ private:
   IMiningManager* m_miningManager;
   IApplicationEventHandler* m_applicationEventHandler;
   INewsReader* m_blogReader;
+  DeterministicWalletAdapter m_deterministicAdapter;
   QAbstractItemModel* m_nodeStateModel;
   QAbstractItemModel* m_walletStateModel;
   QAbstractItemModel* m_transactionsModel;
@@ -117,8 +119,10 @@ private:
   void commitData(QSessionManager& _manager);
   void walletStateModelDataChanged(const QModelIndex& _topLeft, const QModelIndex& _bottomRight, const QVector<int>& _roles);
   void setDevDonation();
+  void getMnemonicSeed();
 
   Q_SLOT void createWallet();
+  Q_SLOT void createNonDeterministicWallet();
   Q_SLOT void openWallet();
   Q_SLOT void backupWallet();
   Q_SLOT void saveWalletKeys();
@@ -138,6 +142,8 @@ private:
   Q_SLOT void communityForumTriggered();
   Q_SLOT void reportIssueTriggered();
   Q_SLOT void showQrCode();
+  Q_SLOT void showMnemonicSeed();
+  Q_SLOT void restoreFromMnemonicSeed();
 
 Q_SIGNALS:
   void reinitCryptoNoteAdapterSignal();
