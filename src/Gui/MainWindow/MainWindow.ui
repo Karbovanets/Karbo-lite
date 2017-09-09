@@ -963,6 +963,9 @@
     <addaction name="m_importKeyAction"/>
     <addaction name="m_exportKeyAction"/>
     <addaction name="m_exportTrackingKeyAction"/>
+    <addaction name="m_showSeedAction"/>
+    <addaction name="m_importSeedAction"/>
+    <addaction name="separator"/>
     <addaction name="m_exitAction"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
@@ -1152,6 +1155,16 @@
   <action name="m_closeWalletAction">
    <property name="text">
     <string>Close wallet</string>
+   </property>
+  </action>
+  <action name="m_showSeedAction">
+   <property name="text">
+    <string>Show mnemonic seed</string>
+   </property>
+  </action>
+  <action name="m_importSeedAction">
+   <property name="text">
+    <string>Import mnemonic seed</string>
    </property>
   </action>
  </widget>
@@ -1676,6 +1689,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>m_showSeedAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showMnemonicSeed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>636</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_importSeedAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>restoreFromMnemonicSeed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>636</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>createWallet()</slot>
@@ -1698,6 +1743,9 @@
   <slot>resetWallet()</slot>
   <slot>saveWalletKeys()</slot>
   <slot>exportKey()</slot>
+  <slot>showMnemonicSeed()</slot>
+  <slot>restoreFromMnemonicSeed()</slot>
+  <slot>showQrCode()</slot>
  </slots>
  <buttongroups>
   <buttongroup name="m_toolButtonGroup">
