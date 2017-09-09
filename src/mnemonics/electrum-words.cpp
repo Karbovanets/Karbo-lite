@@ -57,9 +57,10 @@
 #include "french.h"
 #include "italian.h"
 #include "german.h"
-//#include "spanish.h"
+#include "spanish.h"
 #include "portuguese.h"
 #include "japanese.h"
+#include "polish.h"
 #include "russian.h"
 #include "ukrainian.h"
 #include "language_base.h"
@@ -89,13 +90,14 @@ namespace
       Language::Singleton<Language::English>::instance(),
       Language::Singleton<Language::Dutch>::instance(),
       Language::Singleton<Language::French>::instance(),
-//      Language::Singleton<Language::Spanish>::instance(),
+      Language::Singleton<Language::Spanish>::instance(),
       Language::Singleton<Language::German>::instance(),
       Language::Singleton<Language::Italian>::instance(),
       Language::Singleton<Language::Portuguese>::instance(),
       Language::Singleton<Language::Japanese>::instance(),
       Language::Singleton<Language::Russian>::instance(),
-      Language::Singleton<Language::Ukrainian>::instance()
+      Language::Singleton<Language::Ukrainian>::instance(),
+	  Language::Singleton<Language::Polish>::instance()
     });
     Language::Base *fallback = NULL;
 
@@ -326,10 +328,10 @@ namespace Crypto
       {
         language = Language::Singleton<Language::French>::instance();
       }
-//      else if (language_name == "Español")
-//      {
-//        language = Language::Singleton<Language::Spanish>::instance();
-//      }
+      else if (language_name == "Español")
+      {
+        language = Language::Singleton<Language::Spanish>::instance();
+      }
       else if (language_name == "Português")
       {
         language = Language::Singleton<Language::Portuguese>::instance();
@@ -357,6 +359,10 @@ namespace Crypto
       else if (language_name == "українська мова")
       {
         language = Language::Singleton<Language::Ukrainian>::instance();
+      }
+	  else if (language_name == "język polski")
+      {
+        language = Language::Singleton<Language::Polish>::instance();
       }
       else
       {
@@ -405,13 +411,14 @@ namespace Crypto
       std::vector<Language::Base*> language_instances({
         Language::Singleton<Language::German>::instance(),
         Language::Singleton<Language::English>::instance(),
-     // Language::Singleton<Language::Spanish>::instance(),
+        Language::Singleton<Language::Spanish>::instance(),
         Language::Singleton<Language::French>::instance(),
         Language::Singleton<Language::Italian>::instance(),
         Language::Singleton<Language::Dutch>::instance(),
         Language::Singleton<Language::Portuguese>::instance(),
         Language::Singleton<Language::Russian>::instance(),
         Language::Singleton<Language::Ukrainian>::instance(),
+        Language::Singleton<Language::Polish>::instance(),
         Language::Singleton<Language::Japanese>::instance(),
         Language::Singleton<Language::Chinese_Simplified>::instance()
       });
