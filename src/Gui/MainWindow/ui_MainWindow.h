@@ -63,6 +63,7 @@ public:
     QAction *m_resetAction;
     QAction *m_saveKeysAction;
     QAction *m_exportKeyAction;
+    QAction *m_closeWalletAction;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout_2;
     QFrame *m_headerFrame;
@@ -196,6 +197,8 @@ public:
         m_saveKeysAction->setObjectName(QStringLiteral("m_saveKeysAction"));
         m_exportKeyAction = new QAction(MainWindow);
         m_exportKeyAction->setObjectName(QStringLiteral("m_exportKeyAction"));
+        m_closeWalletAction = new QAction(MainWindow);
+        m_closeWalletAction->setObjectName(QStringLiteral("m_closeWalletAction"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         verticalLayout_2 = new QVBoxLayout(centralwidget);
@@ -597,6 +600,7 @@ public:
         menubar->addAction(menuHelp->menuAction());
         menuFile->addAction(m_createWalletAction);
         menuFile->addAction(m_openWalletAction);
+        menuFile->addAction(m_closeWalletAction);
         menuFile->addAction(m_recentWalletsAction);
         menuFile->addAction(m_backupWalletAction);
         menuFile->addAction(m_saveKeysAction);
@@ -647,6 +651,7 @@ public:
         QObject::connect(m_saveKeysAction, SIGNAL(triggered()), MainWindow, SLOT(saveWalletKeys()));
         QObject::connect(m_exportKeyAction, SIGNAL(triggered()), MainWindow, SLOT(exportKey()));
         QObject::connect(m_showQrCodeButton, SIGNAL(clicked()), MainWindow, SLOT(showQrCode()));
+        QObject::connect(m_closeWalletAction, SIGNAL(triggered()), MainWindow, SLOT(closeWallet()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -687,6 +692,7 @@ public:
 #ifndef QT_NO_TOOLTIP
         m_exportKeyAction->setToolTip(QApplication::translate("MainWindow", "Export key", 0));
 #endif // QT_NO_TOOLTIP
+        m_closeWalletAction->setText(QApplication::translate("MainWindow", "Close wallet", 0));
         m_logoLabel->setText(QString());
         m_noWalletLabel->setText(QApplication::translate("MainWindow", "No active wallet", 0));
         m_walletLabel->setText(QApplication::translate("MainWindow", "Your wallet:", 0));

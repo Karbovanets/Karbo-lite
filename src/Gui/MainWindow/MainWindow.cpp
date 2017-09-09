@@ -357,7 +357,6 @@ void MainWindow::closeEvent(QCloseEvent* _event) {
 }
 
 void MainWindow::setOpenedState() {
-
   QList<QAbstractButton*> toolButtons = m_ui->m_toolButtonGroup->buttons();
   for (const auto& button : toolButtons) {
     button->setChecked(false);
@@ -367,6 +366,7 @@ void MainWindow::setOpenedState() {
   IWalletAdapter* walletAdapter = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter();
   m_ui->m_backupWalletAction->setEnabled(true);
   m_ui->m_resetAction->setEnabled(true);
+  m_ui->m_closeWalletAction->setEnabled(true);
   m_ui->m_exportTrackingKeyAction->setEnabled(true);
   m_ui->m_encryptWalletAction->setEnabled(!walletAdapter->isEncrypted());
   m_ui->m_changePasswordAction->setEnabled(walletAdapter->isEncrypted());
@@ -387,6 +387,7 @@ void MainWindow::setClosedState() {
 
   m_ui->m_backupWalletAction->setEnabled(false);
   m_ui->m_resetAction->setEnabled(false);
+  m_ui->m_closeWalletAction->setEnabled(false);
   m_ui->m_exportTrackingKeyAction->setEnabled(false);
   m_ui->m_encryptWalletAction->setEnabled(false);
   m_ui->m_changePasswordAction->setEnabled(false);
@@ -825,6 +826,16 @@ void MainWindow::setDevDonation() {
      m_donationManager->setDonationChangeEnabled(true);
      m_donationManager->setDonationChangeAmount(1);
   }
+}
+
+void MainWindow::closeWallet() {
+  IWalletAdapter* walletAdapter = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter();
+  Q_ASSERT(walletAdapter->isOpen());
+  walletAdapter->save(CryptoNote::WalletSaveLevel::SAVE_ALL, true);
+  walletAdapter->removeObserver(this);
+  walletAdapter->close();
+  walletClosed();
+  walletAdapter->addObserver(this);
 }
 
 }

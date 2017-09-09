@@ -955,6 +955,7 @@
     </property>
     <addaction name="m_createWalletAction"/>
     <addaction name="m_openWalletAction"/>
+    <addaction name="m_closeWalletAction"/>
     <addaction name="m_recentWalletsAction"/>
     <addaction name="m_backupWalletAction"/>
     <addaction name="m_saveKeysAction"/>
@@ -1146,6 +1147,11 @@
    </property>
    <property name="toolTip">
     <string>Export key</string>
+   </property>
+  </action>
+  <action name="m_closeWalletAction">
+   <property name="text">
+    <string>Close wallet</string>
    </property>
   </action>
  </widget>
@@ -1654,10 +1660,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>m_closeWalletAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>closeWallet()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>636</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>createWallet()</slot>
   <slot>openWallet()</slot>
+  <slot>closeWallet()</slot>
   <slot>encryptWallet()</slot>
   <slot>aboutQt()</slot>
   <slot>backupWallet()</slot>

@@ -120,6 +120,7 @@ private:
 
   Q_SLOT void createWallet();
   Q_SLOT void openWallet();
+  Q_SLOT void closeWallet();
   Q_SLOT void backupWallet();
   Q_SLOT void saveWalletKeys();
   Q_SLOT void resetWallet();
