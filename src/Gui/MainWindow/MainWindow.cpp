@@ -257,6 +257,10 @@ void MainWindow::walletOpened() {
     m_ui->m_sendButton->setEnabled(false);
     m_ui->m_addressBookButton->setEnabled(false);
   }
+  AccountKeys accountKeys = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAccountKeys(0);
+  if (!m_deterministicAdapter.isDeterministic(accountKeys)) {
+    m_ui->m_showSeedAction->setEnabled(false);
+  }
 
   QUrl url = m_applicationEventHandler->getLastReceivedUrl();
   if (url.isValid()) {
