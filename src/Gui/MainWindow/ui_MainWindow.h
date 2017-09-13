@@ -66,6 +66,7 @@ public:
     QAction *m_closeWalletAction;
     QAction *m_showSeedAction;
     QAction *m_importSeedAction;
+    QAction *m_createNondeterministicWalletAction;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout_2;
     QFrame *m_headerFrame;
@@ -205,6 +206,8 @@ public:
         m_showSeedAction->setObjectName(QStringLiteral("m_showSeedAction"));
         m_importSeedAction = new QAction(MainWindow);
         m_importSeedAction->setObjectName(QStringLiteral("m_importSeedAction"));
+        m_createNondeterministicWalletAction = new QAction(MainWindow);
+        m_createNondeterministicWalletAction->setObjectName(QStringLiteral("m_createNondeterministicWalletAction"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         verticalLayout_2 = new QVBoxLayout(centralwidget);
@@ -605,6 +608,7 @@ public:
         menubar->addAction(menuSettings->menuAction());
         menubar->addAction(menuHelp->menuAction());
         menuFile->addAction(m_createWalletAction);
+        menuFile->addAction(m_createNondeterministicWalletAction);
         menuFile->addAction(m_openWalletAction);
         menuFile->addAction(m_closeWalletAction);
         menuFile->addAction(m_recentWalletsAction);
@@ -663,6 +667,7 @@ public:
         QObject::connect(m_closeWalletAction, SIGNAL(triggered()), MainWindow, SLOT(closeWallet()));
         QObject::connect(m_showSeedAction, SIGNAL(triggered()), MainWindow, SLOT(showMnemonicSeed()));
         QObject::connect(m_importSeedAction, SIGNAL(triggered()), MainWindow, SLOT(restoreFromMnemonicSeed()));
+        QObject::connect(m_createNondeterministicWalletAction, SIGNAL(triggered()), MainWindow, SLOT(createNonDeterministicWallet()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -706,6 +711,7 @@ public:
         m_closeWalletAction->setText(QApplication::translate("MainWindow", "Close wallet", 0));
         m_showSeedAction->setText(QApplication::translate("MainWindow", "Show mnemonic seed", 0));
         m_importSeedAction->setText(QApplication::translate("MainWindow", "Import mnemonic seed", 0));
+        m_createNondeterministicWalletAction->setText(QApplication::translate("MainWindow", "Create nondeterministic wallet", 0));
         m_logoLabel->setText(QString());
         m_noWalletLabel->setText(QApplication::translate("MainWindow", "No active wallet", 0));
         m_walletLabel->setText(QApplication::translate("MainWindow", "Your wallet:", 0));

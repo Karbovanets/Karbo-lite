@@ -954,6 +954,7 @@
      <string>File</string>
     </property>
     <addaction name="m_createWalletAction"/>
+    <addaction name="m_createNondeterministicWalletAction"/>
     <addaction name="m_openWalletAction"/>
     <addaction name="m_closeWalletAction"/>
     <addaction name="m_recentWalletsAction"/>
@@ -1165,6 +1166,11 @@
   <action name="m_importSeedAction">
    <property name="text">
     <string>Import mnemonic seed</string>
+   </property>
+  </action>
+  <action name="m_createNondeterministicWalletAction">
+   <property name="text">
+    <string>Create nondeterministic wallet</string>
    </property>
   </action>
  </widget>
@@ -1721,6 +1727,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>m_createNondeterministicWalletAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>createNonDeterministicWallet()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>636</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>createWallet()</slot>
@@ -1745,6 +1767,7 @@
   <slot>exportKey()</slot>
   <slot>showMnemonicSeed()</slot>
   <slot>restoreFromMnemonicSeed()</slot>
+  <slot>createNonDeterministicWallet()</slot>
   <slot>showQrCode()</slot>
  </slots>
  <buttongroups>

@@ -30,7 +30,6 @@ class Ui_MnemonicDialog
 public:
     QVBoxLayout *verticalLayout;
     WalletGui::WalletSmallGrayTextLabel *m_descriptionLabel;
-    QSpacerItem *verticalSpacer_2;
     WalletGui::WalletExtraNormalBlackTextLabel *m_textLabel;
     QSpacerItem *verticalSpacer_3;
     QHBoxLayout *horizontalLayout;
@@ -61,17 +60,18 @@ public:
 
         verticalLayout->addWidget(m_descriptionLabel);
 
-        verticalSpacer_2 = new QSpacerItem(20, 10, QSizePolicy::Minimum, QSizePolicy::Minimum);
-
-        verticalLayout->addItem(verticalSpacer_2);
-
         m_textLabel = new WalletGui::WalletExtraNormalBlackTextLabel(MnemonicDialog);
         m_textLabel->setObjectName(QStringLiteral("m_textLabel"));
         sizePolicy.setHeightForWidth(m_textLabel->sizePolicy().hasHeightForWidth());
         m_textLabel->setSizePolicy(sizePolicy);
         m_textLabel->setMinimumSize(QSize(0, 100));
+        QFont font;
+        font.setBold(true);
+        font.setWeight(75);
+        m_textLabel->setFont(font);
         m_textLabel->setFrameShape(QFrame::Box);
         m_textLabel->setFrameShadow(QFrame::Sunken);
+        m_textLabel->setAlignment(Qt::AlignCenter);
         m_textLabel->setWordWrap(true);
         m_textLabel->setTextInteractionFlags(Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse);
 
