@@ -618,6 +618,11 @@ void MainWindow::createWallet() {
     if (walletAdapter->createWithKeys(filePath, accountKeys) == IWalletAdapter::INIT_SUCCESS) {
       walletAdapter->save(CryptoNote::WalletSaveLevel::SAVE_ALL, true);
 
+      Q_ASSERT(walletAdapter->isOpen());
+      QString fileName = Settings::instance().getWalletFile();
+      fileName.append(QString(".backup"));
+      walletAdapter->exportWallet(fileName,false,CryptoNote::WalletSaveLevel::SAVE_KEYS_ONLY,true);
+
       showMnemonicSeed();
 
     } else {

@@ -324,7 +324,7 @@ IWalletAdapter::WalletSaveStatus WalletGreenWorker::exportWallet(const QString& 
 #if QT_VERSION < 0x050400
       m_wallet->exportWallet(std::string(_path.toLocal8Bit().data()), _encrypt, _saveLevel, std::string(m_userData.data(), m_userData.size()));
 #else
-      m_wallet->exportWallet(_path.toStdString(), _encrypt, _saveLevel, m_userData.toStdString());
+      m_wallet->exportWallet(std::string(_path.toLocal8Bit().data()), _encrypt, _saveLevel, m_userData.toStdString());
 #endif
     } catch (const std::system_error& _error) {
       WalletLogger::critical(tr("[Wallet] Export error: %1").arg(_error.code().message().data()));
