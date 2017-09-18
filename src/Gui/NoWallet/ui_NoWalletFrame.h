@@ -208,7 +208,7 @@ public:
     void retranslateUi(QFrame *NoWalletFrame)
     {
         NoWalletFrame->setWindowTitle(QApplication::translate("NoWalletFrame", "Frame", 0));
-        m_welcomeLabel->setText(QApplication::translate("NoWalletFrame", "Welcome to Karbovanets Wallet!", 0));
+        m_welcomeLabel->setText(QApplication::translate("NoWalletFrame", "Welcome to Karbo Wallet!", 0));
         m_passwordTextLabel->setText(QApplication::translate("NoWalletFrame", "PASSWORD FOR", 0));
         m_walletNameLabel->setText(QString());
         m_walletTextLabel->setText(QApplication::translate("NoWalletFrame", "WALLET", 0));

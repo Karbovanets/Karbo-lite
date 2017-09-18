@@ -38,11 +38,11 @@ const char HIDE_BUTTON_STYLE_SHEET_TEMPLATE[] =
     "font-size: %fontSizeLarge%;"
     "min-width: 5px;"
     "min-height: 5px;"
-    "color: %fontColorGray%;"
+    "color: #0023D1;"
   "}"
 
   "QPushButton:hover {"
-    "color: #ffffff;"
+    "color: #222222;"
   "}";
 
 }
