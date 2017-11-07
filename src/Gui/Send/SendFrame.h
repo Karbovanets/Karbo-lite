@@ -36,6 +36,7 @@ namespace WalletGui {
 class ICryptoNoteAdapter;
 class SendGlassFrame;
 class TransferFrame;
+class AddressProvider;
 
 class SendFrame : public QFrame, public IWalletUiItem, public IWalletAdapterObserver, public IApplicationEventHandlerObserver,
   public ICryptoNoteAdapterObserver {
@@ -88,6 +89,12 @@ private:
   SendGlassFrame* m_glassFrame;
   QAbstractItemModel* m_walletStateModel;
   QAbstractItemModel* m_addressBookModel;
+  AddressProvider* m_addressProvider;
+
+  QString remote_node_fee_address;
+  quint64 remote_node_fee;
+  quint64 total_amount;
+  bool on_remote = false;
 
   void processTranactionSendStatus(IWalletAdapter::SendTransactionStatus _status);
   void setPaymentIdError(bool _error);
@@ -95,6 +102,7 @@ private:
   void updateSliderStyleSheet();
   void amountStringChanged(const QString& _amountString);
   void addressChanged(const QString& _address);
+  void onAddressFound(const QString& _address);
   bool readyToSend() const;
 
   Q_SLOT void addRecipientClicked();

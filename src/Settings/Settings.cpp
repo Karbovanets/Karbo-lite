@@ -660,7 +660,7 @@ void Settings::setStartOnLoginEnabled(bool _enable) {
     QString autorunFilePath = autorunDir.absoluteFilePath("karbowanecwallet.plist");
     QSettings autorunSettings(autorunFilePath, QSettings::NativeFormat);
     autorunSettings.remove("Program");
-    autorunSettings.setValue("Label", "org.Karbovanets.karbowanecwallet");
+    autorunSettings.setValue("Label", "org.karbovanets.karbowanecwallet");
     autorunSettings.setValue("ProgramArguments", QVariantList() << QCoreApplication::applicationFilePath() << "--minimized");
     autorunSettings.setValue("RunAtLoad", _enable);
     autorunSettings.setValue("ProcessType", "InterActive");

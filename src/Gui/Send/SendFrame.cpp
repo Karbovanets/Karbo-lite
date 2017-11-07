@@ -35,6 +35,8 @@
 #include "SendGlassFrame.h"
 #include "Style/Style.h"
 #include "TransferFrame.h"
+#include "AddressProvider.h"
+#include "CryptoNoteWrapper/CryptoNoteAdapter.h"
 
 #include "ui_SendFrame.h"
 
@@ -103,12 +105,21 @@ bool isValidPaymentId(const QString& _paymentIdString) {
 
 SendFrame::SendFrame(QWidget* _parent) : QFrame(_parent), m_ui(new Ui::SendFrame),
   m_cryptoNoteAdapter(nullptr), m_donationManager(nullptr), m_applicationEventHandler(nullptr), m_mainWindow(nullptr),
-  m_glassFrame(new SendGlassFrame(nullptr)), m_walletStateModel(nullptr) {
+  m_glassFrame(new SendGlassFrame(nullptr)), m_walletStateModel(nullptr), m_addressProvider(new AddressProvider(this)) {
   m_ui->setupUi(this);
   m_glassFrame->setObjectName("m_sendGlassFrame");
   m_ui->m_mixinSpin->setMaximum(MAX_MIXIN_VALUE);
   mixinValueChanged(m_ui->m_mixinSlider->value());
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(SEND_FRAME_STYLE_SHEET));
+  remote_node_fee = 0;
+
+  ConnectionMethod currentConnectionMethod = Settings::instance().getConnectionMethod();
+  if(currentConnectionMethod == ConnectionMethod::REMOTE) {
+    on_remote = true;
+    QUrl currentRemoteRpcUrl = Settings::instance().getRemoteRpcUrl();
+    m_addressProvider->getAddress(currentRemoteRpcUrl);
+    connect(m_addressProvider, &AddressProvider::addressFoundSignal, this, &SendFrame::onAddressFound, Qt::QueuedConnection);
+  }
 }
 
 SendFrame::~SendFrame() {
@@ -358,7 +369,7 @@ void SendFrame::sendClicked() {
     }
 
     transferSum += amount;
-    if (transferSum + fee > actualBalance) {
+    if (transferSum + fee + remote_node_fee > actualBalance) {
       transfer->setInsufficientFundsError();
       m_ui->m_sendScrollarea->ensureWidgetVisible(transfer);
       return;
@@ -371,6 +382,14 @@ void SendFrame::sendClicked() {
       m_addressBookManager->findAddressByLabel(label) == INVALID_ADDRESS_INDEX) {
       m_addressBookManager->addAddress(label, address, m_ui->m_paymentIdEdit->text(), false);
     }
+  }
+
+  // Remote node fee
+  if(on_remote && !remote_node_fee_address.isEmpty()) {
+    CryptoNote::WalletOrder walletTransfer;
+    walletTransfer.address = remote_node_fee_address.toStdString();
+    walletTransfer.amount = remote_node_fee;
+    transactionParameters.destinations.push_back(walletTransfer);
   }
 
   if (fee < m_cryptoNoteAdapter->getMinimalFee()) {
@@ -527,10 +546,25 @@ void SendFrame::amountStringChanged(const QString& _amountString) {
 
   m_ui->m_totalAmountLabel->setText(QString("%1 %2").arg(m_cryptoNoteAdapter->formatUnsignedAmount(totalSendAmount)).
   arg(m_cryptoNoteAdapter->getCurrencyTicker().toUpper()));
+
+  remote_node_fee = 0;
+  if (!remote_node_fee_address.isEmpty() ) {
+       remote_node_fee = totalSendAmount * 0.25 / 100; // fee is 0.25%
+    if (remote_node_fee < m_cryptoNoteAdapter->getMinimalFee()) {
+        remote_node_fee = m_cryptoNoteAdapter->getMinimalFee();
+    }
+    if (remote_node_fee > 10000000000000) {
+        remote_node_fee = 10000000000000;
+    }
+  }
 }
 
 void SendFrame::addressChanged(const QString& _address) {
   m_ui->m_sendButton->setEnabled(readyToSend());
+}
+
+void SendFrame::onAddressFound(const QString& _address) {
+  remote_node_fee_address = _address;
 }
 
 bool SendFrame::readyToSend() const {
