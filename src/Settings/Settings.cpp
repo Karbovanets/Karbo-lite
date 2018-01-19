@@ -43,6 +43,7 @@ const char OPTION_MINING_CPU_CORE_COUNT[] = "miningCpuCoreCount";
 const char OPTION_MINING_ON_LOCKED_SCREEN[] = "miningOnLockedScreen";
 const char OPTION_MINING_PARAMS[] = "miningParams";
 const char OPTION_MINING_POOL_SWITCH_STRATEGY[] = "miningPoolSwitchStrategy";
+const char OPTION_REMOTE_NODES[] = "remoteRpcNodes";
 const char OPTION_NODE_CONNECTION_METHOD[] = "connectionMethod";
 const char OPTION_NODE_LOCAL_RPC_PORT[] = "localRpcPort";
 const char OPTION_NODE_REMOTE_RPC_URL[] = "remoteRpcUrl";
@@ -64,7 +65,7 @@ const char OPTION_CLOSE_TO_TRAY[] = "closeToTray";
 const char OPTION_PRIVACY_PARAMS[] = "privacyParams";
 const char OPTION_PRIVACY_NEWS_ENABLED[] = "newsEnabled";
 
-const char DEFAULT_WALLET_FILE_NAME[] = "karbowanecwallet.wallet";
+const char DEFAULT_WALLET_FILE_NAME[] = "karbo.wallet";
 const quint64 DEFAULT_OPTIMIZATION_PERIOD = 1000 * 60 * 30; // 30 minutes
 const quint64 DEFAULT_OPTIMIZATION_THRESHOLD = 10000000000000;
 const quint64 DEFAULT_OPTIMIZATION_MIXIN = 6;
@@ -83,6 +84,7 @@ Settings& Settings::instance() {
 
 Settings::Settings() : m_p2pBindPort(0), m_cmdLineParser(nullptr) {
   m_defaultPoolList << "pool.karbowanec.com:3333" << "pool2.democats.org:45570" << "krb.sberex.com:3333" << "mine.krb.mypool.online:32350";
+  m_defaultNodeList << "node.karbowanec.com:32348" << "node.karbovanets.org:32348" << "node.karbo.cloud:32348" << "node.karbo.io:32348";
 
   Style* lightStyle = new LightStyle();
   Style* darkStyle = new DarkStyle();
@@ -107,13 +109,15 @@ void Settings::setCommandLineParser(CommandLineParser* _cmdLineParser) {
 }
 
 void Settings::init() {
-  QFile cfgFile(getDataDir().absoluteFilePath("karbowanecwallet.cfg"));
+  QFile cfgFile(getDataDir().absoluteFilePath("karbowallet.cfg"));
   if (cfgFile.open(QIODevice::ReadOnly)) {
     m_settings = QJsonDocument::fromJson(cfgFile.readAll()).object();
     cfgFile.close();
   }
 
   restoreDefaultPoolList();
+  restoreDefaultNodeList();
+  setDefaultRemoteNode();
 }
 
 void Settings::restoreDefaultPoolList() {
@@ -129,6 +133,29 @@ void Settings::restoreDefaultPoolList() {
 
     setMiningPoolList(poolList);
   }
+}
+
+void Settings::restoreDefaultNodeList() {
+  if (!m_settings.contains(OPTION_REMOTE_NODES)) {
+    setRemoteNodeList(QStringList() << m_defaultNodeList);
+  } else {
+    QStringList nodeList = getRemoteNodeList();
+    for (const QString& node : m_defaultNodeList) {
+      if (!nodeList.contains(node)) {
+        nodeList << node;
+      }
+    }
+    setRemoteNodeList(nodeList);
+  }
+}
+
+void Settings::setDefaultRemoteNode() {
+   if (!m_settings.contains(OPTION_NODE_REMOTE_RPC_URL)) {
+      srand(time(NULL));
+      QStringList nodeList = getRemoteNodeList();
+      QUrl _url = QUrl::fromUserInput(nodeList.at(rand() % nodeList.size()));
+      m_settings.insert(OPTION_NODE_REMOTE_RPC_URL, QString("%1:%2").arg(_url.host()).arg(_url.port()));
+   }
 }
 
 bool Settings::isMiningOnLockedScreenEnabled(bool _defaultValue) const {
@@ -458,6 +485,19 @@ QStringList Settings::getMiningPoolList() const {
   return res;
 }
 
+QStringList Settings::getRemoteNodeList() const {
+  QReadLocker lock(&m_lock);
+  QStringList res;
+  if (m_settings.contains(OPTION_REMOTE_NODES)) {
+    QJsonArray remoteNodeArray = m_settings.value(OPTION_REMOTE_NODES).toArray();
+    for (const auto& item : remoteNodeArray) {
+      res << item.toString();
+    }
+  }
+
+  return res;
+}
+
 quint64 Settings::getAddressPrefix() const {
   return CryptoNote::parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX;
 }
@@ -471,7 +511,7 @@ bool Settings::isStartOnLoginEnabled() const {
     return false;
   }
 
-  QString autorunFilePath = autorunDir.absoluteFilePath("karbowanecwallet.plist");
+  QString autorunFilePath = autorunDir.absoluteFilePath("karbowallet.plist");
   if (!QFile::exists(autorunFilePath)) {
     return false;
   }
@@ -489,12 +529,12 @@ bool Settings::isStartOnLoginEnabled() const {
     return false;
   }
 
-  QString autorunFilePath = autorunDir.absoluteFilePath("karbowanecwallet.desktop");
+  QString autorunFilePath = autorunDir.absoluteFilePath("karbowallet.desktop");
   res = QFile::exists(autorunFilePath);
 #elif defined(Q_OS_WIN)
   QSettings autorunSettings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
-  res = autorunSettings.contains("karbowanecwallet") &&
-    !QDir::fromNativeSeparators(autorunSettings.value("karbowanecwallet").toString().split(' ')[0]).compare(QCoreApplication::applicationFilePath());
+  res = autorunSettings.contains("karbowallet") &&
+    !QDir::fromNativeSeparators(autorunSettings.value("karbowallet").toString().split(' ')[0]).compare(QCoreApplication::applicationFilePath());
 #endif
   return res;
 }
@@ -636,6 +676,16 @@ void Settings::setMiningPoolList(const QStringList &_miningPoolList) {
   notifyObservers();
 }
 
+void Settings::setRemoteNodeList(const QStringList &_remoteNodeList) {
+  {
+    QWriteLocker lock(&m_lock);
+    m_settings.insert(OPTION_REMOTE_NODES, QJsonArray::fromStringList(_remoteNodeList));
+    saveSettings();
+  }
+
+  notifyObservers();
+}
+
 void Settings::setMiningPoolSwitchStrategy(const QString& _miningPoolSwitchStrategy) {
   {
     QWriteLocker lock(&m_lock);
@@ -657,10 +707,10 @@ void Settings::setStartOnLoginEnabled(bool _enable) {
       return;
     }
 
-    QString autorunFilePath = autorunDir.absoluteFilePath("karbowanecwallet.plist");
+    QString autorunFilePath = autorunDir.absoluteFilePath("karbowallet.plist");
     QSettings autorunSettings(autorunFilePath, QSettings::NativeFormat);
     autorunSettings.remove("Program");
-    autorunSettings.setValue("Label", "org.karbovanets.karbowanecwallet");
+    autorunSettings.setValue("Label", "org.karbovanets.karbowallet");
     autorunSettings.setValue("ProgramArguments", QVariantList() << QCoreApplication::applicationFilePath() << "--minimized");
     autorunSettings.setValue("RunAtLoad", _enable);
     autorunSettings.setValue("ProcessType", "InterActive");
@@ -679,7 +729,7 @@ void Settings::setStartOnLoginEnabled(bool _enable) {
       return;
     }
 
-    QString autorunFilePath = autorunDir.absoluteFilePath("karbowanecwallet.desktop");
+    QString autorunFilePath = autorunDir.absoluteFilePath("karbowallet.desktop");
     QFile autorunFile(autorunFilePath);
     if (!autorunFile.open(QFile::WriteOnly | QFile::Truncate)) {
       return;
@@ -700,9 +750,9 @@ void Settings::setStartOnLoginEnabled(bool _enable) {
     QSettings autorunSettings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
     if (_enable) {
       QString appPath = QString("%1 --minimized").arg(QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
-      autorunSettings.setValue("karbowanecwallet", appPath);
+      autorunSettings.setValue("karbowallet", appPath);
     } else {
-      autorunSettings.remove("karbowanecwallet");
+      autorunSettings.remove("karbowallet");
     }
 #endif
   }
@@ -949,7 +999,7 @@ void Settings::setUrlHandler() {
 #endif
 
 void Settings::saveSettings() const {
-  QFile cfgFile(QDir(m_cmdLineParser->getDataDir()).absoluteFilePath("karbowanecwallet.cfg"));
+  QFile cfgFile(QDir(m_cmdLineParser->getDataDir()).absoluteFilePath("karbowallet.cfg"));
   if (cfgFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
     QJsonDocument cfg_doc(m_settings);
     cfgFile.write(cfg_doc.toJson());
@@ -961,6 +1011,14 @@ void Settings::notifyObservers() {
   for (ISettingsObserver* observer : m_observers) {
     observer->settingsUpdated();
   }
+}
+
+void Settings::setOnRemote(bool _on) {
+    m_onRemote = _on;
+}
+
+bool Settings::isOnRemote() {
+    return m_onRemote;
 }
 
 }

@@ -89,29 +89,6 @@
         <number>0</number>
        </property>
        <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>30</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QLabel" name="m_logoLabel">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item>
         <spacer name="horizontalSpacer_5">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -762,6 +739,22 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="m_receiveButton">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="text">
+            <string>RECEIVE</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <attribute name="buttonGroup">
+            <string notr="true">m_toolButtonGroup</string>
+           </attribute>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="m_transactionsButton">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -774,22 +767,6 @@
            </property>
            <property name="text">
             <string>HISTORY</string>
-           </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-           <attribute name="buttonGroup">
-            <string notr="true">m_toolButtonGroup</string>
-           </attribute>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="m_blockExplorerButton">
-           <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
-           </property>
-           <property name="text">
-            <string>BLOCK EXPLORER</string>
            </property>
            <property name="checkable">
             <bool>true</bool>
@@ -904,7 +881,7 @@
        </widget>
       </item>
       <item>
-       <widget class="WalletGui::BlockExplorerFrame" name="m_blockExplorerFrame">
+       <widget class="WalletGui::ReceiveFrame" name="m_receiveFrame">
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -958,14 +935,6 @@
     <addaction name="m_openWalletAction"/>
     <addaction name="m_closeWalletAction"/>
     <addaction name="m_recentWalletsAction"/>
-    <addaction name="m_backupWalletAction"/>
-    <addaction name="m_saveKeysAction"/>
-    <addaction name="m_resetAction"/>
-    <addaction name="m_importKeyAction"/>
-    <addaction name="m_exportKeyAction"/>
-    <addaction name="m_exportTrackingKeyAction"/>
-    <addaction name="m_showSeedAction"/>
-    <addaction name="m_importSeedAction"/>
     <addaction name="separator"/>
     <addaction name="m_exitAction"/>
    </widget>
@@ -978,9 +947,6 @@
       <string>Themes</string>
      </property>
     </widget>
-    <addaction name="m_encryptWalletAction"/>
-    <addaction name="m_changePasswordAction"/>
-    <addaction name="separator"/>
     <addaction name="m_autostartAction"/>
     <addaction name="m_minimizeToTrayAction"/>
     <addaction name="m_closeToTrayAction"/>
@@ -997,7 +963,34 @@
     <addaction name="m_aboutKarbovanetsAction"/>
     <addaction name="m_aboutQtAction"/>
    </widget>
+   <widget class="QMenu" name="menuPayment">
+    <property name="title">
+     <string>Payment</string>
+    </property>
+    <addaction name="m_createPaymentRequestAction"/>
+    <addaction name="m_openPaymentRequestAction"/>
+   </widget>
+   <widget class="QMenu" name="menuWallet">
+    <property name="title">
+     <string>Wallet</string>
+    </property>
+    <addaction name="m_encryptWalletAction"/>
+    <addaction name="m_changePasswordAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_backupWalletAction"/>
+    <addaction name="m_saveKeysAction"/>
+    <addaction name="m_importKeyAction"/>
+    <addaction name="m_exportKeyAction"/>
+    <addaction name="m_exportTrackingKeyAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_showSeedAction"/>
+    <addaction name="m_importSeedAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_resetAction"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuWallet"/>
+   <addaction name="menuPayment"/>
    <addaction name="menuSettings"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -1173,6 +1166,16 @@
     <string>Create nondeterministic wallet</string>
    </property>
   </action>
+  <action name="m_openPaymentRequestAction">
+   <property name="text">
+    <string>Open payment request</string>
+   </property>
+  </action>
+  <action name="m_createPaymentRequestAction">
+   <property name="text">
+    <string>Create payment request</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -1226,9 +1229,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>WalletGui::BlockExplorerFrame</class>
+   <class>WalletGui::ReceiveFrame</class>
    <extends>QFrame</extends>
-   <header>Gui/BlockchainExplorer/BlockExplorerFrame.h</header>
+   <header>Gui/Receive/ReceiveFrame.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -1520,22 +1523,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>m_blockExplorerButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>m_blockExplorerFrame</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>90</x>
-     <y>226</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1168</x>
-     <y>453</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>m_miningButton</sender>
    <signal>toggled(bool)</signal>
    <receiver>m_miningFrame</receiver>
@@ -1740,6 +1727,54 @@
     <hint type="destinationlabel">
      <x>636</x>
      <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_openPaymentRequestAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openPaymentRequestClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>636</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_createPaymentRequestAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>createPaymentRequestClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>636</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_receiveButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_receiveFrame</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>90</x>
+     <y>226</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1168</x>
+     <y>453</y>
     </hint>
    </hints>
   </connection>

@@ -67,6 +67,7 @@ public:
   quint32 getMiningCpuCoreCount(quint32 _defaultValue) const;
   QStringList getExclusiveNodes() const;
   QStringList getMiningPoolList() const;
+  QStringList getRemoteNodeList() const;
   QStringList getPeers() const;
   QStringList getPriorityNodes() const;
   QStringList getRecentWalletList() const;
@@ -91,11 +92,14 @@ public:
 
   void init();
   void restoreDefaultPoolList();
+  void restoreDefaultNodeList();
+  void setDefaultRemoteNode();
   void setCommandLineParser(CommandLineParser* _cmdLineParser);
   void setConnectionMethod(ConnectionMethod _connectionMethod);
   void setLocalRpcPort(quint16 _port);
   void setRemoteRpcUrl(const QUrl& _url);
   void setP2pBindPort(quint16 _p2pBindPort);
+  void setRemoteNodeList(const QStringList& _remoteNodeList);
   void setWalletFile(const QString& _file);
   void setCurrentTheme(const QString& _theme);
   void setRecentWalletList(const QStringList& _recentWalletList);
@@ -120,6 +124,10 @@ public:
   void addObserver(ISettingsObserver* _settingsObserver);
   void removeObserver(ISettingsObserver* _settingsObserver);
 
+  void setOnRemote(bool _on);
+  bool isOnRemote();
+  bool m_onRemote = false;
+
 #ifdef Q_OS_WIN
   void setUrlHandler();
 #endif
@@ -127,6 +135,7 @@ public:
 private:
   QJsonObject m_settings;
   QStringList m_defaultPoolList;
+  QStringList m_defaultNodeList;
   quint16 m_p2pBindPort;
   CommandLineParser* m_cmdLineParser;
   mutable QReadWriteLock m_lock;

@@ -23,8 +23,9 @@
 #include "CryptoNoteAdapter.h"
 #include "WalletLogger/WalletLogger.h"
 #include "IBlockChainExplorerAdapter.h"
-#include "InProcessNodeAdapter.h"
+//#include "InProcessNodeAdapter.h"
 #include "ProxyRpcNodeAdapter.h"
+#include "Settings/Settings.h"
 
 #include "CryptoNoteCore/TransactionExtra.h"
 
@@ -33,12 +34,12 @@ namespace WalletGui {
 namespace {
 
 const int AUTO_CONNECTION_INTERVAL = 1000;
-const char OLD_CORE_LOG_FILE_NAME[] = "karbowanecwallet.log";
+const char OLD_CORE_LOG_FILE_NAME[] = "karbowallet.log";
 
 }
 
 CryptoNoteAdapter::CryptoNoteAdapter(const QDir& _dataDir, bool _testnet, bool _debug, QObject* _parent) : QObject(_parent),
-  m_dataDir(_dataDir), m_testnet(_testnet), m_debug(_debug), m_connectionMethod(ConnectionMethod::AUTO),
+  m_dataDir(_dataDir), m_testnet(_testnet), m_debug(_debug), m_connectionMethod(ConnectionMethod::REMOTE),
   m_localDaemodPort(CryptoNote::RPC_DEFAULT_PORT), m_remoteDaemonUrl(), m_coreLogger(), m_walletLogger(),
   m_currency(CryptoNote::CurrencyBuilder(m_coreLogger).currency()),
   m_nodeAdapter(nullptr), m_autoConnectionTimerId(-1) {
@@ -341,7 +342,7 @@ void CryptoNoteAdapter::initNode() {
     initAutoConnection();
     break;
   case ConnectionMethod::EMBEDDED:
-    initInProcessNode();
+    //initInProcessNode();
     break;
   case ConnectionMethod::LOCAL:
     initLocalRpcNode();
@@ -360,11 +361,11 @@ void CryptoNoteAdapter::initAutoConnection() {
   m_nodeAdapter->init();
 }
 
-void CryptoNoteAdapter::initInProcessNode() {
+/*void CryptoNoteAdapter::initInProcessNode() {
   m_nodeAdapter = new InProcessNodeAdapter(m_currency, m_coreLogger, m_walletLogger, this);
   m_nodeAdapter->addObserver(this);
   m_nodeAdapter->init();
-}
+}*/
 
 void CryptoNoteAdapter::initLocalRpcNode() {
   m_nodeAdapter = new ProxyRpcNodeAdapter(m_currency, m_coreLogger, m_walletLogger, "127.0.0.1", m_localDaemodPort, this);
@@ -376,6 +377,7 @@ void CryptoNoteAdapter::initRemoteRpcNode() {
   m_nodeAdapter = new ProxyRpcNodeAdapter(m_currency, m_coreLogger, m_walletLogger, m_remoteDaemonUrl.host(), m_remoteDaemonUrl.port(), this);
   m_nodeAdapter->addObserver(this);
   m_nodeAdapter->init();
+  Settings::instance().setOnRemote(true);
 }
 
 void CryptoNoteAdapter::onLocalDaemonNotFound() {
@@ -386,7 +388,8 @@ void CryptoNoteAdapter::onLocalDaemonNotFound() {
   m_nodeAdapter->deinit();
   nodeAdapter->deleteLater();
   m_nodeAdapter = nullptr;
-  initInProcessNode();
+  //initInProcessNode();
+  initRemoteRpcNode();
 }
 
 void CryptoNoteAdapter::configureLogger(Logging::LoggerManager& _logger, const QString& _logFilePath, bool _debug) {

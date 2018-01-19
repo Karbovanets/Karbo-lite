@@ -43,6 +43,8 @@
 #include "Gui/Common/QuestionDialog.h"
 #include "Gui/Common/QRCodeDialog.h"
 #include "Gui/Common/MnemonicDialog.h"
+#include "Gui/Common/OpenUriDialog.h"
+#include "Gui/Common/RequestPaymentDialog.h"
 #include "ICryptoNoteAdapter.h"
 #include "INodeAdapter.h"
 #include "IWalletAdapter.h"
@@ -75,8 +77,8 @@ namespace WalletGui {
 namespace {
 
 const int MAX_RECENT_WALLET_COUNT = 10;
-const char COMMUNITY_FORUM_URL[] = "https://karbovanetstalk.org";
-const char REPORT_ISSUE_URL[] = "https://karbovanets.org/contact";
+const char COMMUNITY_FORUM_URL[] = "https://forum.karbo.io";
+const char REPORT_ISSUE_URL[] = "https://karbo.io/contact";
 
 const char DONATION_URL_DONATION_TAG[] = "donation";
 const char DONATION_URL_LABEL_TAG[] = "label";
@@ -143,7 +145,7 @@ MainWindow::MainWindow(ICryptoNoteAdapter* _cryptoNoteAdapter, IAddressBookManag
 
   QList<IWalletUiItem*> uiItems;
   uiItems << m_ui->m_noWalletFrame << m_ui->m_overviewFrame << m_ui->m_sendFrame << m_ui->m_transactionsFrame <<
-    m_ui->m_blockExplorerFrame << m_ui->m_addressBookFrame << m_ui->m_miningFrame << m_ui->statusBar;
+    m_ui->m_receiveFrame << m_ui->m_addressBookFrame << m_ui->m_miningFrame << m_ui->statusBar;
   for (auto& uiItem : uiItems) {
     uiItem->setCryptoNoteAdapter(m_cryptoNoteAdapter);
     uiItem->setAddressBookManager(m_addressBookManager);
@@ -207,7 +209,6 @@ MainWindow::MainWindow(ICryptoNoteAdapter* _cryptoNoteAdapter, IAddressBookManag
   }
 
   m_ui->m_balanceIconLabel->setPixmap(Settings::instance().getCurrentStyle().getBalanceIcon());
-  m_ui->m_logoLabel->setPixmap(Settings::instance().getCurrentStyle().getLogoPixmap());
   QActionGroup* themeActionGroup = new QActionGroup(this);
   quintptr styleCount = Settings::instance().getStyleCount();
   for (quintptr i = 0; i < styleCount; ++i) {
@@ -256,6 +257,7 @@ void MainWindow::walletOpened() {
   if (walletAdapter->isTrackingWallet()) {
     m_ui->m_sendButton->setEnabled(false);
     m_ui->m_addressBookButton->setEnabled(false);
+    m_ui->m_openPaymentRequestAction->setEnabled(false);
   }
   AccountKeys accountKeys = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAccountKeys(0);
   if (!m_deterministicAdapter.isDeterministic(accountKeys)) {
@@ -404,12 +406,14 @@ void MainWindow::setOpenedState() {
   m_ui->m_showSeedAction->setEnabled(true);
   m_ui->m_encryptWalletAction->setEnabled(!walletAdapter->isEncrypted());
   m_ui->m_changePasswordAction->setEnabled(walletAdapter->isEncrypted());
+  m_ui->m_openPaymentRequestAction->setEnabled(true);
+  m_ui->m_createPaymentRequestAction->setEnabled(true);
 
   m_ui->m_noWalletFrame->hide();
   m_ui->m_overviewFrame->show();
 
   m_ui->m_overviewButton->setChecked(true);
-  m_ui->m_blockExplorerButton->setEnabled(m_cryptoNoteAdapter->getNodeAdapter()->getBlockChainExplorerAdapter() != nullptr);
+  m_ui->m_receiveButton->setEnabled(true);
 }
 
 void MainWindow::setClosedState() {
@@ -428,12 +432,14 @@ void MainWindow::setClosedState() {
   m_ui->m_encryptWalletAction->setEnabled(false);
   m_ui->m_changePasswordAction->setEnabled(false);
   m_ui->m_showSeedAction->setEnabled(false);
+  m_ui->m_openPaymentRequestAction->setEnabled(false);
+  m_ui->m_createPaymentRequestAction->setEnabled(false);
 
   m_ui->m_overviewFrame->hide();
   m_ui->m_sendFrame->hide();
   m_ui->m_transactionsFrame->hide();
   m_ui->m_addressBookFrame->hide();
-  m_ui->m_blockExplorerFrame->hide();
+  m_ui->m_receiveFrame->hide();
   m_ui->m_miningFrame->hide();
   m_ui->m_noWalletFrame->show();
   m_ui->m_syncProgress->setValue(0);
@@ -529,13 +535,12 @@ void MainWindow::themeChanged() {
   Settings::instance().setCurrentTheme(styleAction->data().toString());
   qApp->setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(m_styleSheetTemplate));
   m_ui->m_balanceIconLabel->setPixmap(Settings::instance().getCurrentStyle().getBalanceIcon());
-  m_ui->m_logoLabel->setPixmap(Settings::instance().getCurrentStyle().getLogoPixmap());
   m_syncMovie->stop();
   m_syncMovie->setFileName(Settings::instance().getCurrentStyle().getWalletSyncGifFile());
   m_syncMovie->start();
   QList<IWalletUiItem*> uiItems;
   uiItems << m_ui->m_noWalletFrame << m_ui->m_overviewFrame << m_ui->m_sendFrame << m_ui->m_transactionsFrame <<
-    m_ui->m_blockExplorerFrame << m_ui->m_addressBookFrame << m_ui->m_miningFrame << m_ui->statusBar;
+    m_ui->m_receiveFrame << m_ui->m_addressBookFrame << m_ui->m_miningFrame << m_ui->statusBar;
   for (auto& uiItem : uiItems) {
     uiItem->updateStyle();
   }
@@ -609,22 +614,16 @@ void MainWindow::createWallet() {
       walletAdapter->close();
       walletAdapter->addObserver(this);
     }
-
     QString oldWalletFile = Settings::instance().getWalletFile();
     Settings::instance().setWalletFile(filePath);
-
     AccountKeys accountKeys = m_deterministicAdapter.generateDeterministicKeys();
-
     if (walletAdapter->createWithKeys(filePath, accountKeys) == IWalletAdapter::INIT_SUCCESS) {
       walletAdapter->save(CryptoNote::WalletSaveLevel::SAVE_ALL, true);
-
       Q_ASSERT(walletAdapter->isOpen());
       QString fileName = Settings::instance().getWalletFile();
       fileName.append(QString(".backup"));
       walletAdapter->exportWallet(fileName,false,CryptoNote::WalletSaveLevel::SAVE_KEYS_ONLY,true);
-
       showMnemonicSeed();
-
     } else {
       Settings::instance().setWalletFile(oldWalletFile);
     }
@@ -762,6 +761,16 @@ void MainWindow::encryptWallet() {
 
       walletAdapter->changePassword("", password);
     }
+  }
+  QString fileName = Settings::instance().getWalletFile();
+  fileName.append(QString(".backup"));
+  if (!fileName.isEmpty()) {
+    // remove old unencrypted backup
+    if(QFile::exists(fileName)) {
+       QFile::remove(fileName);
+    }
+    // create new encrypted backup
+    walletAdapter->exportWallet(fileName,false,CryptoNote::WalletSaveLevel::SAVE_KEYS_ONLY,true);
   }
 }
 
@@ -902,6 +911,25 @@ void MainWindow::restoreFromMnemonicSeed() {
     } else {
       Settings::instance().setWalletFile(oldWalletFile);
     }
+  }
+}
+
+void MainWindow::openPaymentRequestClicked() {
+  OpenUriDialog dlg(this);
+  if (dlg.exec() == QDialog::Accepted) {
+    QUrl request = dlg.getURI();
+    if (request.isEmpty()) {
+      return;
+    }
+    m_ui->m_sendFrame->urlReceived(request);
+    m_ui->m_sendButton->click();
+  }
+}
+
+void MainWindow::createPaymentRequestClicked() {
+  RequestPaymentDialog dlg(m_cryptoNoteAdapter, m_walletStateModel->index(0, WalletStateModel::COLUMN_ADDRESS).data().toString(), this);
+  if (dlg.exec() == QDialog::Accepted) {
+
   }
 }
 

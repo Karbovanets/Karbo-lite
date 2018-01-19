@@ -34,7 +34,7 @@ namespace WalletGui {
 namespace {
 
 const char BLOG_RSS_SCHEME[] = "https";
-const char BLOG_RSS_HOST[] = "karbovanets.org";
+const char BLOG_RSS_HOST[] = "karbo.io";
 const char BLOG_RSS_PATH[] = "/blog/feed.atom/";
 
 const char BLOG_RSS_ID_TAG_NAME[] = "id";
@@ -212,23 +212,23 @@ void BlogReader::processBlogReplyData(const QString& _data) {
   QList<MessageItem> newMessages;
   while (!xml.atEnd() && newMessages.size() < MAX_MESSAGE_COUNT) {
     xml.readNext();
-    if (xml.isStartElement() && !xml.name().compare("entry")) {
+    if (xml.isStartElement() && !xml.name().compare((QString)"entry")) {
       MessageItem messageItem;
-      while (!xml.atEnd() && !(xml.isEndElement() && !xml.name().compare("entry"))) {
+      while (!xml.atEnd() && !(xml.isEndElement() && !xml.name().compare((QString)"entry"))) {
         xml.readNext();
         if (xml.isStartElement()) {
-          if (!xml.name().compare(BLOG_RSS_ID_TAG_NAME)) {
+          if (!xml.name().compare((QString)BLOG_RSS_ID_TAG_NAME)) {
             messageItem.messageId = xml.readElementText();
-          } else if(!xml.name().compare(BLOG_RSS_LINK_TAG_NAME)) {
-            messageItem.messageSourceUrl = xml.attributes().value(BLOG_RSS_LINK_HREF_ATTRIBUTE_NAME).toString();
-          } else if(!xml.name().compare(BLOG_RSS_TITLE_TAG_NAME)) {
+          } else if(!xml.name().compare((QString)BLOG_RSS_LINK_TAG_NAME)) {
+            messageItem.messageSourceUrl = xml.attributes().value((QString)BLOG_RSS_LINK_HREF_ATTRIBUTE_NAME).toString();
+          } else if(!xml.name().compare((QString)BLOG_RSS_TITLE_TAG_NAME)) {
             messageItem.messageTitle = xml.readElementText();
-          } else if(!xml.name().compare(BLOG_RSS_CONTENT_TAG_NAME)) {
+          } else if(!xml.name().compare((QString)BLOG_RSS_CONTENT_TAG_NAME)) {
             QString htmlText = xml.readElementText();
             QTextDocument textDoc;
             textDoc.setHtml(htmlText);
             messageItem.messageText = textDoc.toPlainText();
-          } else if(!xml.name().compare(BLOG_RSS_UPDATED_TAG_NAME)) {
+          } else if(!xml.name().compare((QString)BLOG_RSS_UPDATED_TAG_NAME)) {
             QString timeString = xml.readElementText();
             messageItem.messageTime = QDateTime::fromString(timeString, Qt::ISODate);
           }

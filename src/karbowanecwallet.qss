@@ -279,6 +279,10 @@ QCalendarWidget QMenu {
   background-image: url(:icons/%currentTheme%/block_explorer);
 }
 
+#MainWindow > #centralwidget > #m_toolFrame > #m_receiveButton {
+  background-image: url(:icons/%currentTheme%/receive);
+}
+
 #MainWindow > #centralwidget > #m_toolFrame > #m_addressBookButton {
   background-image: url(:icons/%currentTheme%/address_book);
 }

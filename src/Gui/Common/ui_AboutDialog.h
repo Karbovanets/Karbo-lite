@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'AboutDialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -83,8 +83,8 @@ public:
     void retranslateUi(QDialog *AboutDialog)
     {
         AboutDialog->setWindowTitle(QApplication::translate("AboutDialog", "About Karbovanets", 0));
-        m_aboutLabel->setText(QApplication::translate("AboutDialog", "<html><head/><body><p><span style=\" font-family:'Open Sans'; font-size:14px;\">Karbovanets version %1-%2</span></p><p><span style=\" font-family:'Open Sans'; font-size:14px;\">Karbovanets is the next generation anonymous cryptocurrency based on CryptoNote.</span></p><p><span style=\" font-family:'Open Sans'; font-size:14px;\">Copyright \302\251 2012-%3 The Bytecoin developers</span></p><p><span style=\" font-family:'Open Sans'; font-size:14px;\">This is free software.</span></p><p><span style=\" font-family:'Open Sans'; font-size:14px;\">Distributed under the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.</span></p><p><span style=\" font-family:'Open Sans'; font-size:14px;\">Distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details:</span></p><p><a href=\"https://www"
-                        ".gnu.org/licenses/lgpl.html\"><span style=\" font-family:'Open Sans'; font-size:14px; text-decoration: underline; color:#0000ff;\">https://www.gnu.org/licenses/lgpl.html</span></a></p><p><a href=\"http://Karbovanets.org/\"><span style=\" font-family:'Open Sans'; font-size:14px; text-decoration: underline; color:#0000ff;\">http://Karbovanets.org/</span></a></p></body></html>", 0));
+        m_aboutLabel->setText(QApplication::translate("AboutDialog", "<html><head/><body><p><span style=\" font-family:'Open Sans'; font-size:14px;\">Karbo Wallet version %1-%2</span></p><p><span style=\" font-family:'Open Sans'; font-size:14px;\">Karbo (Karbovanets) is the next generation anonymous cryptocurrency based on CryptoNote.</span></p><p><span style=\" font-family:'Open Sans'; font-size:14px;\">Copyright \302\251 2012-%3 The Karbowanec developers</span></p><p><span style=\" font-family:'Open Sans'; font-size:14px;\">Copyright \302\251 2012-2017 The Bytecoin developers</span></p><p><span style=\" font-family:'Open Sans'; font-size:14px;\">This is free software.</span></p><p><span style=\" font-family:'Open Sans'; font-size:14px;\">Distributed under the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.</span></p><p><span style=\" font-family:'Open Sans'; font-size:14px;\">Distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHA"
+                        "NTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details:</span></p><p><a href=\"https://www.gnu.org/licenses/lgpl.html\"><span style=\" font-family:'Open Sans'; font-size:14px; text-decoration: underline; color:#0000ff;\">https://www.gnu.org/licenses/lgpl.html</span></a></p><p><a href=\"http://karbo.io/\"><span style=\" font-family:'Open Sans'; font-size:14px; text-decoration: underline; color:#0000ff;\">http://karbo.io/</span></a></p></body></html>", 0));
         m_okButton->setText(QApplication::translate("AboutDialog", "Close", 0));
     } // retranslateUi
 

@@ -92,7 +92,7 @@ private:
   void initWalletLogger(bool _debug);
   void initNode();
   void initAutoConnection();
-  void initInProcessNode();
+  //void initInProcessNode();
   void initLocalRpcNode();
   void initRemoteRpcNode();
   void onLocalDaemonNotFound();

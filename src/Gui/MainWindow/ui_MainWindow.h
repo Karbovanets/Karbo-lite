@@ -27,7 +27,6 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include "Gui/AddressBook/AddressBookFrame.h"
-#include "Gui/BlockchainExplorer/BlockExplorerFrame.h"
 #include "Gui/Common/CopyMagicLabel.h"
 #include "Gui/Common/WalletLinkLikeButton.h"
 #include "Gui/Common/WalletTextLabel.h"
@@ -35,6 +34,7 @@
 #include "Gui/Mining/MiningFrame.h"
 #include "Gui/NoWallet/NoWalletFrame.h"
 #include "Gui/Overview/OverviewFrame.h"
+#include "Gui/Receive/ReceiveFrame.h"
 #include "Gui/Send/SendFrame.h"
 #include "Gui/Transactions/TransactionsFrame.h"
 
@@ -67,12 +67,12 @@ public:
     QAction *m_showSeedAction;
     QAction *m_importSeedAction;
     QAction *m_createNondeterministicWalletAction;
+    QAction *m_openPaymentRequestAction;
+    QAction *m_createPaymentRequestAction;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout_2;
     QFrame *m_headerFrame;
     QHBoxLayout *horizontalLayout_3;
-    QSpacerItem *horizontalSpacer_2;
-    QLabel *m_logoLabel;
     QSpacerItem *horizontalSpacer_5;
     WalletGui::WalletSmallGrayTextLabel *m_noWalletLabel;
     QFrame *m_walletFrame;
@@ -112,8 +112,8 @@ public:
     QVBoxLayout *verticalLayout;
     QPushButton *m_overviewButton;
     QPushButton *m_sendButton;
+    QPushButton *m_receiveButton;
     QPushButton *m_transactionsButton;
-    QPushButton *m_blockExplorerButton;
     QPushButton *m_addressBookButton;
     QPushButton *m_miningButton;
     QSpacerItem *verticalSpacer;
@@ -122,7 +122,7 @@ public:
     WalletGui::TransactionsFrame *m_transactionsFrame;
     WalletGui::AddressBookFrame *m_addressBookFrame;
     WalletGui::NoWalletFrame *m_noWalletFrame;
-    WalletGui::BlockExplorerFrame *m_blockExplorerFrame;
+    WalletGui::ReceiveFrame *m_receiveFrame;
     WalletGui::MiningFrame *m_miningFrame;
     QProgressBar *m_syncProgress;
     QMenuBar *menubar;
@@ -130,6 +130,8 @@ public:
     QMenu *menuSettings;
     QMenu *menuThemes;
     QMenu *menuHelp;
+    QMenu *menuPayment;
+    QMenu *menuWallet;
     WalletGui::WalletStatusBar *statusBar;
     QButtonGroup *m_toolButtonGroup;
 
@@ -208,6 +210,10 @@ public:
         m_importSeedAction->setObjectName(QStringLiteral("m_importSeedAction"));
         m_createNondeterministicWalletAction = new QAction(MainWindow);
         m_createNondeterministicWalletAction->setObjectName(QStringLiteral("m_createNondeterministicWalletAction"));
+        m_openPaymentRequestAction = new QAction(MainWindow);
+        m_openPaymentRequestAction->setObjectName(QStringLiteral("m_openPaymentRequestAction"));
+        m_createPaymentRequestAction = new QAction(MainWindow);
+        m_createPaymentRequestAction->setObjectName(QStringLiteral("m_createPaymentRequestAction"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         verticalLayout_2 = new QVBoxLayout(centralwidget);
@@ -224,15 +230,6 @@ public:
         horizontalLayout_3->setSpacing(0);
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
         horizontalLayout_3->setContentsMargins(0, 0, 25, 0);
-        horizontalSpacer_2 = new QSpacerItem(30, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
-
-        horizontalLayout_3->addItem(horizontalSpacer_2);
-
-        m_logoLabel = new QLabel(m_headerFrame);
-        m_logoLabel->setObjectName(QStringLiteral("m_logoLabel"));
-
-        horizontalLayout_3->addWidget(m_logoLabel);
-
         horizontalSpacer_5 = new QSpacerItem(20, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
         horizontalLayout_3->addItem(horizontalSpacer_5);
@@ -484,6 +481,14 @@ public:
 
         verticalLayout->addWidget(m_sendButton);
 
+        m_receiveButton = new QPushButton(m_toolFrame);
+        m_toolButtonGroup->addButton(m_receiveButton);
+        m_receiveButton->setObjectName(QStringLiteral("m_receiveButton"));
+        m_receiveButton->setFocusPolicy(Qt::NoFocus);
+        m_receiveButton->setCheckable(true);
+
+        verticalLayout->addWidget(m_receiveButton);
+
         m_transactionsButton = new QPushButton(m_toolFrame);
         m_toolButtonGroup->addButton(m_transactionsButton);
         m_transactionsButton->setObjectName(QStringLiteral("m_transactionsButton"));
@@ -493,14 +498,6 @@ public:
         m_transactionsButton->setCheckable(true);
 
         verticalLayout->addWidget(m_transactionsButton);
-
-        m_blockExplorerButton = new QPushButton(m_toolFrame);
-        m_toolButtonGroup->addButton(m_blockExplorerButton);
-        m_blockExplorerButton->setObjectName(QStringLiteral("m_blockExplorerButton"));
-        m_blockExplorerButton->setFocusPolicy(Qt::NoFocus);
-        m_blockExplorerButton->setCheckable(true);
-
-        verticalLayout->addWidget(m_blockExplorerButton);
 
         m_addressBookButton = new QPushButton(m_toolFrame);
         m_toolButtonGroup->addButton(m_addressBookButton);
@@ -562,12 +559,12 @@ public:
 
         horizontalLayout->addWidget(m_noWalletFrame);
 
-        m_blockExplorerFrame = new WalletGui::BlockExplorerFrame(centralwidget);
-        m_blockExplorerFrame->setObjectName(QStringLiteral("m_blockExplorerFrame"));
-        m_blockExplorerFrame->setFrameShape(QFrame::NoFrame);
-        m_blockExplorerFrame->setFrameShadow(QFrame::Raised);
+        m_receiveFrame = new WalletGui::ReceiveFrame(centralwidget);
+        m_receiveFrame->setObjectName(QStringLiteral("m_receiveFrame"));
+        m_receiveFrame->setFrameShape(QFrame::NoFrame);
+        m_receiveFrame->setFrameShadow(QFrame::Raised);
 
-        horizontalLayout->addWidget(m_blockExplorerFrame);
+        horizontalLayout->addWidget(m_receiveFrame);
 
         m_miningFrame = new WalletGui::MiningFrame(centralwidget);
         m_miningFrame->setObjectName(QStringLiteral("m_miningFrame"));
@@ -599,12 +596,18 @@ public:
         menuThemes->setObjectName(QStringLiteral("menuThemes"));
         menuHelp = new QMenu(menubar);
         menuHelp->setObjectName(QStringLiteral("menuHelp"));
+        menuPayment = new QMenu(menubar);
+        menuPayment->setObjectName(QStringLiteral("menuPayment"));
+        menuWallet = new QMenu(menubar);
+        menuWallet->setObjectName(QStringLiteral("menuWallet"));
         MainWindow->setMenuBar(menubar);
         statusBar = new WalletGui::WalletStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
 
         menubar->addAction(menuFile->menuAction());
+        menubar->addAction(menuWallet->menuAction());
+        menubar->addAction(menuPayment->menuAction());
         menubar->addAction(menuSettings->menuAction());
         menubar->addAction(menuHelp->menuAction());
         menuFile->addAction(m_createWalletAction);
@@ -612,19 +615,8 @@ public:
         menuFile->addAction(m_openWalletAction);
         menuFile->addAction(m_closeWalletAction);
         menuFile->addAction(m_recentWalletsAction);
-        menuFile->addAction(m_backupWalletAction);
-        menuFile->addAction(m_saveKeysAction);
-        menuFile->addAction(m_resetAction);
-        menuFile->addAction(m_importKeyAction);
-        menuFile->addAction(m_exportKeyAction);
-        menuFile->addAction(m_exportTrackingKeyAction);
-        menuFile->addAction(m_showSeedAction);
-        menuFile->addAction(m_importSeedAction);
         menuFile->addSeparator();
         menuFile->addAction(m_exitAction);
-        menuSettings->addAction(m_encryptWalletAction);
-        menuSettings->addAction(m_changePasswordAction);
-        menuSettings->addSeparator();
         menuSettings->addAction(m_autostartAction);
         menuSettings->addAction(m_minimizeToTrayAction);
         menuSettings->addAction(m_closeToTrayAction);
@@ -635,6 +627,21 @@ public:
         menuHelp->addAction(m_reportIssueAction);
         menuHelp->addAction(m_aboutKarbovanetsAction);
         menuHelp->addAction(m_aboutQtAction);
+        menuPayment->addAction(m_createPaymentRequestAction);
+        menuPayment->addAction(m_openPaymentRequestAction);
+        menuWallet->addAction(m_encryptWalletAction);
+        menuWallet->addAction(m_changePasswordAction);
+        menuWallet->addSeparator();
+        menuWallet->addAction(m_backupWalletAction);
+        menuWallet->addAction(m_saveKeysAction);
+        menuWallet->addAction(m_importKeyAction);
+        menuWallet->addAction(m_exportKeyAction);
+        menuWallet->addAction(m_exportTrackingKeyAction);
+        menuWallet->addSeparator();
+        menuWallet->addAction(m_showSeedAction);
+        menuWallet->addAction(m_importSeedAction);
+        menuWallet->addSeparator();
+        menuWallet->addAction(m_resetAction);
 
         retranslateUi(MainWindow);
         QObject::connect(m_createWalletAction, SIGNAL(triggered()), MainWindow, SLOT(createWallet()));
@@ -654,7 +661,6 @@ public:
         QObject::connect(m_closeToTrayAction, SIGNAL(triggered(bool)), MainWindow, SLOT(setCloseToTrayEnabled(bool)));
         QObject::connect(m_encryptButton, SIGNAL(clicked()), m_encryptWalletAction, SLOT(trigger()));
         QObject::connect(m_preferencesAction, SIGNAL(triggered()), MainWindow, SLOT(showPreferences()));
-        QObject::connect(m_blockExplorerButton, SIGNAL(toggled(bool)), m_blockExplorerFrame, SLOT(setVisible(bool)));
         QObject::connect(m_miningButton, SIGNAL(toggled(bool)), m_miningFrame, SLOT(setVisible(bool)));
         QObject::connect(m_exportTrackingKeyAction, SIGNAL(triggered()), MainWindow, SLOT(exportTrackingKey()));
         QObject::connect(m_importKeyAction, SIGNAL(triggered()), MainWindow, SLOT(importKey()));
@@ -668,6 +674,9 @@ public:
         QObject::connect(m_showSeedAction, SIGNAL(triggered()), MainWindow, SLOT(showMnemonicSeed()));
         QObject::connect(m_importSeedAction, SIGNAL(triggered()), MainWindow, SLOT(restoreFromMnemonicSeed()));
         QObject::connect(m_createNondeterministicWalletAction, SIGNAL(triggered()), MainWindow, SLOT(createNonDeterministicWallet()));
+        QObject::connect(m_openPaymentRequestAction, SIGNAL(triggered()), MainWindow, SLOT(openPaymentRequestClicked()));
+        QObject::connect(m_createPaymentRequestAction, SIGNAL(triggered()), MainWindow, SLOT(createPaymentRequestClicked()));
+        QObject::connect(m_receiveButton, SIGNAL(toggled(bool)), m_receiveFrame, SLOT(setVisible(bool)));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -712,7 +721,8 @@ public:
         m_showSeedAction->setText(QApplication::translate("MainWindow", "Show mnemonic seed", 0));
         m_importSeedAction->setText(QApplication::translate("MainWindow", "Import mnemonic seed", 0));
         m_createNondeterministicWalletAction->setText(QApplication::translate("MainWindow", "Create nondeterministic wallet", 0));
-        m_logoLabel->setText(QString());
+        m_openPaymentRequestAction->setText(QApplication::translate("MainWindow", "Open payment request", 0));
+        m_createPaymentRequestAction->setText(QApplication::translate("MainWindow", "Create payment request", 0));
         m_noWalletLabel->setText(QApplication::translate("MainWindow", "No active wallet", 0));
         m_walletLabel->setText(QApplication::translate("MainWindow", "Your wallet:", 0));
 #ifndef QT_NO_TOOLTIP
@@ -734,14 +744,16 @@ public:
         m_balanceIconLabel->setText(QString());
         m_overviewButton->setText(QApplication::translate("MainWindow", "OVERVIEW", 0));
         m_sendButton->setText(QApplication::translate("MainWindow", "SEND", 0));
+        m_receiveButton->setText(QApplication::translate("MainWindow", "RECEIVE", 0));
         m_transactionsButton->setText(QApplication::translate("MainWindow", "HISTORY", 0));
-        m_blockExplorerButton->setText(QApplication::translate("MainWindow", "BLOCK EXPLORER", 0));
         m_addressBookButton->setText(QApplication::translate("MainWindow", "CONTACTS", 0));
         m_miningButton->setText(QApplication::translate("MainWindow", "MINING", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
         menuSettings->setTitle(QApplication::translate("MainWindow", "Settings", 0));
         menuThemes->setTitle(QApplication::translate("MainWindow", "Themes", 0));
         menuHelp->setTitle(QApplication::translate("MainWindow", "Help", 0));
+        menuPayment->setTitle(QApplication::translate("MainWindow", "Payment", 0));
+        menuWallet->setTitle(QApplication::translate("MainWindow", "Wallet", 0));
     } // retranslateUi
 
 };
