@@ -150,7 +150,7 @@ void Settings::restoreDefaultNodeList() {
 }
 
 void Settings::setDefaultRemoteNode() {
-   if (!m_settings.contains(OPTION_NODE_REMOTE_RPC_URL)) {
+   if (!m_settings.contains(OPTION_NODE_REMOTE_RPC_URL) || getConnectionMethod() != ConnectionMethod::REMOTE) {
       srand(time(NULL));
       QStringList nodeList = getRemoteNodeList();
       QUrl _url = QUrl::fromUserInput(nodeList.at(rand() % nodeList.size()));

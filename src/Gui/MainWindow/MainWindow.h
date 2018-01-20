@@ -145,7 +145,6 @@ private:
   Q_SLOT void showQrCode();
   Q_SLOT void showMnemonicSeed();
   Q_SLOT void restoreFromMnemonicSeed();
-  Q_SLOT void createPaymentRequestClicked();
   Q_SLOT void openPaymentRequestClicked();
 
 Q_SIGNALS:

@@ -675,7 +675,7 @@ public:
         QObject::connect(m_importSeedAction, SIGNAL(triggered()), MainWindow, SLOT(restoreFromMnemonicSeed()));
         QObject::connect(m_createNondeterministicWalletAction, SIGNAL(triggered()), MainWindow, SLOT(createNonDeterministicWallet()));
         QObject::connect(m_openPaymentRequestAction, SIGNAL(triggered()), MainWindow, SLOT(openPaymentRequestClicked()));
-        QObject::connect(m_createPaymentRequestAction, SIGNAL(triggered()), MainWindow, SLOT(createPaymentRequestClicked()));
+        QObject::connect(m_createPaymentRequestAction, SIGNAL(triggered()), m_receiveFrame, SLOT(setVisible(bool)));
         QObject::connect(m_receiveButton, SIGNAL(toggled(bool)), m_receiveFrame, SLOT(setVisible(bool)));
 
         QMetaObject::connectSlotsByName(MainWindow);

@@ -15,13 +15,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Karbovanets.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <QMouseEvent>
-#include <QThread>
-
-#ifdef Q_OS_WIN
-#include <stdint.h>
-#endif
-
+#include <QDataWidgetMapper>
+#include <QApplication>
+#include <QFileDialog>
+#include <QTextStream>
+#include <QClipboard>
+#include <QBuffer>
+#include <QTime>
+#include <QUrl>
+#include "Gui/Common/QRLabel.h"
 #include "Settings/Settings.h"
 #include "ReceiveFrame.h"
 #include "ui_ReceiveFrame.h"
@@ -47,11 +49,96 @@ void ReceiveFrame::setMainWindow(QWidget* _mainWindow) {
 
 void ReceiveFrame::cryptoNoteAdapterInitCompleted(int _status) {
   if (_status == 0) {
+      m_ui->m_amountRequestSpinBox->setSuffix(" " + m_cryptoNoteAdapter->getCurrencyTicker().toUpper());
+      generateRequest();
   }
 }
 
 void ReceiveFrame::cryptoNoteAdapterDeinitCompleted() {
   // Do nothing
+}
+
+void ReceiveFrame::walletOpened(QString& _address) {
+  m_address = _address;
+  m_ui->m_amountRequestSpinBox->setSuffix(" " + m_cryptoNoteAdapter->getCurrencyTicker().toUpper());
+  generateRequest();
+}
+
+void ReceiveFrame::walletClosed() {
+  m_address = "";
+}
+
+void ReceiveFrame::generateRequest() {
+  m_request = "karbowanec:" + m_address;
+  if(m_cryptoNoteAdapter->parseAmount(m_ui->m_amountRequestSpinBox->cleanText()) != 0){
+    m_request.append("?amount=" + m_ui->m_amountRequestSpinBox->cleanText());
+  }
+
+  if(m_cryptoNoteAdapter->parseAmount(m_ui->m_amountRequestSpinBox->cleanText()) != 0 && !m_ui->m_paymentIdRequestEdit->text().isEmpty()) {
+    m_request.append("&payment_id=" + m_ui->m_paymentIdRequestEdit->text());
+  } else if(!m_ui->m_paymentIdRequestEdit->text().isEmpty()) {
+    m_request.append("?payment_id=" + m_ui->m_paymentIdRequestEdit->text());
+  }
+
+  if((m_cryptoNoteAdapter->parseAmount(m_ui->m_amountRequestSpinBox->cleanText()) != 0 || !m_ui->m_paymentIdRequestEdit->text().isEmpty()) && !m_ui->m_labelEdit->text().isEmpty()) {
+    m_request.append("&label=" + QUrl::toPercentEncoding(m_ui->m_labelEdit->text()));
+  } else if(!m_ui->m_labelEdit->text().isEmpty()){
+    m_request.append("?label=" + QUrl::toPercentEncoding(m_ui->m_labelEdit->text()));
+  }
+  m_ui->m_requestTextEdit->setText(m_request);
+  m_ui->m_qrCodeRequestLabel->showQRCode(m_request);
+}
+
+void ReceiveFrame::copyRequest() {
+  QApplication::clipboard()->setText(m_request);
+}
+
+void ReceiveFrame::saveRequest() {
+  QString file = QFileDialog::getSaveFileName(this, tr("Save as"), QDir::homePath(), "TXT (*.txt)");
+  if (!file.isEmpty()) {
+    QFile f(file);
+    if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+      QTextStream outputStream(&f);
+      outputStream << m_request;
+      f.close();
+    }
+  }
+}
+
+void ReceiveFrame::saveQrCode() {
+  QString fileName = QFileDialog::getSaveFileName(this, tr("Save QR Code"), QDir::homePath(), "PNG (*.png)");
+  if (!fileName.isEmpty()) {
+    QPixmap qrcode = QPixmap::grabWidget(m_ui->m_qrCodeRequestLabel);
+    QFile f(fileName);
+    if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+      QByteArray ba;
+      QBuffer buffer(&ba);
+      buffer.open(QIODevice::WriteOnly);
+      qrcode.save(&buffer, "PNG");
+      f.write(ba);
+      f.close();
+    }
+  }
+}
+
+void ReceiveFrame::generatePaymentIdClicked() {
+  QTime time = QTime::currentTime();
+  qsrand((uint)time.msec());
+  const QString possibleCharacters("ABCDEF0123456789");
+  const int randomStringLength = 64;
+  QString randomString;
+  for(int i=0; i<randomStringLength; ++i)
+  {
+    int index = qrand() % possibleCharacters.length();
+    QChar nextChar = possibleCharacters.at(index);
+    randomString.append(nextChar);
+  }
+  m_ui->m_paymentIdRequestEdit->setText(randomString);
+
+  //Crypto::Hash
+
+  //        hash8 payment_id = crypto::rand<crypto::hash8>();
+  //return epee::string_tools::pod_to_hex(payment_id);
 }
 
 }

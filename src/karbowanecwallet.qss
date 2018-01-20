@@ -403,6 +403,21 @@ QCalendarWidget QMenu {
   color: %fontColorBlueHover%;
 }
 
+#m_receiveFrame {
+  background-color: #ffffff;
+  border: none;
+}
+
+#m_receiveFrame > #m_createRequestFrame {
+  background-color: #ffffff;
+  border: none;
+  border-bottom: 1px solid %borderColor%;
+}
+#m_receiveFrame > #m_receiveFrameButtons {
+  background-color: #ffffff;
+  border: none;
+  border-top: 1px solid %borderColor%;
+}
 
 #m_blockExplorerFrame {
   background-color: %backgroundColorGray%;

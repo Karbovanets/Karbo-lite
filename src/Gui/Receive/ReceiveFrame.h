@@ -18,12 +18,10 @@
 #pragma once
 
 #include <QFrame>
-#include <QTreeView>
-
 #include "Application/IWalletUiItem.h"
 #include "ICryptoNoteAdapter.h"
 
-class QPropertyAnimation;
+class QAbstractItemModel;
 
 namespace Ui {
 class ReceiveFrame;
@@ -47,11 +45,22 @@ public:
   Q_SLOT virtual void cryptoNoteAdapterInitCompleted(int _status) override;
   Q_SLOT virtual void cryptoNoteAdapterDeinitCompleted() override;
 
+  Q_SLOT void walletOpened(QString& _address);
+  Q_SLOT void walletClosed();
+
+  QString m_address;
+  QString m_request;
+
 private:
   QScopedPointer<Ui::ReceiveFrame> m_ui;
   ICryptoNoteAdapter* m_cryptoNoteAdapter;
   QWidget* m_mainWindow;
 
+  Q_SLOT void generatePaymentIdClicked();
+  Q_SLOT void generateRequest();
+  Q_SLOT void copyRequest();
+  Q_SLOT void saveRequest();
+  Q_SLOT void saveQrCode();
 };
 
 }

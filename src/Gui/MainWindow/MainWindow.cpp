@@ -44,7 +44,6 @@
 #include "Gui/Common/QRCodeDialog.h"
 #include "Gui/Common/MnemonicDialog.h"
 #include "Gui/Common/OpenUriDialog.h"
-#include "Gui/Common/RequestPaymentDialog.h"
 #include "ICryptoNoteAdapter.h"
 #include "INodeAdapter.h"
 #include "IWalletAdapter.h"
@@ -270,6 +269,8 @@ void MainWindow::walletOpened() {
   }
 
   setDevDonation();
+
+  m_ui->m_receiveFrame->walletOpened(walletAdapter->getAddress(0));
 }
 
 void MainWindow::walletOpenError(int _initStatus) {
@@ -407,7 +408,6 @@ void MainWindow::setOpenedState() {
   m_ui->m_encryptWalletAction->setEnabled(!walletAdapter->isEncrypted());
   m_ui->m_changePasswordAction->setEnabled(walletAdapter->isEncrypted());
   m_ui->m_openPaymentRequestAction->setEnabled(true);
-  m_ui->m_createPaymentRequestAction->setEnabled(true);
 
   m_ui->m_noWalletFrame->hide();
   m_ui->m_overviewFrame->show();
@@ -433,7 +433,6 @@ void MainWindow::setClosedState() {
   m_ui->m_changePasswordAction->setEnabled(false);
   m_ui->m_showSeedAction->setEnabled(false);
   m_ui->m_openPaymentRequestAction->setEnabled(false);
-  m_ui->m_createPaymentRequestAction->setEnabled(false);
 
   m_ui->m_overviewFrame->hide();
   m_ui->m_sendFrame->hide();
@@ -443,6 +442,8 @@ void MainWindow::setClosedState() {
   m_ui->m_miningFrame->hide();
   m_ui->m_noWalletFrame->show();
   m_ui->m_syncProgress->setValue(0);
+
+  m_ui->m_receiveFrame->walletClosed();
 }
 
 void MainWindow::addRecipientTriggered() {
@@ -923,13 +924,6 @@ void MainWindow::openPaymentRequestClicked() {
     }
     m_ui->m_sendFrame->urlReceived(request);
     m_ui->m_sendButton->click();
-  }
-}
-
-void MainWindow::createPaymentRequestClicked() {
-  RequestPaymentDialog dlg(m_cryptoNoteAdapter, m_walletStateModel->index(0, WalletStateModel::COLUMN_ADDRESS).data().toString(), this);
-  if (dlg.exec() == QDialog::Accepted) {
-
   }
 }
 

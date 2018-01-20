@@ -1749,16 +1749,16 @@
   <connection>
    <sender>m_createPaymentRequestAction</sender>
    <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>createPaymentRequestClicked()</slot>
+   <receiver>m_receiveFrame</receiver>
+   <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>636</x>
-     <y>411</y>
+     <x>1033</x>
+     <y>459</y>
     </hint>
    </hints>
   </connection>
