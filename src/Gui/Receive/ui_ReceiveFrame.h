@@ -15,7 +15,6 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFrame>
-#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLineEdit>
@@ -33,26 +32,27 @@ class Ui_ReceiveFrame
 {
 public:
     QVBoxLayout *verticalLayout;
+    QHBoxLayout *horizontalLayout_4;
     QFrame *m_createRequestFrame;
-    QGridLayout *gridLayout;
+    QVBoxLayout *verticalLayout_5;
+    WalletGui::WalletHeaderLabel *label;
+    WalletGui::WalletNormalGrayTextLabel *amountLabel;
+    QHBoxLayout *horizontalLayout_6;
     QDoubleSpinBox *m_amountRequestSpinBox;
     QSpacerItem *horizontalSpacer_2;
-    WalletGui::WalletNormalGrayTextLabel *amountLabel;
-    WalletGui::WalletNormalGrayTextLabel *paymentIdLabel;
     QHBoxLayout *horizontalLayout_3;
-    QLineEdit *m_paymentIdRequestEdit;
+    WalletGui::WalletNormalGrayTextLabel *paymentIdLabel;
     WalletGui::WalletNormalLinkLikeButton *m_generateIdButton;
+    QSpacerItem *horizontalSpacer_4;
+    QLineEdit *m_paymentIdRequestEdit;
     WalletGui::WalletNormalGrayTextLabel *labelLabel;
     QLineEdit *m_labelEdit;
-    QSpacerItem *horizontalSpacer_3;
-    WalletGui::WalletHeaderLabel *label;
-    QHBoxLayout *horizontalLayout_2;
     WalletGui::WalletHeaderLabel *label_2;
-    QFrame *m_showRequestFrame;
-    QHBoxLayout *horizontalLayout;
-    WalletGui::QRLabel *m_qrCodeRequestLabel;
-    QVBoxLayout *verticalLayout_2;
     QTextEdit *m_requestTextEdit;
+    QSpacerItem *verticalSpacer_2;
+    QVBoxLayout *verticalLayout_4;
+    QHBoxLayout *horizontalLayout_7;
+    WalletGui::QRLabel *m_qrCodeRequestLabel;
     QSpacerItem *verticalSpacer;
     QFrame *m_receiveFrameButtons;
     QHBoxLayout *m_receiveFrameButtonsLayout;
@@ -72,6 +72,9 @@ public:
         verticalLayout->setSpacing(0);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
+        horizontalLayout_4->setContentsMargins(-1, 9, -1, 9);
         m_createRequestFrame = new QFrame(ReceiveFrame);
         m_createRequestFrame->setObjectName(QStringLiteral("m_createRequestFrame"));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -83,128 +86,148 @@ public:
         font.setBold(false);
         font.setWeight(50);
         m_createRequestFrame->setFont(font);
-        gridLayout = new QGridLayout(m_createRequestFrame);
-        gridLayout->setObjectName(QStringLiteral("gridLayout"));
-        gridLayout->setHorizontalSpacing(6);
-        gridLayout->setContentsMargins(18, 9, 18, 9);
+        verticalLayout_5 = new QVBoxLayout(m_createRequestFrame);
+        verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
+        verticalLayout_5->setContentsMargins(18, -1, 9, -1);
+        label = new WalletGui::WalletHeaderLabel(m_createRequestFrame);
+        label->setObjectName(QStringLiteral("label"));
+        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy1);
+        label->setMinimumSize(QSize(0, 13));
+        label->setMargin(0);
+
+        verticalLayout_5->addWidget(label);
+
+        amountLabel = new WalletGui::WalletNormalGrayTextLabel(m_createRequestFrame);
+        amountLabel->setObjectName(QStringLiteral("amountLabel"));
+
+        verticalLayout_5->addWidget(amountLabel);
+
+        horizontalLayout_6 = new QHBoxLayout();
+        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
+        horizontalLayout_6->setContentsMargins(-1, 0, -1, -1);
         m_amountRequestSpinBox = new QDoubleSpinBox(m_createRequestFrame);
         m_amountRequestSpinBox->setObjectName(QStringLiteral("m_amountRequestSpinBox"));
         m_amountRequestSpinBox->setDecimals(12);
         m_amountRequestSpinBox->setMaximum(1e+09);
 
-        gridLayout->addWidget(m_amountRequestSpinBox, 1, 1, 1, 1);
+        horizontalLayout_6->addWidget(m_amountRequestSpinBox);
 
         horizontalSpacer_2 = new QSpacerItem(299, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        gridLayout->addItem(horizontalSpacer_2, 1, 2, 1, 2);
+        horizontalLayout_6->addItem(horizontalSpacer_2);
 
-        amountLabel = new WalletGui::WalletNormalGrayTextLabel(m_createRequestFrame);
-        amountLabel->setObjectName(QStringLiteral("amountLabel"));
 
-        gridLayout->addWidget(amountLabel, 1, 0, 1, 1);
-
-        paymentIdLabel = new WalletGui::WalletNormalGrayTextLabel(m_createRequestFrame);
-        paymentIdLabel->setObjectName(QStringLiteral("paymentIdLabel"));
-
-        gridLayout->addWidget(paymentIdLabel, 2, 0, 1, 1);
+        verticalLayout_5->addLayout(horizontalLayout_6);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        m_paymentIdRequestEdit = new QLineEdit(m_createRequestFrame);
-        m_paymentIdRequestEdit->setObjectName(QStringLiteral("m_paymentIdRequestEdit"));
+        paymentIdLabel = new WalletGui::WalletNormalGrayTextLabel(m_createRequestFrame);
+        paymentIdLabel->setObjectName(QStringLiteral("paymentIdLabel"));
+        QSizePolicy sizePolicy2(QSizePolicy::Maximum, QSizePolicy::Preferred);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(paymentIdLabel->sizePolicy().hasHeightForWidth());
+        paymentIdLabel->setSizePolicy(sizePolicy2);
 
-        horizontalLayout_3->addWidget(m_paymentIdRequestEdit);
+        horizontalLayout_3->addWidget(paymentIdLabel);
 
         m_generateIdButton = new WalletGui::WalletNormalLinkLikeButton(m_createRequestFrame);
         m_generateIdButton->setObjectName(QStringLiteral("m_generateIdButton"));
-        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(m_generateIdButton->sizePolicy().hasHeightForWidth());
-        m_generateIdButton->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(m_generateIdButton->sizePolicy().hasHeightForWidth());
+        m_generateIdButton->setSizePolicy(sizePolicy3);
         m_generateIdButton->setMinimumSize(QSize(80, 0));
         m_generateIdButton->setFlat(true);
 
         horizontalLayout_3->addWidget(m_generateIdButton);
 
+        horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        gridLayout->addLayout(horizontalLayout_3, 2, 1, 1, 3);
+        horizontalLayout_3->addItem(horizontalSpacer_4);
+
+
+        verticalLayout_5->addLayout(horizontalLayout_3);
+
+        m_paymentIdRequestEdit = new QLineEdit(m_createRequestFrame);
+        m_paymentIdRequestEdit->setObjectName(QStringLiteral("m_paymentIdRequestEdit"));
+
+        verticalLayout_5->addWidget(m_paymentIdRequestEdit);
 
         labelLabel = new WalletGui::WalletNormalGrayTextLabel(m_createRequestFrame);
         labelLabel->setObjectName(QStringLiteral("labelLabel"));
 
-        gridLayout->addWidget(labelLabel, 3, 0, 1, 1);
+        verticalLayout_5->addWidget(labelLabel);
 
         m_labelEdit = new QLineEdit(m_createRequestFrame);
         m_labelEdit->setObjectName(QStringLiteral("m_labelEdit"));
         m_labelEdit->setMinimumSize(QSize(300, 0));
 
-        gridLayout->addWidget(m_labelEdit, 3, 1, 1, 2);
+        verticalLayout_5->addWidget(m_labelEdit);
 
-        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout->addItem(horizontalSpacer_3, 3, 3, 1, 1);
-
-        label = new WalletGui::WalletHeaderLabel(m_createRequestFrame);
-        label->setObjectName(QStringLiteral("label"));
-        sizePolicy1.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy1);
-        label->setMinimumSize(QSize(0, 30));
-        label->setMargin(0);
-
-        gridLayout->addWidget(label, 0, 0, 1, 1);
-
-
-        verticalLayout->addWidget(m_createRequestFrame);
-
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        horizontalLayout_2->setContentsMargins(18, -1, 18, -1);
-        label_2 = new WalletGui::WalletHeaderLabel(ReceiveFrame);
+        label_2 = new WalletGui::WalletHeaderLabel(m_createRequestFrame);
         label_2->setObjectName(QStringLiteral("label_2"));
         sizePolicy1.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
         label_2->setSizePolicy(sizePolicy1);
-        label_2->setMinimumSize(QSize(0, 30));
+        label_2->setMinimumSize(QSize(0, 13));
+        label_2->setBaseSize(QSize(0, 13));
         label_2->setMargin(0);
 
-        horizontalLayout_2->addWidget(label_2);
+        verticalLayout_5->addWidget(label_2);
+
+        m_requestTextEdit = new QTextEdit(m_createRequestFrame);
+        m_requestTextEdit->setObjectName(QStringLiteral("m_requestTextEdit"));
+        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(m_requestTextEdit->sizePolicy().hasHeightForWidth());
+        m_requestTextEdit->setSizePolicy(sizePolicy4);
+        m_requestTextEdit->setMinimumSize(QSize(300, 25));
+        m_requestTextEdit->setMaximumSize(QSize(16777215, 60));
+        m_requestTextEdit->setBaseSize(QSize(0, 100));
+        m_requestTextEdit->setReadOnly(false);
+        m_requestTextEdit->setAcceptRichText(false);
+
+        verticalLayout_5->addWidget(m_requestTextEdit);
+
+        verticalSpacer_2 = new QSpacerItem(20, 60, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_5->addItem(verticalSpacer_2);
 
 
-        verticalLayout->addLayout(horizontalLayout_2);
+        horizontalLayout_4->addWidget(m_createRequestFrame);
 
-        m_showRequestFrame = new QFrame(ReceiveFrame);
-        m_showRequestFrame->setObjectName(QStringLiteral("m_showRequestFrame"));
-        QSizePolicy sizePolicy2(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(m_showRequestFrame->sizePolicy().hasHeightForWidth());
-        m_showRequestFrame->setSizePolicy(sizePolicy2);
-        m_showRequestFrame->setMinimumSize(QSize(600, 350));
-        horizontalLayout = new QHBoxLayout(m_showRequestFrame);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        horizontalLayout->setContentsMargins(18, -1, 18, -1);
-        m_qrCodeRequestLabel = new WalletGui::QRLabel(m_showRequestFrame);
+        verticalLayout_4 = new QVBoxLayout();
+        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
+        verticalLayout_4->setContentsMargins(9, 9, 18, 9);
+        horizontalLayout_7 = new QHBoxLayout();
+        horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
+        horizontalLayout_7->setContentsMargins(-1, 0, -1, -1);
+        m_qrCodeRequestLabel = new WalletGui::QRLabel(ReceiveFrame);
         m_qrCodeRequestLabel->setObjectName(QStringLiteral("m_qrCodeRequestLabel"));
+        sizePolicy1.setHeightForWidth(m_qrCodeRequestLabel->sizePolicy().hasHeightForWidth());
+        m_qrCodeRequestLabel->setSizePolicy(sizePolicy1);
         m_qrCodeRequestLabel->setMinimumSize(QSize(300, 300));
 
-        horizontalLayout->addWidget(m_qrCodeRequestLabel);
-
-        verticalLayout_2 = new QVBoxLayout();
-        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
-        m_requestTextEdit = new QTextEdit(m_showRequestFrame);
-        m_requestTextEdit->setObjectName(QStringLiteral("m_requestTextEdit"));
-
-        verticalLayout_2->addWidget(m_requestTextEdit);
+        horizontalLayout_7->addWidget(m_qrCodeRequestLabel);
 
 
-        horizontalLayout->addLayout(verticalLayout_2);
+        verticalLayout_4->addLayout(horizontalLayout_7);
+
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_4->addItem(verticalSpacer);
 
 
-        verticalLayout->addWidget(m_showRequestFrame);
+        horizontalLayout_4->addLayout(verticalLayout_4);
 
-        verticalSpacer = new QSpacerItem(20, 10, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        verticalLayout->addItem(verticalSpacer);
+        verticalLayout->addLayout(horizontalLayout_4);
 
         m_receiveFrameButtons = new QFrame(ReceiveFrame);
         m_receiveFrameButtons->setObjectName(QStringLiteral("m_receiveFrameButtons"));
@@ -217,8 +240,8 @@ public:
 
         m_copyToClipBoardButton = new WalletGui::WalletNormalBlueButton(m_receiveFrameButtons);
         m_copyToClipBoardButton->setObjectName(QStringLiteral("m_copyToClipBoardButton"));
-        sizePolicy1.setHeightForWidth(m_copyToClipBoardButton->sizePolicy().hasHeightForWidth());
-        m_copyToClipBoardButton->setSizePolicy(sizePolicy1);
+        sizePolicy3.setHeightForWidth(m_copyToClipBoardButton->sizePolicy().hasHeightForWidth());
+        m_copyToClipBoardButton->setSizePolicy(sizePolicy3);
         m_copyToClipBoardButton->setMinimumSize(QSize(150, 0));
         m_copyToClipBoardButton->setBaseSize(QSize(150, 0));
         m_copyToClipBoardButton->setFlat(true);
@@ -227,8 +250,8 @@ public:
 
         m_saveRequestButton = new WalletGui::WalletNormalBlueButton(m_receiveFrameButtons);
         m_saveRequestButton->setObjectName(QStringLiteral("m_saveRequestButton"));
-        sizePolicy1.setHeightForWidth(m_saveRequestButton->sizePolicy().hasHeightForWidth());
-        m_saveRequestButton->setSizePolicy(sizePolicy1);
+        sizePolicy3.setHeightForWidth(m_saveRequestButton->sizePolicy().hasHeightForWidth());
+        m_saveRequestButton->setSizePolicy(sizePolicy3);
         m_saveRequestButton->setMinimumSize(QSize(150, 0));
         m_saveRequestButton->setBaseSize(QSize(150, 0));
         m_saveRequestButton->setFlat(true);
@@ -237,8 +260,8 @@ public:
 
         m_saveQrCodeButton = new WalletGui::WalletNormalBlueButton(m_receiveFrameButtons);
         m_saveQrCodeButton->setObjectName(QStringLiteral("m_saveQrCodeButton"));
-        sizePolicy1.setHeightForWidth(m_saveQrCodeButton->sizePolicy().hasHeightForWidth());
-        m_saveQrCodeButton->setSizePolicy(sizePolicy1);
+        sizePolicy3.setHeightForWidth(m_saveQrCodeButton->sizePolicy().hasHeightForWidth());
+        m_saveQrCodeButton->setSizePolicy(sizePolicy3);
         m_saveQrCodeButton->setMinimumSize(QSize(150, 0));
         m_saveQrCodeButton->setBaseSize(QSize(150, 0));
         m_saveQrCodeButton->setFlat(true);
@@ -250,9 +273,9 @@ public:
 
         QWidget::setTabOrder(m_amountRequestSpinBox, m_paymentIdRequestEdit);
         QWidget::setTabOrder(m_paymentIdRequestEdit, m_labelEdit);
-        QWidget::setTabOrder(m_labelEdit, m_generateIdButton);
-        QWidget::setTabOrder(m_generateIdButton, m_requestTextEdit);
-        QWidget::setTabOrder(m_requestTextEdit, m_copyToClipBoardButton);
+        QWidget::setTabOrder(m_labelEdit, m_requestTextEdit);
+        QWidget::setTabOrder(m_requestTextEdit, m_generateIdButton);
+        QWidget::setTabOrder(m_generateIdButton, m_copyToClipBoardButton);
         QWidget::setTabOrder(m_copyToClipBoardButton, m_saveRequestButton);
         QWidget::setTabOrder(m_saveRequestButton, m_saveQrCodeButton);
 
@@ -271,12 +294,12 @@ public:
     void retranslateUi(QFrame *ReceiveFrame)
     {
         ReceiveFrame->setWindowTitle(QApplication::translate("ReceiveFrame", "Frame", 0));
+        label->setText(QApplication::translate("ReceiveFrame", "Create request", 0));
         amountLabel->setText(QApplication::translate("ReceiveFrame", "AMOUNT", 0));
         paymentIdLabel->setText(QApplication::translate("ReceiveFrame", "PAYMENT ID", 0));
         m_generateIdButton->setText(QApplication::translate("ReceiveFrame", "Generate", 0));
         labelLabel->setText(QApplication::translate("ReceiveFrame", "LABEL", 0));
-        label->setText(QApplication::translate("ReceiveFrame", "Create request", 0));
-        label_2->setText(QApplication::translate("ReceiveFrame", "Payment Request", 0));
+        label_2->setText(QApplication::translate("ReceiveFrame", "Payment request", 0));
         m_qrCodeRequestLabel->setText(QString());
         m_copyToClipBoardButton->setText(QApplication::translate("ReceiveFrame", "Copy to clipboard", 0));
         m_saveRequestButton->setText(QApplication::translate("ReceiveFrame", "Save Request", 0));
