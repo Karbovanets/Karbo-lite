@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ConnectionOptionsFrame.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -35,10 +35,6 @@ public:
     QVBoxLayout *verticalLayout;
     QRadioButton *m_autoRadio;
     WalletGui::WalletSmallGrayTextLabel *m_autoHelperLabel;
-    QWidget *widget_2;
-    QVBoxLayout *verticalLayout_2;
-    QRadioButton *m_embeddedRadio;
-    WalletGui::WalletSmallGrayTextLabel *m_embeddedHelperLabel;
     QWidget *widget_3;
     QVBoxLayout *verticalLayout_3;
     QHBoxLayout *horizontalLayout;
@@ -60,6 +56,7 @@ public:
     QSpinBox *m_remotePortSpin;
     QSpacerItem *horizontalSpacer_4;
     WalletGui::WalletSmallGrayTextLabel *m_remoteHelperLabel;
+    WalletGui::WalletExtraNormalGrayTextLabel *label_4;
     QSpacerItem *verticalSpacer;
     QButtonGroup *m_connectionButtonGroup;
 
@@ -106,34 +103,6 @@ public:
         verticalLayout->setStretch(1, 1);
 
         verticalLayout_5->addWidget(widget);
-
-        widget_2 = new QWidget(ConnectionOptionsFrame);
-        widget_2->setObjectName(QStringLiteral("widget_2"));
-        sizePolicy.setHeightForWidth(widget_2->sizePolicy().hasHeightForWidth());
-        widget_2->setSizePolicy(sizePolicy);
-        widget_2->setMinimumSize(QSize(0, 70));
-        widget_2->setMaximumSize(QSize(16777215, 70));
-        verticalLayout_2 = new QVBoxLayout(widget_2);
-        verticalLayout_2->setSpacing(3);
-        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
-        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
-        m_embeddedRadio = new QRadioButton(widget_2);
-        m_connectionButtonGroup->addButton(m_embeddedRadio);
-        m_embeddedRadio->setObjectName(QStringLiteral("m_embeddedRadio"));
-
-        verticalLayout_2->addWidget(m_embeddedRadio);
-
-        m_embeddedHelperLabel = new WalletGui::WalletSmallGrayTextLabel(widget_2);
-        m_embeddedHelperLabel->setObjectName(QStringLiteral("m_embeddedHelperLabel"));
-        m_embeddedHelperLabel->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
-        m_embeddedHelperLabel->setWordWrap(true);
-        m_embeddedHelperLabel->setIndent(0);
-
-        verticalLayout_2->addWidget(m_embeddedHelperLabel, 0, Qt::AlignTop);
-
-        verticalLayout_2->setStretch(1, 1);
-
-        verticalLayout_5->addWidget(widget_2);
 
         widget_3 = new QWidget(ConnectionOptionsFrame);
         widget_3->setObjectName(QStringLiteral("widget_3"));
@@ -262,6 +231,12 @@ public:
 
         verticalLayout_5->addWidget(widget_4);
 
+        label_4 = new WalletGui::WalletExtraNormalGrayTextLabel(ConnectionOptionsFrame);
+        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setWordWrap(true);
+
+        verticalLayout_5->addWidget(label_4);
+
         verticalSpacer = new QSpacerItem(665, 61, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout_5->addItem(verticalSpacer);
@@ -281,16 +256,15 @@ public:
     {
         ConnectionOptionsFrame->setWindowTitle(QApplication::translate("ConnectionOptionsFrame", "Frame", 0));
         m_autoRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Auto selection", 0));
-        m_autoHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to local Karbovanets daemon process on port 8081. In case of no local daemon running it will use an in-wallet embedded node implementation.", 0));
-        m_embeddedRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Embedded", 0));
-        m_embeddedHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "An in-wallet embedded Karbovanets node will be used.", 0));
+        m_autoHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to local Karbo daemon process on default port 32348. In case of no local daemon running it will use an in-wallet embedded node implementation.", 0));
         m_localRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Local daemon", 0));
         label->setText(QApplication::translate("ConnectionOptionsFrame", "Port:", 0));
-        m_localHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to local Karbovanets daemon process. Please specify daemon's port.", 0));
+        m_localHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to local Karbo daemon process. Please specify daemon's port.", 0));
         m_remoteRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Remote daemon", 0));
         label_2->setText(QApplication::translate("ConnectionOptionsFrame", "Host:", 0));
         label_3->setText(QApplication::translate("ConnectionOptionsFrame", "Port:", 0));
-        m_remoteHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to Karbovanets node running on another PC in the local or global network. Please specify IP address or domain name and the port.", 0));
+        m_remoteHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to Karbo node running on another PC in the local or global network. Please specify IP address or domain name and the port.", 0));
+        label_4->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet sends 0.25% fee from each transaction to the remote node it is connected to, but no more than 10 KRB.", 0));
     } // retranslateUi
 
 };

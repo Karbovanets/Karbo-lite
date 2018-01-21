@@ -81,72 +81,7 @@
       <item alignment="Qt::AlignTop">
        <widget class="WalletGui::WalletSmallGrayTextLabel" name="m_autoHelperLabel">
         <property name="text">
-         <string>Wallet will connect to local Karbovanets daemon process on port 8081. In case of no local daemon running it will use an in-wallet embedded node implementation.</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-        <property name="indent">
-         <number>0</number>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QWidget" name="widget_2" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>70</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>70</height>
-      </size>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,1">
-      <property name="spacing">
-       <number>3</number>
-      </property>
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QRadioButton" name="m_embeddedRadio">
-        <property name="text">
-         <string>Embedded</string>
-        </property>
-        <attribute name="buttonGroup">
-         <string notr="true">m_connectionButtonGroup</string>
-        </attribute>
-       </widget>
-      </item>
-      <item alignment="Qt::AlignTop">
-       <widget class="WalletGui::WalletSmallGrayTextLabel" name="m_embeddedHelperLabel">
-        <property name="text">
-         <string>An in-wallet embedded Karbovanets node will be used.</string>
+         <string>Wallet will connect to local Karbo daemon process on default port 32348. In case of no local daemon running it will use an in-wallet embedded node implementation.</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -270,7 +205,7 @@
       <item alignment="Qt::AlignTop">
        <widget class="WalletGui::WalletSmallGrayTextLabel" name="m_localHelperLabel">
         <property name="text">
-         <string>Wallet will connect to local Karbovanets daemon process. Please specify daemon's port.</string>
+         <string>Wallet will connect to local Karbo daemon process. Please specify daemon's port.</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -424,7 +359,7 @@
       <item alignment="Qt::AlignTop">
        <widget class="WalletGui::WalletSmallGrayTextLabel" name="m_remoteHelperLabel">
         <property name="text">
-         <string>Wallet will connect to Karbovanets node running on another PC in the local or global network. Please specify IP address or domain name and the port.</string>
+         <string>Wallet will connect to Karbo node running on another PC in the local or global network. Please specify IP address or domain name and the port.</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -438,6 +373,16 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="WalletGui::WalletExtraNormalGrayTextLabel" name="label_4">
+     <property name="text">
+      <string>Wallet sends 0.25% fee from each transaction to the remote node it is connected to, but no more than 10 KRB.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item>
@@ -458,6 +403,11 @@
  <customwidgets>
   <customwidget>
    <class>WalletGui::WalletSmallGrayTextLabel</class>
+   <extends>QLabel</extends>
+   <header>Gui/Common/WalletTextLabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>WalletGui::WalletExtraNormalGrayTextLabel</class>
    <extends>QLabel</extends>
    <header>Gui/Common/WalletTextLabel.h</header>
   </customwidget>

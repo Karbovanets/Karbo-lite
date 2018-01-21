@@ -240,7 +240,7 @@ bool WalletApplication::initCryptoNoteAdapter() {
   for (;;) {
     if (m_splash != nullptr) {
       m_splash->show();
-      m_splash->showMessage(QObject::tr("Loading blockchain..."), Qt::AlignLeft | Qt::AlignBottom, Qt::blue);
+      m_splash->showMessage(QObject::tr("Loading..."), Qt::AlignLeft | Qt::AlignBottom, Qt::blue);
       if (m_logWatcher == nullptr) {
         m_logWatcher = new LogFileWatcher(Settings::instance().getDataDir().absoluteFilePath(CORE_LOG_FILE_NAME), this);
         connect(m_logWatcher, &LogFileWatcher::newLogStringSignal, this, &WalletApplication::newLogString);
@@ -262,7 +262,7 @@ bool WalletApplication::initCryptoNoteAdapter() {
       okButton->setText(QObject::tr("Ok"));
       dlg.addButton(okButton, QMessageBox::AcceptRole);
       dlg.setText(QObject::tr("The database is currently used by another application or service.\n"
-      "If you have karbowanecd with non-default RPC port, you should terminate it and relaunch KarboWallet\n"
+      "If you have karbowanecd with non-default RPC port, you should terminate it and relaunch wallet\n"
       "or\n"
       "Set the Local deamon required port in KarboWallet Menu/Preferences/Connection settings."));
       dlg.exec();

@@ -675,8 +675,8 @@ public:
         QObject::connect(m_importSeedAction, SIGNAL(triggered()), MainWindow, SLOT(restoreFromMnemonicSeed()));
         QObject::connect(m_createNondeterministicWalletAction, SIGNAL(triggered()), MainWindow, SLOT(createNonDeterministicWallet()));
         QObject::connect(m_openPaymentRequestAction, SIGNAL(triggered()), MainWindow, SLOT(openPaymentRequestClicked()));
-        QObject::connect(m_createPaymentRequestAction, SIGNAL(triggered()), m_receiveFrame, SLOT(setVisible(bool)));
         QObject::connect(m_receiveButton, SIGNAL(toggled(bool)), m_receiveFrame, SLOT(setVisible(bool)));
+        QObject::connect(m_createPaymentRequestAction, SIGNAL(triggered()), m_receiveButton, SLOT(toggle()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -693,7 +693,7 @@ public:
 #ifndef QT_NO_TOOLTIP
         m_changePasswordAction->setToolTip(QApplication::translate("MainWindow", "Change password", 0));
 #endif // QT_NO_TOOLTIP
-        m_aboutKarbovanetsAction->setText(QApplication::translate("MainWindow", "About Karbovanets", 0));
+        m_aboutKarbovanetsAction->setText(QApplication::translate("MainWindow", "About Karbo Lite Wallet", 0));
         m_aboutQtAction->setText(QApplication::translate("MainWindow", "About Qt", 0));
         m_backupWalletAction->setText(QApplication::translate("MainWindow", "Backup wallet", 0));
         m_autostartAction->setText(QApplication::translate("MainWindow", "Start on system login", 0));

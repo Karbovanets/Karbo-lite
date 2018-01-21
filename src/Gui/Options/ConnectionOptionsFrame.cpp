@@ -59,7 +59,7 @@ ConnectionOptionsFrame::ConnectionOptionsFrame(QWidget* _parent) : QFrame(_paren
   m_ui(new Ui::ConnectionOptionsFrame), m_cryptoNoteAdapter(nullptr) {
   m_ui->setupUi(this);
   m_ui->m_connectionButtonGroup->setId(m_ui->m_autoRadio, static_cast<int>(ConnectionMethod::AUTO));
-  m_ui->m_connectionButtonGroup->setId(m_ui->m_embeddedRadio, static_cast<int>(ConnectionMethod::EMBEDDED));
+  //m_ui->m_connectionButtonGroup->setId(m_ui->m_embeddedRadio, static_cast<int>(ConnectionMethod::EMBEDDED));
   m_ui->m_connectionButtonGroup->setId(m_ui->m_localRadio, static_cast<int>(ConnectionMethod::LOCAL));
   m_ui->m_connectionButtonGroup->setId(m_ui->m_remoteRadio, static_cast<int>(ConnectionMethod::REMOTE));
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(CONNECTION_OPTIONS_STYLE_SHEET_TEMPLATE));
@@ -82,9 +82,9 @@ void ConnectionOptionsFrame::load() {
   case ConnectionMethod::AUTO:
     m_ui->m_autoRadio->toggle();
     break;
-  case ConnectionMethod::EMBEDDED:
-    m_ui->m_embeddedRadio->toggle();
-    break;
+  //case ConnectionMethod::EMBEDDED:
+  //  m_ui->m_embeddedRadio->toggle();
+  //  break;
   case ConnectionMethod::LOCAL:
     m_ui->m_localRadio->toggle();
     break;

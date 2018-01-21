@@ -2,3 +2,4 @@ build/
 cryptonote/
 rocksdb/
 *~
+*.user

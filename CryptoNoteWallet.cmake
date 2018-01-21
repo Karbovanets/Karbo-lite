@@ -1,4 +1,4 @@
-set(CN_PROJECT_NAME "karbowallet")
+set(CN_PROJECT_NAME "KarboLite")
 set(CN_CURRENCY_DISPLAY_NAME "Karbo")
 set(CN_CURRENCY_TICKER "KRB")
-set(CN_VERSION 2.0.0)
+set(CN_VERSION 1.0.0)

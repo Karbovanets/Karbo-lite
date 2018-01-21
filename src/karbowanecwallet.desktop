@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Karbo Wallet
+Name=Karbo Lite Wallet
 Comment=Karbo wallet
 Exec=karbowallet %U
 Terminal=false

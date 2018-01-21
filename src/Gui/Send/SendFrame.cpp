@@ -16,14 +16,13 @@
 // along with Karbovanets.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QUrl>
-#include <QTime>
 #include <QPair>
 #include <QUrlQuery>
 #include <QMessageBox>
 #include <QMetaMethod>
 
 #include <Wallet/WalletErrors.h>
-
+#include <Common/StringTools.h>
 #include "SendFrame.h"
 #include "Settings/Settings.h"
 #include "Gui/Common/QuestionDialog.h"
@@ -583,18 +582,9 @@ bool SendFrame::readyToSend() const {
 }
 
 void SendFrame::generatePaymentIdClicked() {
-  QTime time = QTime::currentTime();
-  qsrand((uint)time.msec());
-  const QString possibleCharacters("ABCDEF0123456789");
-  const int randomStringLength = 64;
-  QString randomString;
-  for(int i=0; i<randomStringLength; ++i)
-  {
-    int index = qrand() % possibleCharacters.length();
-    QChar nextChar = possibleCharacters.at(index);
-    randomString.append(nextChar);
-  }
-  m_ui->m_paymentIdEdit->setText(randomString);
+  Crypto::Hash payment_id;
+  payment_id = Crypto::rand<Crypto::Hash>();
+  m_ui->m_paymentIdEdit->setText(QString::fromStdString(Common::podToHex(payment_id)));
 }
 
 void SendFrame::insertPaymentIdReceived(const QString& _paymentId) {

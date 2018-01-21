@@ -21,8 +21,8 @@
 #include <QTextStream>
 #include <QClipboard>
 #include <QBuffer>
-#include <QTime>
 #include <QUrl>
+#include <Common/StringTools.h>
 #include "Gui/Common/QRLabel.h"
 #include "Settings/Settings.h"
 #include "ReceiveFrame.h"
@@ -122,23 +122,9 @@ void ReceiveFrame::saveQrCode() {
 }
 
 void ReceiveFrame::generatePaymentIdClicked() {
-  QTime time = QTime::currentTime();
-  qsrand((uint)time.msec());
-  const QString possibleCharacters("ABCDEF0123456789");
-  const int randomStringLength = 64;
-  QString randomString;
-  for(int i=0; i<randomStringLength; ++i)
-  {
-    int index = qrand() % possibleCharacters.length();
-    QChar nextChar = possibleCharacters.at(index);
-    randomString.append(nextChar);
-  }
-  m_ui->m_paymentIdRequestEdit->setText(randomString);
-
-  //Crypto::Hash
-
-  //        hash8 payment_id = crypto::rand<crypto::hash8>();
-  //return epee::string_tools::pod_to_hex(payment_id);
+  Crypto::Hash payment_id;
+  payment_id = Crypto::rand<Crypto::Hash>();
+  m_ui->m_paymentIdRequestEdit->setText(QString::fromStdString(Common::podToHex(payment_id)));
 }
 
 }
