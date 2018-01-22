@@ -287,7 +287,7 @@ public:
         m_enableDonationMiningCheck->setText(QApplication::translate("DonationOptionsFrame", "Donation mining", 0));
         label_2->setText(QApplication::translate("DonationOptionsFrame", "% of hashes to be donated", 0));
         m_donationMiningAmountSpin->setSuffix(QApplication::translate("DonationOptionsFrame", "%", 0));
-        m_donationMiningCommentLabel->setText(QApplication::translate("DonationOptionsFrame", "Donation mining allows you to contribute a fixed share of your in-wallet mining profit to a Karbovanets address of you choice.", 0));
+        m_donationMiningCommentLabel->setText(QApplication::translate("DonationOptionsFrame", "Donation mining allows you to contribute a fixed share of your in-wallet mining profit to a Karbo address of you choice.", 0));
         label->setText(QApplication::translate("DonationOptionsFrame", "Address for donations", 0));
         label_5->setText(QApplication::translate("DonationOptionsFrame", "(Donation addresses can be added in Contacts)", 0));
         m_enableDonationChangeCheck->setText(QApplication::translate("DonationOptionsFrame", "Random donation on each transaction", 0));
