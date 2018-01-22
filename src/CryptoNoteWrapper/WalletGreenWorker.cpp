@@ -282,7 +282,7 @@ IWalletAdapter::WalletInitStatus WalletGreenWorker::createWithKeysAndTimestamp(c
       if (std::memcmp(&_accountKeys.spendKeys.secretKey, &CryptoNote::NULL_SECRET_KEY, sizeof(Crypto::SecretKey)) == 0) {
         m_wallet->createAddress(_accountKeys.spendKeys.publicKey);
       } else {
-        m_wallet->createAddress(_accountKeys.spendKeys.secretKey);
+        m_wallet->createAddressWithTimestamp(_accountKeys.spendKeys.secretKey, _creationTimestamp);
       }
     } catch (const std::system_error& _error) {
       WalletLogger::critical(tr("[Wallet] Import keys error: %1").arg(_error.code().message().data()));

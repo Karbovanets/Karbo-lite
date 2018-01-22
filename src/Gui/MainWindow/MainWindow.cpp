@@ -29,7 +29,7 @@
 #include <QSessionManager>
 #include <QSystemTrayIcon>
 #include <QUrlQuery>
-#include <QDebug>
+#include <ctime>
 
 #include <Common/Base58.h>
 #include "MainWindow.h"
@@ -619,9 +619,8 @@ void MainWindow::createWallet() {
     QString oldWalletFile = Settings::instance().getWalletFile();
     Settings::instance().setWalletFile(filePath);
     AccountKeys accountKeys = m_deterministicAdapter.generateDeterministicKeys();
-    QDateTime currentDateTime = QDateTime::currentDateTimeUtc();
-    uint64_t timestamp = currentDateTime.toTime_t();
-    if (walletAdapter->createWithKeysAndTimestamp(filePath, accountKeys, timestamp) == IWalletAdapter::INIT_SUCCESS) {
+    uint64_t creationTimestamp = static_cast<uint64_t>(time(nullptr));
+    if (walletAdapter->createWithKeysAndTimestamp(filePath, accountKeys, creationTimestamp) == IWalletAdapter::INIT_SUCCESS) {
       walletAdapter->save(CryptoNote::WalletSaveLevel::SAVE_ALL, true);
       Q_ASSERT(walletAdapter->isOpen());
       QString fileName = Settings::instance().getWalletFile();
