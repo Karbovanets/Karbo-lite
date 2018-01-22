@@ -161,10 +161,10 @@ public:
         m_feeSpin->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
         m_feeSpin->setSuffix(QStringLiteral("KRB"));
         m_feeSpin->setDecimals(12);
-        m_feeSpin->setMinimum(0.0001);
-        m_feeSpin->setMaximum(1e+09);
+        m_feeSpin->setMinimum(0.0002);
+        m_feeSpin->setMaximum(999);
         m_feeSpin->setSingleStep(0.01);
-        m_feeSpin->setValue(0.0001);
+        m_feeSpin->setValue(0.0002);
 
         gridLayout_2->addWidget(m_feeSpin, 2, 0, 1, 1);
 
