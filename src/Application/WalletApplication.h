@@ -62,7 +62,6 @@ private:
   IDonationManager* m_donationManager;
   IOptimizationManager* m_optimizationManager;
   IMiningManager* m_miningManager;
-  INewsReader* m_blogReader;
   QMainWindow* m_mainWindow;
   QSplashScreen* m_splash;
   LogFileWatcher* m_logWatcher;

@@ -116,11 +116,11 @@ bool isDonationUrl(const QUrl& _url) {
 
 MainWindow::MainWindow(ICryptoNoteAdapter* _cryptoNoteAdapter, IAddressBookManager* _addressBookManager,
   IDonationManager* _donationManager, IOptimizationManager* _optimizationManager, IMiningManager* _miningManager,
-  IApplicationEventHandler* _applicationEventHandler, INewsReader* _blogReader, const QString& _styleSheetTemplate, QWidget* _parent) :
+  IApplicationEventHandler* _applicationEventHandler, const QString& _styleSheetTemplate, QWidget* _parent) :
   QMainWindow(_parent), m_ui(new Ui::MainWindow), m_cryptoNoteAdapter(_cryptoNoteAdapter),
   m_addressBookManager(_addressBookManager), m_donationManager(_donationManager),
   m_optimizationManager(_optimizationManager), m_miningManager(_miningManager), m_applicationEventHandler(_applicationEventHandler),
-  m_blogReader(_blogReader), m_blockChainModel(nullptr), m_transactionPoolModel(nullptr), m_recentWalletsMenu(new QMenu(this)),
+  m_blockChainModel(nullptr), m_transactionPoolModel(nullptr), m_recentWalletsMenu(new QMenu(this)),
   m_addRecipientAction(new QAction(this)), m_styleSheetTemplate(_styleSheetTemplate), m_walletStateMapper(new QDataWidgetMapper(this)),
   m_syncMovie(new QMovie(Settings::instance().getCurrentStyle().getWalletSyncGifFile(), QByteArray(), this)) {
   m_ui->setupUi(this);
@@ -151,7 +151,6 @@ MainWindow::MainWindow(ICryptoNoteAdapter* _cryptoNoteAdapter, IAddressBookManag
     uiItem->setDonationManager(m_donationManager);
     uiItem->setMiningManager(m_miningManager);
     uiItem->setApplicationEventHandler(m_applicationEventHandler);
-    uiItem->setBlogReader(m_blogReader);
     uiItem->setMainWindow(this);
     uiItem->setNodeStateModel(m_nodeStateModel);
     uiItem->setWalletStateModel(m_walletStateModel);

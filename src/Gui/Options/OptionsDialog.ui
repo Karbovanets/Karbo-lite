@@ -67,11 +67,6 @@
        <string>Donations</string>
       </attribute>
      </widget>
-     <widget class="WalletGui::PrivacyFrame" name="m_privacyTab">
-      <attribute name="title">
-       <string>Privacy</string>
-      </attribute>
-     </widget>
     </widget>
    </item>
    <item>

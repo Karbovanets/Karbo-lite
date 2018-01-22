@@ -39,7 +39,6 @@ public:
   virtual void setDonationManager(IDonationManager* _donationManager) {}
   virtual void setMiningManager(IMiningManager* _miningManager) {}
   virtual void setApplicationEventHandler(IApplicationEventHandler* _applicationEventHandler) {}
-  virtual void setBlogReader(INewsReader* _blogReader) {}
   virtual void setMainWindow(QWidget* _mainWindow) {}
   virtual void setTransactionsModel(QAbstractItemModel* _model) {}
   virtual void setSortedTransactionsModel(QAbstractItemModel* _model) {}

@@ -51,7 +51,7 @@ class MainWindow : public QMainWindow, public IWalletAdapterObserver, public IAp
 public:
   MainWindow(ICryptoNoteAdapter* _cryptoNoteAdapter, IAddressBookManager* _addressBookManager,
     IDonationManager* _donationManager, IOptimizationManager* _optimizationManager, IMiningManager* _miningManager,
-    IApplicationEventHandler* _applicationEventHandler, INewsReader* _blogReader,
+    IApplicationEventHandler* _applicationEventHandler, 
     const QString& _styleSheetTemplate, QWidget* _parent);
   virtual ~MainWindow();
 

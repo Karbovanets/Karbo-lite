@@ -40,7 +40,6 @@ public:
   // IWalletUiItem
   virtual void setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAdapter) override;
   virtual void setMiningManager(IMiningManager *_miningManager) override;
-  virtual void setBlogReader(INewsReader* _blogReader) override;
   virtual void setMainWindow(QWidget* _mainWindow) override;
   virtual void setTransactionsModel(QAbstractItemModel* _model) override;
   virtual void setSortedTransactionsModel(QAbstractItemModel *_model) override;

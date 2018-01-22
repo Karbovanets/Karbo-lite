@@ -83,10 +83,6 @@ void OverviewFrame::setMiningManager(IMiningManager* _miningManager) {
   m_ui->m_overviewHeaderFrame->setMiningManager(_miningManager);
 }
 
-void OverviewFrame::setBlogReader(INewsReader* _blogReader) {
-  m_ui->m_blogFrame->setNewsReader(_blogReader);
-}
-
 void OverviewFrame::setMainWindow(QWidget* _mainWindow) {
   m_mainWindow = _mainWindow;
   QList<QPushButton*> buttonList = m_mainWindow->findChildren<QPushButton*>("m_transactionsButton");
