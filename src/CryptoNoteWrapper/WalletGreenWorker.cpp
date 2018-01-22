@@ -268,6 +268,45 @@ IWalletAdapter::WalletInitStatus WalletGreenWorker::createWithKeys(const QString
   return getInitStatus(result);
 }
 
+IWalletAdapter::WalletInitStatus WalletGreenWorker::createWithKeysAndTimestamp(const QString& _walletPath, const AccountKeys& _accountKeys, const uint64_t& _creationTimestamp) {
+  Q_ASSERT(m_wallet.isNull());
+  SemaphoreLocker locker(m_walletSemaphore);
+  init();
+  QEventLoop waitLoop;
+  WalletLogger::info(tr("[Wallet] Importing keys..."));
+  m_dispatcher->remoteSpawn([this, &_walletPath, &_accountKeys, &_creationTimestamp, &waitLoop]() {
+    SemaphoreUnlocker unlocker(m_walletSemaphore);
+    int errorCode = 0;
+    try {
+      m_wallet->initializeWithViewKeyAndTimestamp(std::string(_walletPath.toLocal8Bit().data()), "", _accountKeys.viewKeys.secretKey, _creationTimestamp);
+      if (std::memcmp(&_accountKeys.spendKeys.secretKey, &CryptoNote::NULL_SECRET_KEY, sizeof(Crypto::SecretKey)) == 0) {
+        m_wallet->createAddress(_accountKeys.spendKeys.publicKey);
+      } else {
+        m_wallet->createAddress(_accountKeys.spendKeys.secretKey);
+      }
+    } catch (const std::system_error& _error) {
+      WalletLogger::critical(tr("[Wallet] Import keys error: %1").arg(_error.code().message().data()));
+      errorCode = _error.code().value();
+    } catch (const std::exception& _error) {
+      WalletLogger::critical(tr("[Wallet] Import keys runtime error: %1").arg(_error.what()));
+      errorCode = CryptoNote::error::INTERNAL_WALLET_ERROR;
+    }
+
+    waitLoop.exit(errorCode);
+  });
+
+  int result = waitLoop.exec();
+  locker.wait();
+  WalletLogger::info(tr("[Wallet] Import keys result: %1").arg(result));
+  if (result == 0) {
+    startEventLoop();
+    m_isOpen.store(true);
+    Q_EMIT walletOpenedSignal();
+  }
+
+  return getInitStatus(result);
+}
+
 IWalletAdapter::WalletSaveStatus WalletGreenWorker::save(CryptoNote::WalletSaveLevel _saveLevel, bool _saveUserData) {
   Q_ASSERT(!m_wallet.isNull());
   if (m_isSaved.load() && _saveLevel == CryptoNote::WalletSaveLevel::SAVE_ALL) {

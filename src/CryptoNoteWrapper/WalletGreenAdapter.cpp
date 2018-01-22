@@ -72,6 +72,16 @@ IWalletAdapter::WalletInitStatus WalletGreenAdapter::createWithKeys(const QStrin
   return status;
 }
 
+IWalletAdapter::WalletInitStatus WalletGreenAdapter::createWithKeysAndTimestamp(const QString& _walletPath, const AccountKeys& _accountKeys, const uint64_t& _creationTimestamp) {
+  createWorker();
+  WalletInitStatus status = m_worker->createWithKeysAndTimestamp(_walletPath, _accountKeys, _creationTimestamp);
+  if (status != INIT_SUCCESS) {
+    deleteWorker();
+  }
+
+  return status;
+}
+
 IWalletAdapter::WalletSaveStatus WalletGreenAdapter::save(CryptoNote::WalletSaveLevel _saveLevel, bool _saveUserData) {
   Q_ASSERT(m_worker != nullptr);
   return m_worker->save(_saveLevel, _saveUserData);

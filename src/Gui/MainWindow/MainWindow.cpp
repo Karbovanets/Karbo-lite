@@ -619,7 +619,9 @@ void MainWindow::createWallet() {
     QString oldWalletFile = Settings::instance().getWalletFile();
     Settings::instance().setWalletFile(filePath);
     AccountKeys accountKeys = m_deterministicAdapter.generateDeterministicKeys();
-    if (walletAdapter->createWithKeys(filePath, accountKeys) == IWalletAdapter::INIT_SUCCESS) {
+    QDateTime currentDateTime = QDateTime::currentDateTimeUtc();
+    uint64_t timestamp = currentDateTime.toTime_t();
+    if (walletAdapter->createWithKeysAndTimestamp(filePath, accountKeys, timestamp) == IWalletAdapter::INIT_SUCCESS) {
       walletAdapter->save(CryptoNote::WalletSaveLevel::SAVE_ALL, true);
       Q_ASSERT(walletAdapter->isOpen());
       QString fileName = Settings::instance().getWalletFile();
@@ -729,8 +731,8 @@ void MainWindow::resetWallet() {
   IWalletAdapter* walletAdapter = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter();
   Q_ASSERT(walletAdapter->isOpen());
   QString fileName = Settings::instance().getWalletFile();
-  QDateTime currenctDateTime = QDateTime::currentDateTime();
-  fileName.append(QString(".%1.backup").arg(currenctDateTime.toString("yyyyMMddHHMMss")));
+  QDateTime currentDateTime = QDateTime::currentDateTime();
+  fileName.append(QString(".%1.backup").arg(currentDateTime.toString("yyyyMMddHHMMss")));
 
   walletAdapter->save(CryptoNote::WalletSaveLevel::SAVE_KEYS_ONLY, true);
   walletAdapter->removeObserver(this);
