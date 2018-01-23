@@ -175,6 +175,10 @@ void OverviewHeaderFrame::setNodeStateModel(QAbstractItemModel* _model) {
   stateMapper->setModel(m_nodeStateModel);
   stateMapper->addMapping(m_ui->m_overviewNetworkHashrateLabel, NodeStateModel::COLUMN_NETWORK_HASHRATE, "text");
   stateMapper->addMapping(m_ui->m_overviewNetworkDifficultyLabel, NodeStateModel::COLUMN_LAST_LOCAL_BLOCK_DIFFICULTY, "text");
+  stateMapper->addMapping(m_ui->m_overviewConnectionState, NodeStateModel::COLUMN_CONNECTION_STATE, "text");
+  stateMapper->addMapping(m_ui->m_overviewPeerCount, NodeStateModel::COLUMN_PEER_COUNT, "text");
+  stateMapper->addMapping(m_ui->m_overviewLocalHeight, NodeStateModel::COLUMN_LOCAL_BLOCK_COUNT, "text");
+  stateMapper->addMapping(m_ui->m_overviewBlockTimestamp, NodeStateModel::COLUMN_LAST_LOCAL_BLOCK_TIMESTAMP, "text");
   stateMapper->setCurrentIndex(0);
 }
 
@@ -190,7 +194,7 @@ void OverviewHeaderFrame::setWalletStateModel(QAbstractItemModel* _model) {
 }
 
 void OverviewHeaderFrame::setTransactionPoolModel(QAbstractItemModel* _model) {
-  m_transactionPoolModel = _model;
+/*  m_transactionPoolModel = _model;
   connect(m_transactionPoolModel, &QAbstractItemModel::modelReset, this, &OverviewHeaderFrame::transactionPoolChanged);
   m_overViewTransactionPoolModel = new OverviewTransactionPoolModel(m_cryptoNoteAdapter, this);
   m_overViewTransactionPoolModel->setSourceModel(m_transactionPoolModel);
@@ -199,7 +203,7 @@ void OverviewHeaderFrame::setTransactionPoolModel(QAbstractItemModel* _model) {
   int amountColumn = TransactionPoolModel::findProxyColumn(m_overViewTransactionPoolModel, TransactionPoolModel::COLUMN_AMOUNT);
   m_ui->m_overviewTransactionPoolView->header()->setSectionResizeMode(hashColumn, QHeaderView::Stretch);
   m_ui->m_overviewTransactionPoolView->header()->setSectionResizeMode(amountColumn, QHeaderView::ResizeToContents);
-  m_ui->m_overviewTransactionPoolView->setItemDelegateForColumn(hashColumn, new LinkLikeColumnDelegate(this));
+  m_ui->m_overviewTransactionPoolView->setItemDelegateForColumn(hashColumn, new LinkLikeColumnDelegate(this));*/
 }
 
 void OverviewHeaderFrame::setMinerModel(QAbstractItemModel *_model) {
@@ -328,7 +332,7 @@ void OverviewHeaderFrame::copyTotalBalance() {
 }
 
 void OverviewHeaderFrame::transactionPoolChanged() {
-  m_ui->m_overviewPoolSizeLabel->setText(tr("%1 transactions").arg(m_transactionPoolModel->rowCount()));
+  //m_ui->m_overviewPoolSizeLabel->setText(tr("%1 transactions").arg(m_transactionPoolModel->rowCount()));
 }
 
 void OverviewHeaderFrame::walletStateModelDataChanged(const QModelIndex& _topLeft, const QModelIndex& _bottomRight,

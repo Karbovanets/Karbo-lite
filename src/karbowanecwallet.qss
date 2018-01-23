@@ -373,6 +373,14 @@ QCalendarWidget QMenu {
   color: %fontColorBlueHover%;
 }
 
+#m_overviewBalanceFrame,
+#m_overviewMiningFrame,
+#m_overviewNodeFrame
+{
+  background-color: #EFF3FA;
+  border: none;
+}
+
 #m_receiveFrame {
   background-color: #ffffff;
   border: none;
