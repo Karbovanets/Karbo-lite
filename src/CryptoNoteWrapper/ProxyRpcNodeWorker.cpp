@@ -78,6 +78,16 @@ CryptoNote::BlockHeaderInfo ProxyRpcNodeWorker::getLastLocalBlockInfo() const {
   return m_node->getLastLocalBlockHeaderInfo();
 }
 
+QString ProxyRpcNodeWorker::getNodeHost() const {
+  Q_ASSERT(!m_node.isNull());
+  return m_nodeHost;
+}
+
+quint16 ProxyRpcNodeWorker::getNodePort() const {
+  Q_ASSERT(!m_node.isNull());
+  return m_nodePort;
+}
+
 void ProxyRpcNodeWorker::addObserver(INodeAdapterObserver* _observer) {
   QObject* observer = dynamic_cast<QObject*>(_observer);
   Q_ASSERT(observer != nullptr);

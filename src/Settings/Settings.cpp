@@ -83,7 +83,7 @@ Settings& Settings::instance() {
 
 
 Settings::Settings() : m_p2pBindPort(0), m_cmdLineParser(nullptr) {
-  m_defaultPoolList << "pool.karbowanec.com:3333" << "pool2.democats.org:45570" << "krb.sberex.com:3333" << "mine.krb.mypool.online:32350";
+  m_defaultPoolList << "pool.karbowanec.com:3333" << "pool2.democats.org:45570" << "krb.sberex.com:3333" << "mine.krb.mypool.online:32350" << "eu1.karbo.farm:3333" << "krb.miner.rocks:80" << "krb-pool.pp.ua:3333" << "krbpool.ml:443" << "krb.kopanka.com:3333" << "krb.easyhash.io:3530" << "pool.krbpool.com:33337" << "pool.karbowanec.hashvault.pro:80";
   m_defaultNodeList << "node.karbowanec.com:32348" << "node.karbovanets.org:32348" << "node.karbo.cloud:32348" << "node.karbo.io:32348";
 
   Style* lightStyle = new LightStyle();

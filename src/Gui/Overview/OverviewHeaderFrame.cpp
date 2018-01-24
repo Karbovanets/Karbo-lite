@@ -28,6 +28,7 @@
 #include "Gui/Common/LinkLikeColumnDelegate.h"
 #include "Gui/Common/PoolTransactionDetailsDialog.h"
 #include "ICryptoNoteAdapter.h"
+#include "CryptoNoteWrapper/CommonNodeAdapter.h"
 #include "Models/MinerModel.h"
 #include "Models/NodeStateModel.h"
 #include "Models/TransactionPoolModel.h"
@@ -158,6 +159,9 @@ void OverviewHeaderFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAd
   m_ui->m_overviewLockedBalanceTickerLabel->setText(m_cryptoNoteAdapter->getCurrencyTicker().toUpper());
   m_ui->m_overviewTotalBalanceTickerLabel->setText(m_cryptoNoteAdapter->getCurrencyTicker().toUpper());
   m_cryptoNoteAdapter->addObserver(this);
+
+  m_ui->m_overviewMasternode->setText(QString("%1:%2").arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodeHost()).
+  arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodePort()));
 }
 
 void OverviewHeaderFrame::setMiningManager(IMiningManager* _miningManager) {
@@ -175,8 +179,8 @@ void OverviewHeaderFrame::setNodeStateModel(QAbstractItemModel* _model) {
   stateMapper->setModel(m_nodeStateModel);
   stateMapper->addMapping(m_ui->m_overviewNetworkHashrateLabel, NodeStateModel::COLUMN_NETWORK_HASHRATE, "text");
   stateMapper->addMapping(m_ui->m_overviewNetworkDifficultyLabel, NodeStateModel::COLUMN_LAST_LOCAL_BLOCK_DIFFICULTY, "text");
-  stateMapper->addMapping(m_ui->m_overviewConnectionState, NodeStateModel::COLUMN_CONNECTION_STATE, "text");
-  stateMapper->addMapping(m_ui->m_overviewPeerCount, NodeStateModel::COLUMN_PEER_COUNT, "text");
+  //stateMapper->addMapping(m_ui->m_overviewConnectionState, NodeStateModel::COLUMN_CONNECTION_STATE, "text");
+  //stateMapper->addMapping(m_ui->m_overviewPeerCount, NodeStateModel::COLUMN_PEER_COUNT, "text");
   stateMapper->addMapping(m_ui->m_overviewLocalHeight, NodeStateModel::COLUMN_LOCAL_BLOCK_COUNT, "text");
   stateMapper->addMapping(m_ui->m_overviewBlockTimestamp, NodeStateModel::COLUMN_LAST_LOCAL_BLOCK_TIMESTAMP, "text");
   stateMapper->setCurrentIndex(0);

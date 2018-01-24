@@ -505,7 +505,7 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0,0,1,0">
+     <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0,0,1,0,0">
       <property name="leftMargin">
        <number>30</number>
       </property>
@@ -517,57 +517,30 @@
       </property>
       <item row="3" column="2">
        <widget class="WalletGui::WalletSmallBlackTextLabel" name="label_2">
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
-         <string>Peers</string>
+         <string>Node</string>
         </property>
        </widget>
       </item>
       <item row="3" column="3">
-       <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewPeerCount">
+       <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewMasternode">
         <property name="text">
          <string>TextLabel</string>
         </property>
        </widget>
       </item>
       <item row="4" column="2">
-       <widget class="WalletGui::WalletNormalBlackTextLabel" name="label_6">
+       <widget class="WalletGui::WalletSmallBlackTextLabel" name="label_6">
         <property name="text">
          <string>Height</string>
         </property>
        </widget>
-      </item>
-      <item row="4" column="3">
-       <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewLocalHeight">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="4">
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="6" column="0" colspan="5">
-       <spacer name="verticalSpacer_6">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
       </item>
       <item row="0" column="0" colspan="5">
        <spacer name="verticalSpacer_5">
@@ -582,33 +555,27 @@
         </property>
        </spacer>
       </item>
-      <item row="1" column="3" colspan="2">
-       <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewConnectionState">
+      <item row="4" column="3">
+       <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewLocalHeight">
         <property name="text">
-         <string>Connected</string>
-        </property>
-        <property name="indent">
-         <number>0</number>
+         <string>TextLabel</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" rowspan="3">
-       <spacer name="horizontalSpacer_6">
+      <item row="6" column="0" colspan="5">
+       <spacer name="verticalSpacer_6">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
+         <enum>Qt::Vertical</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
-          <height>20</height>
+          <height>40</height>
          </size>
         </property>
        </spacer>
       </item>
-      <item row="2" column="2" colspan="2">
+      <item row="3" column="2" colspan="3">
        <spacer name="verticalSpacer_9">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -624,13 +591,10 @@
         </property>
        </spacer>
       </item>
-      <item row="1" column="2" alignment="Qt::AlignLeft">
-       <widget class="WalletGui::WalletHeaderLabel" name="label_9">
+      <item row="5" column="3">
+       <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewBlockTimestamp">
         <property name="text">
-         <string>Node</string>
-        </property>
-        <property name="indent">
-         <number>0</number>
+         <string>TextLabel</string>
         </property>
        </widget>
       </item>
@@ -644,17 +608,49 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="2" colspan="4">
+       <widget class="WalletGui::WalletHeaderLabel" name="label_9">
+        <property name="text">
+         <string>Node status</string>
+        </property>
+        <property name="indent">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="5" rowspan="3">
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="1" rowspan="5">
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item row="5" column="2">
        <widget class="WalletGui::WalletSmallBlackTextLabel" name="label_10">
         <property name="text">
          <string>Last block</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="3">
-       <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewBlockTimestamp">
-        <property name="text">
-         <string>TextLabel</string>
         </property>
        </widget>
       </item>

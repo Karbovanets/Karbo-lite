@@ -60,6 +60,9 @@ public:
   virtual IBlockChainExplorerAdapter* getBlockChainExplorerAdapter() override;
   virtual IWalletAdapter* getWalletAdapter() override;
 
+  QString getNodeHost() const;
+  quint16 getNodePort() const;
+
   // CryptoNote::INodeObserver
   virtual void peerCountUpdated(size_t _count) override;
   virtual void localBlockchainUpdated(uint32_t _height) override;

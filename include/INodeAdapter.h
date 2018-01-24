@@ -64,6 +64,9 @@ public:
   virtual void removeObserver(INodeAdapterObserver* _observer) = 0;
   virtual IBlockChainExplorerAdapter* getBlockChainExplorerAdapter() = 0;
   virtual IWalletAdapter* getWalletAdapter() = 0;
+
+  virtual QString getNodeHost() const = 0;
+  virtual quint16 getNodePort() const = 0;
 };
 
 }

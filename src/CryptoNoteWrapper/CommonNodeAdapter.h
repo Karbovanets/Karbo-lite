@@ -46,6 +46,9 @@ public:
   virtual IBlockChainExplorerAdapter* getBlockChainExplorerAdapter() override;
   virtual IWalletAdapter* getWalletAdapter() override;
 
+  virtual QString getNodeHost() const override;
+  virtual quint16 getNodePort() const override;
+
   // INodeAdapterObserver
   Q_SLOT virtual void initCompleted(int _status) override;
   Q_SLOT virtual void deinitCompleted() override;

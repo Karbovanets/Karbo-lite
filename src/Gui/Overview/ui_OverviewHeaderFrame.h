@@ -72,19 +72,18 @@ public:
     QFrame *m_overviewNodeFrame;
     QGridLayout *gridLayout_3;
     WalletGui::WalletSmallBlackTextLabel *label_2;
-    WalletGui::WalletNormalBlackTextLabel *m_overviewPeerCount;
-    WalletGui::WalletNormalBlackTextLabel *label_6;
-    WalletGui::WalletNormalBlackTextLabel *m_overviewLocalHeight;
-    QSpacerItem *horizontalSpacer_3;
-    QSpacerItem *verticalSpacer_6;
+    WalletGui::WalletNormalBlackTextLabel *m_overviewMasternode;
+    WalletGui::WalletSmallBlackTextLabel *label_6;
     QSpacerItem *verticalSpacer_5;
-    WalletGui::WalletNormalBlackTextLabel *m_overviewConnectionState;
-    QSpacerItem *horizontalSpacer_6;
+    WalletGui::WalletNormalBlackTextLabel *m_overviewLocalHeight;
+    QSpacerItem *verticalSpacer_6;
     QSpacerItem *verticalSpacer_9;
-    WalletGui::WalletHeaderLabel *label_9;
-    QLabel *m_overviewNodeIconLabel;
-    WalletGui::WalletSmallBlackTextLabel *label_10;
     WalletGui::WalletNormalBlackTextLabel *m_overviewBlockTimestamp;
+    QLabel *m_overviewNodeIconLabel;
+    WalletGui::WalletHeaderLabel *label_9;
+    QSpacerItem *horizontalSpacer_3;
+    QSpacerItem *horizontalSpacer_6;
+    WalletGui::WalletSmallBlackTextLabel *label_10;
 
     void setupUi(QFrame *OverviewHeaderFrame)
     {
@@ -330,55 +329,41 @@ public:
         gridLayout_3->setContentsMargins(30, 25, -1, -1);
         label_2 = new WalletGui::WalletSmallBlackTextLabel(m_overviewNodeFrame);
         label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setBaseSize(QSize(0, 0));
 
         gridLayout_3->addWidget(label_2, 3, 2, 1, 1);
 
-        m_overviewPeerCount = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
-        m_overviewPeerCount->setObjectName(QStringLiteral("m_overviewPeerCount"));
+        m_overviewMasternode = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
+        m_overviewMasternode->setObjectName(QStringLiteral("m_overviewMasternode"));
 
-        gridLayout_3->addWidget(m_overviewPeerCount, 3, 3, 1, 1);
+        gridLayout_3->addWidget(m_overviewMasternode, 3, 3, 1, 1);
 
-        label_6 = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
+        label_6 = new WalletGui::WalletSmallBlackTextLabel(m_overviewNodeFrame);
         label_6->setObjectName(QStringLiteral("label_6"));
 
         gridLayout_3->addWidget(label_6, 4, 2, 1, 1);
+
+        verticalSpacer_5 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_3->addItem(verticalSpacer_5, 0, 0, 1, 5);
 
         m_overviewLocalHeight = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
         m_overviewLocalHeight->setObjectName(QStringLiteral("m_overviewLocalHeight"));
 
         gridLayout_3->addWidget(m_overviewLocalHeight, 4, 3, 1, 1);
 
-        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout_3->addItem(horizontalSpacer_3, 3, 4, 1, 1);
-
         verticalSpacer_6 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         gridLayout_3->addItem(verticalSpacer_6, 6, 0, 1, 5);
 
-        verticalSpacer_5 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        gridLayout_3->addItem(verticalSpacer_5, 0, 0, 1, 5);
-
-        m_overviewConnectionState = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
-        m_overviewConnectionState->setObjectName(QStringLiteral("m_overviewConnectionState"));
-        m_overviewConnectionState->setIndent(0);
-
-        gridLayout_3->addWidget(m_overviewConnectionState, 1, 3, 1, 2);
-
-        horizontalSpacer_6 = new QSpacerItem(20, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
-
-        gridLayout_3->addItem(horizontalSpacer_6, 1, 1, 3, 1);
-
         verticalSpacer_9 = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Fixed);
 
-        gridLayout_3->addItem(verticalSpacer_9, 2, 2, 1, 2);
+        gridLayout_3->addItem(verticalSpacer_9, 3, 2, 1, 3);
 
-        label_9 = new WalletGui::WalletHeaderLabel(m_overviewNodeFrame);
-        label_9->setObjectName(QStringLiteral("label_9"));
-        label_9->setIndent(0);
+        m_overviewBlockTimestamp = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
+        m_overviewBlockTimestamp->setObjectName(QStringLiteral("m_overviewBlockTimestamp"));
 
-        gridLayout_3->addWidget(label_9, 1, 2, 1, 1, Qt::AlignLeft);
+        gridLayout_3->addWidget(m_overviewBlockTimestamp, 5, 3, 1, 1);
 
         m_overviewNodeIconLabel = new QLabel(m_overviewNodeFrame);
         m_overviewNodeIconLabel->setObjectName(QStringLiteral("m_overviewNodeIconLabel"));
@@ -386,15 +371,24 @@ public:
 
         gridLayout_3->addWidget(m_overviewNodeIconLabel, 1, 0, 5, 1);
 
+        label_9 = new WalletGui::WalletHeaderLabel(m_overviewNodeFrame);
+        label_9->setObjectName(QStringLiteral("label_9"));
+        label_9->setIndent(0);
+
+        gridLayout_3->addWidget(label_9, 1, 2, 1, 4);
+
+        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_3->addItem(horizontalSpacer_3, 3, 5, 3, 1);
+
+        horizontalSpacer_6 = new QSpacerItem(20, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        gridLayout_3->addItem(horizontalSpacer_6, 1, 1, 5, 1);
+
         label_10 = new WalletGui::WalletSmallBlackTextLabel(m_overviewNodeFrame);
         label_10->setObjectName(QStringLiteral("label_10"));
 
         gridLayout_3->addWidget(label_10, 5, 2, 1, 1);
-
-        m_overviewBlockTimestamp = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
-        m_overviewBlockTimestamp->setObjectName(QStringLiteral("m_overviewBlockTimestamp"));
-
-        gridLayout_3->addWidget(m_overviewBlockTimestamp, 5, 3, 1, 1);
 
         gridLayout_3->setColumnStretch(3, 1);
 
@@ -443,15 +437,14 @@ public:
         m_miningStateLabel->setText(QApplication::translate("OverviewHeaderFrame", "mining off", 0));
         m_overviewNetworkHashrateLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
         label_5->setText(QApplication::translate("OverviewHeaderFrame", "Network", 0));
-        label_2->setText(QApplication::translate("OverviewHeaderFrame", "Peers", 0));
-        m_overviewPeerCount->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
+        label_2->setText(QApplication::translate("OverviewHeaderFrame", "Node", 0));
+        m_overviewMasternode->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
         label_6->setText(QApplication::translate("OverviewHeaderFrame", "Height", 0));
         m_overviewLocalHeight->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
-        m_overviewConnectionState->setText(QApplication::translate("OverviewHeaderFrame", "Connected", 0));
-        label_9->setText(QApplication::translate("OverviewHeaderFrame", "Node stats", 0));
-        m_overviewNodeIconLabel->setText(QString());
-        label_10->setText(QApplication::translate("OverviewHeaderFrame", "Last block", 0));
         m_overviewBlockTimestamp->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
+        m_overviewNodeIconLabel->setText(QString());
+        label_9->setText(QApplication::translate("OverviewHeaderFrame", "Node status", 0));
+        label_10->setText(QApplication::translate("OverviewHeaderFrame", "Last block", 0));
     } // retranslateUi
 
 };
