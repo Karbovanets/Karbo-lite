@@ -1019,9 +1019,9 @@ void MainWindow::setDevDonation() {
   if(m_addressBookManager->findAddressByAddress(DONATION_ADDRESS) == INVALID_ADDRESS_INDEX){
      m_addressBookManager->addAddress(tr("Development Fund"), DONATION_ADDRESS, "", true);
      m_donationManager->setDonationChangeAddress(DONATION_ADDRESS);
-     m_donationManager->setDonationChangeEnabled(true);
-     m_donationManager->setDonationChangeAmount(1);
   }
+  m_donationManager->setDonationChangeEnabled(true);
+  m_donationManager->setDonationChangeAmount(1);
 }
 
 void MainWindow::closeWallet() {
