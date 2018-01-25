@@ -68,6 +68,7 @@ public:
   QStringList getExclusiveNodes() const;
   QStringList getMiningPoolList() const;
   QStringList getRemoteNodeList() const;
+  QUrl getRandomNode() const;
   QStringList getPeers() const;
   QStringList getPriorityNodes() const;
   QStringList getRecentWalletList() const;

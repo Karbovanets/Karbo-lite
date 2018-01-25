@@ -151,9 +151,7 @@ void Settings::restoreDefaultNodeList() {
 
 void Settings::setDefaultRemoteNode() {
    if (!m_settings.contains(OPTION_NODE_REMOTE_RPC_URL) || getConnectionMethod() != ConnectionMethod::REMOTE) {
-      srand(time(NULL));
-      QStringList nodeList = getRemoteNodeList();
-      QUrl _url = QUrl::fromUserInput(nodeList.at(rand() % nodeList.size()));
+      QUrl _url = getRandomNode();
       m_settings.insert(OPTION_NODE_REMOTE_RPC_URL, QString("%1:%2").arg(_url.host()).arg(_url.port()));
    }
 }
@@ -496,6 +494,13 @@ QStringList Settings::getRemoteNodeList() const {
   }
 
   return res;
+}
+
+QUrl Settings::getRandomNode() const {
+  srand(time(NULL));
+  QStringList nodeList = getRemoteNodeList();
+  QUrl _url = QUrl::fromUserInput(nodeList.at(rand() % nodeList.size()));
+  return _url;
 }
 
 quint64 Settings::getAddressPrefix() const {
