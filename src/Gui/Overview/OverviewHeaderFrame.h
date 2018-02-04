@@ -99,7 +99,9 @@ private:
   void copyLockedBalance();
   void copyTotalBalance();
   void transactionPoolChanged();
+  void changeConnectionStateAppearance();
   void walletStateModelDataChanged(const QModelIndex& _topLeft, const QModelIndex& _bottomRight, const QVector<int>& _roles);
+  void m_nodeStateModelDataChanged(const QModelIndex& _topLeft, const QModelIndex& _bottomRight, const QVector<int>& _roles);
 
   Q_SLOT void poolTransactionClicked(const QModelIndex& _index);
   Q_SLOT void startMiningClicked(bool _on);

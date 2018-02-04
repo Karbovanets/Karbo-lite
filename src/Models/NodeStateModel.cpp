@@ -127,6 +127,7 @@ void NodeStateModel::lastKnownBlockHeightUpdated(quint32 _height) {
 
 void NodeStateModel::connectionStatusUpdated(bool _connected) {
   m_isConnected = _connected;
+  Q_EMIT dataChanged(index(0, COLUMN_CONNECTION_STATE), index(0, COLUMN_CONNECTION_STATE), QVector<int>() << Qt::EditRole << ROLE_CONNECTION_STATE);
 }
 
 void NodeStateModel::cryptoNoteAdapterInitCompleted(int _status) {
@@ -153,6 +154,8 @@ void NodeStateModel::cryptoNoteAdapterDeinitCompleted() {
 
 QVariant NodeStateModel::getDisplayRole(const QModelIndex& _index) const {
   switch (_index.column()) {
+  case COLUMN_CONNECTION_STATE:
+     return tr("%1").arg(m_isConnected ? tr("connected") : tr("disconnected"));
   case COLUMN_NODE_TYPE:
     return _index.data(ROLE_NODE_TYPE);
   case COLUMN_PEER_COUNT: {
@@ -206,7 +209,7 @@ QVariant NodeStateModel::getUserRole(int _role) const {
   case ROLE_NETWORK_HASHRATE:
     return m_lastLocalBlockInfo.difficulty / m_cryptoNoteAdapter->getTargetTime();
   case ROLE_CONNECTION_STATE:
-    return QVariant();
+    return m_isConnected;
   }
 
   return QVariant();

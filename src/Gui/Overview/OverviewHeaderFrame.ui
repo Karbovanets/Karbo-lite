@@ -538,7 +538,7 @@
       <item row="4" column="2">
        <widget class="WalletGui::WalletSmallBlackTextLabel" name="label_6">
         <property name="text">
-         <string>Height</string>
+         <string>State</string>
         </property>
        </widget>
       </item>
@@ -556,7 +556,7 @@
        </spacer>
       </item>
       <item row="4" column="3">
-       <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewLocalHeight">
+       <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewConnectionState">
         <property name="text">
          <string>TextLabel</string>
         </property>
@@ -594,7 +594,7 @@
       <item row="5" column="3">
        <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewBlockTimestamp">
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -650,7 +650,7 @@
       <item row="5" column="2">
        <widget class="WalletGui::WalletSmallBlackTextLabel" name="label_10">
         <property name="text">
-         <string>Last block</string>
+         <string/>
         </property>
        </widget>
       </item>

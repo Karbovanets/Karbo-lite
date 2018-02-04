@@ -75,7 +75,7 @@ public:
     WalletGui::WalletNormalBlackTextLabel *m_overviewMasternode;
     WalletGui::WalletSmallBlackTextLabel *label_6;
     QSpacerItem *verticalSpacer_5;
-    WalletGui::WalletNormalBlackTextLabel *m_overviewLocalHeight;
+    WalletGui::WalletNormalBlackTextLabel *m_overviewConnectionState;
     QSpacerItem *verticalSpacer_6;
     QSpacerItem *verticalSpacer_9;
     WalletGui::WalletNormalBlackTextLabel *m_overviewBlockTimestamp;
@@ -347,10 +347,10 @@ public:
 
         gridLayout_3->addItem(verticalSpacer_5, 0, 0, 1, 5);
 
-        m_overviewLocalHeight = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
-        m_overviewLocalHeight->setObjectName(QStringLiteral("m_overviewLocalHeight"));
+        m_overviewConnectionState = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
+        m_overviewConnectionState->setObjectName(QStringLiteral("m_overviewConnectionState"));
 
-        gridLayout_3->addWidget(m_overviewLocalHeight, 4, 3, 1, 1);
+        gridLayout_3->addWidget(m_overviewConnectionState, 4, 3, 1, 1);
 
         verticalSpacer_6 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
@@ -439,12 +439,12 @@ public:
         label_5->setText(QApplication::translate("OverviewHeaderFrame", "Network", 0));
         label_2->setText(QApplication::translate("OverviewHeaderFrame", "Node", 0));
         m_overviewMasternode->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
-        label_6->setText(QApplication::translate("OverviewHeaderFrame", "Height", 0));
-        m_overviewLocalHeight->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
-        m_overviewBlockTimestamp->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
+        label_6->setText(QApplication::translate("OverviewHeaderFrame", "State", 0));
+        m_overviewConnectionState->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
+        m_overviewBlockTimestamp->setText(QString());
         m_overviewNodeIconLabel->setText(QString());
         label_9->setText(QApplication::translate("OverviewHeaderFrame", "Node status", 0));
-        label_10->setText(QApplication::translate("OverviewHeaderFrame", "Last block", 0));
+        label_10->setText(QString());
     } // retranslateUi
 
 };

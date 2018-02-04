@@ -21,6 +21,7 @@
 #include <QMetaMethod>
 #include <QMovie>
 #include <QtMath>
+#include <QDebug>
 
 #include "OverviewHeaderFrame.h"
 #include "Settings/Settings.h"
@@ -118,6 +119,14 @@ const char OVERVIEW_HEADER_STYLE_SHEET_TEMPLATE[] =
 
   "WalletGui--OverviewHeaderFrame #m_miningStateLabel[miningRunning=\"true\"] {"
     "color: %fontColorGreen%;"
+  "}"
+
+  "WalletGui--OverviewHeaderFrame #m_overviewConnectionState[connected=\"false\"] {"
+    "color: %fontColorRed%;"
+  "}"
+
+  "WalletGui--OverviewHeaderFrame #m_overviewConnectionState[connected=\"true\"] {"
+    "color: %fontColorGreen%;"
   "}";
 
 }
@@ -134,6 +143,7 @@ OverviewHeaderFrame::OverviewHeaderFrame(QWidget* _parent) : QFrame(_parent), m_
  // m_ui->m_overviewAvailableBalanceLabel->installEventFilter(this);
  // m_ui->m_overviewLockedBalanceLabel->installEventFilter(this);
  // m_ui->m_overviewTotalBalanceLabel->installEventFilter(this);
+ // changeConnectionStateAppearance();
 }
 
 OverviewHeaderFrame::~OverviewHeaderFrame() {
@@ -181,9 +191,12 @@ void OverviewHeaderFrame::setNodeStateModel(QAbstractItemModel* _model) {
   stateMapper->addMapping(m_ui->m_overviewNetworkDifficultyLabel, NodeStateModel::COLUMN_LAST_LOCAL_BLOCK_DIFFICULTY, "text");
   //stateMapper->addMapping(m_ui->m_overviewConnectionState, NodeStateModel::COLUMN_CONNECTION_STATE, "text");
   //stateMapper->addMapping(m_ui->m_overviewPeerCount, NodeStateModel::COLUMN_PEER_COUNT, "text");
-  stateMapper->addMapping(m_ui->m_overviewLocalHeight, NodeStateModel::COLUMN_LOCAL_BLOCK_COUNT, "text");
-  stateMapper->addMapping(m_ui->m_overviewBlockTimestamp, NodeStateModel::COLUMN_LAST_LOCAL_BLOCK_TIMESTAMP, "text");
+  //stateMapper->addMapping(m_ui->m_overviewLocalHeight, NodeStateModel::COLUMN_LOCAL_BLOCK_COUNT, "text");
+  //stateMapper->addMapping(m_ui->m_overviewBlockTimestamp, NodeStateModel::COLUMN_LAST_LOCAL_BLOCK_TIMESTAMP, "text");
+  stateMapper->addMapping(m_ui->m_overviewConnectionState, NodeStateModel::COLUMN_CONNECTION_STATE, "text");
   stateMapper->setCurrentIndex(0);
+  connect(m_nodeStateModel, &QAbstractItemModel::dataChanged, this, &OverviewHeaderFrame::m_nodeStateModelDataChanged);
+  changeConnectionStateAppearance();
 }
 
 void OverviewHeaderFrame::setWalletStateModel(QAbstractItemModel* _model) {
@@ -355,6 +368,23 @@ void OverviewHeaderFrame::walletStateModelDataChanged(const QModelIndex& _topLef
     //  m_syncMovie->stop();
     }
   }
+}
+
+void OverviewHeaderFrame::m_nodeStateModelDataChanged(const QModelIndex& _topLeft, const QModelIndex& _bottomRight,
+  const QVector<int>& _roles) {
+  changeConnectionStateAppearance();
+}
+
+void OverviewHeaderFrame::changeConnectionStateAppearance() {
+  if (m_ui->m_overviewConnectionState->text() == "connected") {
+    m_ui->m_overviewConnectionState->setProperty("connected", true);
+    m_ui->m_overviewConnectionState->setStyleSheet("QLabel {  }");
+  } else if (m_ui->m_overviewConnectionState->text() == "disconnected") {
+    m_ui->m_overviewConnectionState->setProperty("connected", false);
+    m_ui->m_overviewConnectionState->setStyleSheet("QLabel {  }");
+  }
+  m_ui->m_overviewConnectionState->style()->unpolish(m_ui->m_overviewConnectionState);
+  m_ui->m_overviewConnectionState->style()->polish(m_ui->m_overviewConnectionState);
 }
 
 void OverviewHeaderFrame::poolTransactionClicked(const QModelIndex& _index) {
