@@ -149,11 +149,6 @@ void AddressBookManager::editAddress(quintptr _addressIndex, const QString& _lab
   Q_ASSERT(_addressIndex < m_addressBookObject[ADDRESS_BOOK_TAG_NAME].toArray().size());
   QJsonArray addressArray = m_addressBookObject[ADDRESS_BOOK_TAG_NAME].toArray();
   QJsonObject addressObject = addressArray[_addressIndex].toObject();
-  if (getDonationMiningAddress() == addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString() &&
-    (!_isDonationAddress || addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString() != _address)) {
-    setDonationMiningEnabled(false);
-    setDonationMiningAddress(QString());
-  }
 
   if (getDonationChangeAddress() == addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString() &&
     (!_isDonationAddress || addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString() != _address)) {
@@ -189,10 +184,6 @@ void AddressBookManager::removeAddress(quintptr _addressIndex) {
     arg(addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString()).
     arg(addressObject.value(ADDRESS_ITEM_PAYMENT_ID_TAG_NAME).toString()).
     arg(addressObject.value(ADDRESS_ITEM_DONATION_TAG_NAME).toBool()));
-  if (getDonationMiningAddress() == addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString()) {
-    setDonationMiningEnabled(false);
-    setDonationMiningAddress(QString());
-  }
 
   if (getDonationChangeAddress() == addressObject.value(ADDRESS_ITEM_ADDRESS_TAG_NAME).toString()) {
     setDonationChangeEnabled(false);
@@ -233,21 +224,6 @@ void AddressBookManager::removeObserver(IAddressBookManagerObserver* _observer) 
   disconnect(this, SIGNAL(addressRemovedSignal(quintptr)), observer, SLOT(addressRemoved(quintptr)));
 }
 
-bool WalletGui::AddressBookManager::isDonationMiningEnabled() const {
-  QJsonObject donationObject = m_addressBookObject.value(DONATION_TAG_NAME).toObject();
-  return donationObject.value(DONATION_MINING_TAG_NAME).toObject().value(DONATION_MINING_IS_ENABLED_TAG_NAME).toBool(false);
-}
-
-QString AddressBookManager::getDonationMiningAddress() const {
-  QJsonObject donationObject = m_addressBookObject.value(DONATION_TAG_NAME).toObject();
-  return donationObject.value(DONATION_MINING_TAG_NAME).toObject().value(DONATION_MINING_ADDRESS_TAG_NAME).toString();
-}
-
-int AddressBookManager::getDonationMiningAmount() const {
-  QJsonObject donationObject = m_addressBookObject.value(DONATION_TAG_NAME).toObject();
-  return donationObject.value(DONATION_MINING_TAG_NAME).toObject().value(DONATION_MINING_AMOUNT_TAG_NAME).toInt(1);
-}
-
 bool AddressBookManager::isDonationChangeEnabled() const {
   QJsonObject donationObject = m_addressBookObject.value(DONATION_TAG_NAME).toObject();
   return donationObject.value(DONATION_CHANGE_TAG_NAME).toObject().value(DONATION_CHANGE_IS_ENABLED_TAG_NAME).toBool(false);
@@ -261,45 +237,6 @@ QString AddressBookManager::getDonationChangeAddress() const {
 int AddressBookManager::getDonationChangeAmount() const {
   QJsonObject donationObject = m_addressBookObject.value(DONATION_TAG_NAME).toObject();
   return donationObject.value(DONATION_CHANGE_TAG_NAME).toObject().value(DONATION_CHANGE_AMOUNT_TAG_NAME).toInt(10);
-}
-
-void AddressBookManager::setDonationMiningEnabled(bool _on) {
-  QJsonObject donationObject = m_addressBookObject.value(DONATION_TAG_NAME).toObject();
-  if (donationObject.value(DONATION_MINING_TAG_NAME).toObject().value(DONATION_MINING_IS_ENABLED_TAG_NAME).toBool(false) !=
-    _on) {
-    QJsonObject donationMiningObject = donationObject.value(DONATION_MINING_TAG_NAME).toObject();
-    donationMiningObject.insert(DONATION_MINING_IS_ENABLED_TAG_NAME, _on);
-    donationObject.insert(DONATION_MINING_TAG_NAME, donationMiningObject);
-    m_addressBookObject.insert(DONATION_TAG_NAME, donationObject);
-    saveAddressBook();
-    Q_EMIT donationMiningEnabledSignal(_on);
-  }
-}
-
-void AddressBookManager::setDonationMiningAddress(const QString& _address) {
-  QJsonObject donationObject = m_addressBookObject.value(DONATION_TAG_NAME).toObject();
-  if (donationObject.value(DONATION_MINING_TAG_NAME).toObject().value(DONATION_MINING_ADDRESS_TAG_NAME).toString() !=
-    _address) {
-    QJsonObject donationMiningObject = donationObject.value(DONATION_MINING_TAG_NAME).toObject();
-    donationMiningObject.insert(DONATION_MINING_ADDRESS_TAG_NAME, _address);
-    donationObject.insert(DONATION_MINING_TAG_NAME, donationMiningObject);
-    m_addressBookObject.insert(DONATION_TAG_NAME, donationObject);
-    saveAddressBook();
-    Q_EMIT donationMiningAddressChangedSignal(_address);
-  }
-}
-
-void AddressBookManager::setDonationMiningAmount(int _amount) {
-  QJsonObject donationObject = m_addressBookObject.value(DONATION_TAG_NAME).toObject();
-  if (donationObject.value(DONATION_MINING_TAG_NAME).toObject().value(DONATION_MINING_AMOUNT_TAG_NAME).toInt(1) !=
-    _amount) {
-    QJsonObject donationMiningObject = donationObject.value(DONATION_MINING_TAG_NAME).toObject();
-    donationMiningObject.insert(DONATION_MINING_AMOUNT_TAG_NAME, _amount);
-    donationObject.insert(DONATION_MINING_TAG_NAME, donationMiningObject);
-    m_addressBookObject.insert(DONATION_TAG_NAME, donationObject);
-    saveAddressBook();
-    Q_EMIT donationMiningAmountChangedSignal(_amount);
-  }
 }
 
 void AddressBookManager::setDonationChangeEnabled(bool _on) {

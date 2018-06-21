@@ -50,7 +50,6 @@
 #include "Models/AddressBookModel.h"
 #include "Models/BlockchainModel.h"
 #include "Models/FusionTransactionsFilterModel.h"
-#include "Models/MinerModel.h"
 #include "Models/NodeStateModel.h"
 #include "Models/SortedAddressBookModel.h"
 #include "Models/SortedTransactionsModel.h"
@@ -68,7 +67,7 @@ extern "C"
 #include "crypto/keccak.h"
 #include "crypto/crypto-ops.h"
 }
-
+#include "../include/IDonationManager.h"
 #include "ui_MainWindow.h"
 
 namespace WalletGui {
@@ -115,11 +114,11 @@ bool isDonationUrl(const QUrl& _url) {
 }
 
 MainWindow::MainWindow(ICryptoNoteAdapter* _cryptoNoteAdapter, IAddressBookManager* _addressBookManager,
-  IDonationManager* _donationManager, IOptimizationManager* _optimizationManager, IMiningManager* _miningManager,
+  IDonationManager* _donationManager, IOptimizationManager* _optimizationManager,
   IApplicationEventHandler* _applicationEventHandler, const QString& _styleSheetTemplate, QWidget* _parent) :
   QMainWindow(_parent), m_ui(new Ui::MainWindow), m_cryptoNoteAdapter(_cryptoNoteAdapter),
   m_addressBookManager(_addressBookManager), m_donationManager(_donationManager),
-  m_optimizationManager(_optimizationManager), m_miningManager(_miningManager), m_applicationEventHandler(_applicationEventHandler),
+  m_optimizationManager(_optimizationManager), m_applicationEventHandler(_applicationEventHandler),
   m_blockChainModel(nullptr), m_transactionPoolModel(nullptr), m_recentWalletsMenu(new QMenu(this)),
   m_addRecipientAction(new QAction(this)), m_styleSheetTemplate(_styleSheetTemplate), m_walletStateMapper(new QDataWidgetMapper(this)),
   m_syncMovie(new QMovie(Settings::instance().getCurrentStyle().getWalletSyncGifFile(), QByteArray(), this)) {
@@ -140,16 +139,14 @@ MainWindow::MainWindow(ICryptoNoteAdapter* _cryptoNoteAdapter, IAddressBookManag
   m_sortedAddressBookModel = new SortedAddressBookModel(m_addressBookModel, this);
   m_blockChainModel = new BlockchainModel(m_cryptoNoteAdapter, m_nodeStateModel, this);
   m_transactionPoolModel = new TransactionPoolModel(m_cryptoNoteAdapter, this);
-  m_minerModel = new MinerModel(m_miningManager, this);
 
   QList<IWalletUiItem*> uiItems;
   uiItems << m_ui->m_noWalletFrame << m_ui->m_overviewFrame << m_ui->m_sendFrame << m_ui->m_transactionsFrame <<
-    m_ui->m_receiveFrame << m_ui->m_addressBookFrame << m_ui->m_miningFrame << m_ui->statusBar;
+    m_ui->m_receiveFrame << m_ui->m_addressBookFrame << m_ui->statusBar;
   for (auto& uiItem : uiItems) {
     uiItem->setCryptoNoteAdapter(m_cryptoNoteAdapter);
     uiItem->setAddressBookManager(m_addressBookManager);
     uiItem->setDonationManager(m_donationManager);
-    uiItem->setMiningManager(m_miningManager);
     uiItem->setApplicationEventHandler(m_applicationEventHandler);
     uiItem->setMainWindow(this);
     uiItem->setNodeStateModel(m_nodeStateModel);
@@ -160,7 +157,6 @@ MainWindow::MainWindow(ICryptoNoteAdapter* _cryptoNoteAdapter, IAddressBookManag
     uiItem->setSortedAddressBookModel(m_sortedAddressBookModel);
     uiItem->setBlockChainModel(m_blockChainModel);
     uiItem->setTransactionPoolModel(m_transactionPoolModel);
-    uiItem->setMinerModel(m_minerModel);
   }
 
   if (!Settings::instance().isSystemTrayAvailable() && QSystemTrayIcon::isSystemTrayAvailable()) {
@@ -440,7 +436,6 @@ void MainWindow::setClosedState() {
   m_ui->m_transactionsFrame->hide();
   m_ui->m_addressBookFrame->hide();
   m_ui->m_receiveFrame->hide();
-  m_ui->m_miningFrame->hide();
   m_ui->m_noWalletFrame->show();
   m_ui->m_syncProgress->setValue(0);
 
@@ -542,7 +537,7 @@ void MainWindow::themeChanged() {
   m_syncMovie->start();
   QList<IWalletUiItem*> uiItems;
   uiItems << m_ui->m_noWalletFrame << m_ui->m_overviewFrame << m_ui->m_sendFrame << m_ui->m_transactionsFrame <<
-    m_ui->m_receiveFrame << m_ui->m_addressBookFrame << m_ui->m_miningFrame << m_ui->statusBar;
+    m_ui->m_receiveFrame << m_ui->m_addressBookFrame << m_ui->statusBar;
   for (auto& uiItem : uiItems) {
     uiItem->updateStyle();
   }

@@ -52,15 +52,9 @@ public:
   virtual void removeObserver(IAddressBookManagerObserver* _observer) override;
 
   // IDonationManager
-  virtual bool isDonationMiningEnabled() const override;
-  virtual QString getDonationMiningAddress() const override;
-  virtual int getDonationMiningAmount() const override;
   virtual bool isDonationChangeEnabled() const override;
   virtual QString getDonationChangeAddress() const override;
   virtual int getDonationChangeAmount() const override;
-  virtual void setDonationMiningEnabled(bool _on) override;
-  virtual void setDonationMiningAddress(const QString& _address) override;
-  virtual void setDonationMiningAmount(int _amount) override;
   virtual void setDonationChangeEnabled(bool _on) override;
   virtual void setDonationChangeAddress(const QString& _address) override;
   virtual void setDonationChangeAmount(int _amount) override;

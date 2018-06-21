@@ -79,10 +79,6 @@ void OverviewFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAdapter)
   m_ui->m_overviewHeaderFrame->setCryptoNoteAdapter(m_cryptoNoteAdapter);
 }
 
-void OverviewFrame::setMiningManager(IMiningManager* _miningManager) {
-  m_ui->m_overviewHeaderFrame->setMiningManager(_miningManager);
-}
-
 void OverviewFrame::setMainWindow(QWidget* _mainWindow) {
   m_mainWindow = _mainWindow;
   QList<QPushButton*> buttonList = m_mainWindow->findChildren<QPushButton*>("m_transactionsButton");
@@ -128,10 +124,6 @@ void OverviewFrame::setNodeStateModel(QAbstractItemModel* _model) {
 
 void OverviewFrame::setWalletStateModel(QAbstractItemModel* _model) {
   m_ui->m_overviewHeaderFrame->setWalletStateModel(_model);
-}
-
-void OverviewFrame::setMinerModel(QAbstractItemModel* _model) {
-  m_ui->m_overviewHeaderFrame->setMinerModel(_model);
 }
 
 void OverviewFrame::settingsUpdated() {

@@ -131,7 +131,6 @@ file(GLOB_RECURSE CRYPTONOTE_SOURCES
   cryptonote/src/JsonRpcServer/*.cpp
   cryptonote/src/PaymentGate/*.cpp
   cryptonote/src/PaymentGateService/*.cpp
-  cryptonote/src/Miner/*.cpp
 )
 
 file(GLOB_RECURSE Mnemonics cryptonote/src/mnemonics/*)

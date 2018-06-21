@@ -48,13 +48,11 @@ const char DONATION_OPTIONS_STYLE_SHEET_TEMPLATE[] =
     "min-width: 40px;"
   "}"
 
-  "WalletGui--DonationOptionsFrame #m_enableDonationMiningCheck,"
   "WalletGui--DonationOptionsFrame #m_enableDonationChangeCheck {"
     "font-size: %fontSizeLarge%;"
     "font-weight: bold;"
   "}"
 
-  "WalletGui--DonationOptionsFrame #m_enableDonationMiningCheck::indicator,"
   "WalletGui--DonationOptionsFrame #m_enableDonationChangeCheck::indicator {"
     "width: 20px;"
     "height: 20px;"
@@ -65,7 +63,6 @@ const char DONATION_OPTIONS_STYLE_SHEET_TEMPLATE[] =
 DonationOptionsFrame::DonationOptionsFrame(QWidget *parent) : QFrame(parent), m_ui(new Ui::DonationOptionsFrame),
   m_cryptoNoteAdapter(nullptr), m_donationManager(nullptr), m_donationAddressesModel(nullptr) {
   m_ui->setupUi(this);
-  m_ui->m_donationMiningFrame->setEnabled(false);
   m_ui->m_donationChangeFrame->setEnabled(false);
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(DONATION_OPTIONS_STYLE_SHEET_TEMPLATE));
 }
@@ -77,31 +74,16 @@ void DonationOptionsFrame::load() {
   Q_ASSERT(m_donationManager != nullptr);
   Q_ASSERT(m_donationAddressesModel != nullptr);
 
-  m_ui->m_enableDonationMiningCheck->setChecked(m_donationAddressesModel->rowCount() > 0 &&
-    m_donationManager->isDonationMiningEnabled());
   m_ui->m_enableDonationChangeCheck->setChecked(m_donationAddressesModel->rowCount() > 0 &&
     m_donationManager->isDonationChangeEnabled());
-  m_ui->m_enableDonationMiningCheck->setEnabled(m_donationAddressesModel->rowCount() > 0);
   m_ui->m_enableDonationChangeCheck->setEnabled(m_donationAddressesModel->rowCount() > 0);
   m_ui->m_enableDonationChangeCheck->setChecked(m_donationManager->isDonationChangeEnabled());
-  m_ui->m_donationMiningAddressCombo->setModel(m_donationAddressesModel);
   m_ui->m_donationChangeAddressCombo->setModel(m_donationAddressesModel);
-  m_ui->m_donationMiningAddressCombo->setCurrentIndex(findDonationAddress(m_donationManager->getDonationMiningAddress()));
   m_ui->m_donationChangeAddressCombo->setCurrentIndex(findDonationAddress(m_donationManager->getDonationChangeAddress()));
-  m_ui->m_donationMiningAmountSlider->setValue(m_donationManager->getDonationMiningAmount());
   m_ui->m_donationChangeAmountSlider->setValue(m_donationManager->getDonationChangeAmount());
 }
 
 void DonationOptionsFrame::save() {
-  m_donationManager->setDonationMiningAmount(m_ui->m_donationMiningAmountSlider->value());
-  int miningAddressIndex = m_ui->m_donationMiningAddressCombo->currentIndex();
-  if (miningAddressIndex != -1) {
-    QString address = m_donationAddressesModel->index(miningAddressIndex, 0).data(AddressBookModel::ROLE_ADDRESS).toString();
-    m_donationManager->setDonationMiningAddress(address);
-  }
-
-  m_donationManager->setDonationMiningEnabled(m_ui->m_enableDonationMiningCheck->checkState() == Qt::Checked);
-
   m_donationManager->setDonationChangeAmount(m_ui->m_donationChangeAmountSlider->value());
   int changeAddressIndex = m_ui->m_donationChangeAddressCombo->currentIndex();
   if (changeAddressIndex != -1) {
@@ -121,12 +103,10 @@ void DonationOptionsFrame::setData(const QVariantMap& _data) {
     AddressBookModel::ROLE_LABEL, label);
   for (const auto& donationAddressIndex : donationAddressIndexList) {
     if (donationAddressIndex.data(AddressBookModel::ROLE_ADDRESS).toString().compare(address, Qt::CaseSensitive) == 0) {
-      m_ui->m_donationMiningAddressCombo->setCurrentIndex(donationAddressIndex.row());
       m_ui->m_donationChangeAddressCombo->setCurrentIndex(donationAddressIndex.row());
     }
   }
 
-  m_ui->m_enableDonationMiningCheck->setCheckState(Qt::Checked);
   m_ui->m_enableDonationChangeCheck->setCheckState(Qt::Checked);
 }
 
@@ -169,16 +149,6 @@ int DonationOptionsFrame::findDonationAddress(const QString& _address) const {
   }
 
   return indexes.first().row();
-}
-
-void DonationOptionsFrame::donationMiningAmountChanged(int _value) {
-  if (m_ui->m_donationMiningAmountSlider->value() != _value) {
-    m_ui->m_donationMiningAmountSlider->setValue(_value);
-  }
-
-  if (m_ui->m_donationMiningAmountSpin->value() != _value) {
-    m_ui->m_donationMiningAmountSpin->setValue(_value);
-  }
 }
 
 void DonationOptionsFrame::donationChangeAmountChanged(int _value) {

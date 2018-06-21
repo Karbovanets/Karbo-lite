@@ -289,10 +289,6 @@ QCalendarWidget QMenu {
   background-image: url(:icons/address_book);
 }
 
-#MainWindow > #centralwidget > #m_toolFrame > #m_miningButton {
-  background-image: url(:icons/miner);
-}
-
 #MainWindow > #centralwidget > #m_toolFrame > #m_sendButton {
   background-image: url(:icons/send);
 }
@@ -317,10 +313,6 @@ QCalendarWidget QMenu {
   color: #ffffff;
 }
 
-#MainWindow > #centralwidget > #m_toolFrame > #m_miningButton:checked {
-  color: #ffffff;
-}
-
 #MainWindow > #centralwidget > #m_toolFrame > #m_sendButton:checked {
   color: #ffffff;
 }
@@ -341,11 +333,6 @@ QCalendarWidget QMenu {
 }
 
 #MainWindow > #centralwidget > #m_toolFrame > #m_addressBookButton:checked:disabled {
-  background-color: transparent;
-  color: %toolButtonFontColorDisabled%;
-}
-
-#MainWindow > #centralwidget > #m_toolFrame > #m_miningButton:checked:disabled {
   background-color: transparent;
   color: %toolButtonFontColorDisabled%;
 }
@@ -374,7 +361,6 @@ QCalendarWidget QMenu {
 }
 
 #m_overviewBalanceFrame,
-#m_overviewMiningFrame,
 #m_overviewNodeFrame
 {
   background-color: #EFF3FA;

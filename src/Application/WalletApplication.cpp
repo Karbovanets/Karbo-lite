@@ -46,7 +46,6 @@
 #include "LogFileWatcher.h"
 #include "WalletLogger/WalletLogger.h"
 #include "Gui/MainWindow/MainWindow.h"
-#include "MiningManager.h"
 #include "OptimizationManager.h"
 #include "QJsonRpc/JsonRpcServer.h"
 #include "Settings/Settings.h"
@@ -101,7 +100,7 @@ bool rmDir(const QString& dirPath) {
 
 WalletApplication::WalletApplication(int& _argc, char** _argv) : QApplication(_argc, _argv), m_lockFile(nullptr),
   m_systemTrayIcon(new QSystemTrayIcon(this)), m_applicationEventHandler(new ApplicationEventHandler(this)),
-  m_optimizationManager(nullptr), m_mainWindow(nullptr), m_splash(nullptr),
+  m_optimizationManager(nullptr), m_donationManager(nullptr), m_mainWindow(nullptr), m_splash(nullptr),
   m_logWatcher(nullptr), m_isAboutToQuit(false) {
   setApplicationName("karbowanecwallet");
   setApplicationVersion(Settings::instance().getVersion());
@@ -330,8 +329,7 @@ void WalletApplication::initUi() {
   AddressBookManager* addressBookManager = new AddressBookManager(m_cryptoNoteAdapter, this);
   m_addressBookManager = addressBookManager;
   m_donationManager = addressBookManager;
-  m_optimizationManager= new OptimizationManager(m_cryptoNoteAdapter, this);
-  m_miningManager = new MiningManager(m_cryptoNoteAdapter, m_donationManager, this);
+  m_optimizationManager = new OptimizationManager(m_cryptoNoteAdapter, this);
   if (m_splash != nullptr) {
     m_splash->showMessage(QObject::tr("Initializing GUI..."), Qt::AlignLeft | Qt::AlignBottom, Qt::blue);
   }
@@ -342,7 +340,7 @@ void WalletApplication::initUi() {
   styleSheetFile.close();
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(styleSheet));
   m_mainWindow = new MainWindow(m_cryptoNoteAdapter, m_addressBookManager, m_donationManager, m_optimizationManager,
-    m_miningManager, m_applicationEventHandler, styleSheet, nullptr);
+    m_applicationEventHandler, styleSheet, nullptr);
   connect(static_cast<MainWindow*>(m_mainWindow), &MainWindow::reinitCryptoNoteAdapterSignal,
     this, &WalletApplication::reinitCryptoNoteAdapter);
   if (m_splash != nullptr) {

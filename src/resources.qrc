@@ -67,7 +67,6 @@
         <file alias="arrow-circle-hover">icons/arrow_circle_hover.png</file>
         <file alias="arrow-circle-up-hover">icons/arrow_circle_up_hover.png</file>
         <file alias="light/wallet-sync">icons/wallet_sync.gif</file>
-        <file alias="miner-big">icons/miner_big.png</file>
         <file alias="pool-stats">icons/pool_stats.png</file>
         <file alias="blog">icons/blog.png</file>
         <file alias="dark/wallet-sync">icons/wallet_sync_dark.gif</file>
@@ -75,13 +74,10 @@
         <file alias="scroll-news-down">icons/scroll_news_down.png</file>
         <file alias="scroll-news-up-hover">icons/scroll_news_up_hover.png</file>
         <file alias="scroll-news-up">icons/scroll_news_up.png</file>
-        <file alias="start-mining">icons/start.png</file>
-        <file alias="stop-mining">icons/stop.png</file>
         <file alias="receive">icons/receive.png</file>
         <file alias="address_book">icons/address_book.png</file>
         <file alias="transactions">icons/history.png</file>
         <file alias="overview">icons/overview.png</file>
-        <file alias="miner">icons/miner.png</file>
         <file alias="send">icons/send.png</file>
         <file alias="node">icons/nodes.png</file>
     </qresource>

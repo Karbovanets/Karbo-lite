@@ -26,7 +26,6 @@ class ICryptoNoteAdapter;
 class IAddressBookManager;
 class IDonationManager;
 class IOptimizationManager;
-class IMiningManager;
 class IApplicationEventHandler;
 class INewsReader;
 
@@ -37,7 +36,6 @@ public:
   virtual void setAddressBookManager(IAddressBookManager* _addressBookManager) {}
   virtual void setOptimizationManager(IOptimizationManager* _optimizationManager) {}
   virtual void setDonationManager(IDonationManager* _donationManager) {}
-  virtual void setMiningManager(IMiningManager* _miningManager) {}
   virtual void setApplicationEventHandler(IApplicationEventHandler* _applicationEventHandler) {}
   virtual void setMainWindow(QWidget* _mainWindow) {}
   virtual void setTransactionsModel(QAbstractItemModel* _model) {}
@@ -48,7 +46,6 @@ public:
   virtual void setSortedAddressBookModel(QAbstractItemModel* _model) {}
   virtual void setBlockChainModel(QAbstractItemModel* _model) {}
   virtual void setTransactionPoolModel(QAbstractItemModel* _model) {}
-  virtual void setMinerModel(QAbstractItemModel* _model) {}
   virtual void updateStyle() {}
 };
 
