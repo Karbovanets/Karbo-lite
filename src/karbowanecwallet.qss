@@ -225,6 +225,14 @@ QCalendarWidget QMenu {
   color: %fontColorBlueHover%;
 }
 
+#MainWindow > #centralwidget > #m_headerFrame > #m_walletFrame > #m_walletLabel,
+#MainWindow > #centralwidget > #m_headerFrame #m_noWalletLabel,
+#MainWindow > #centralwidget > #m_headerFrame #m_notEncryptedTextLabel,
+#MainWindow > #centralwidget > #m_headerFrame #m_balanceCopyLabel
+{
+  color: %balanceFontColor%;
+}
+
 #MainWindow > #centralwidget > #m_toolFrame {
   background-color: %toolButtonBackgroundColorNormal%;
   border: none;

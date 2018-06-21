@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1273</width>
-    <height>824</height>
+    <width>1060</width>
+    <height>640</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1260</width>
+    <width>1060</width>
     <height>600</height>
    </size>
   </property>
@@ -152,7 +152,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="WalletGui::WalletSmallGrayTextLabel" name="m_walletLabel">
+           <widget class="QLabel" name="m_walletLabel">
             <property name="text">
              <string>Your wallet:</string>
             </property>
@@ -896,7 +896,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1273</width>
+     <width>1060</width>
      <height>20</height>
     </rect>
    </property>

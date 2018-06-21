@@ -77,7 +77,7 @@ public:
     QFrame *m_walletFrame;
     QVBoxLayout *verticalLayout_3;
     QSpacerItem *verticalSpacer_3;
-    WalletGui::WalletSmallGrayTextLabel *m_walletLabel;
+    QLabel *m_walletLabel;
     QLabel *m_addressLabel;
     QHBoxLayout *horizontalLayout_2;
     QFrame *m_notEncryptedFrame;
@@ -136,13 +136,13 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(1273, 824);
+        MainWindow->resize(1060, 640);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
         MainWindow->setSizePolicy(sizePolicy);
-        MainWindow->setMinimumSize(QSize(1260, 600));
+        MainWindow->setMinimumSize(QSize(1060, 600));
         MainWindow->setMaximumSize(QSize(16777215, 16777215));
         QIcon icon;
         icon.addFile(QStringLiteral(":/images/Karbovanets"), QSize(), QIcon::Normal, QIcon::Off);
@@ -248,7 +248,7 @@ public:
 
         verticalLayout_3->addItem(verticalSpacer_3);
 
-        m_walletLabel = new WalletGui::WalletSmallGrayTextLabel(m_walletFrame);
+        m_walletLabel = new QLabel(m_walletFrame);
         m_walletLabel->setObjectName(QStringLiteral("m_walletLabel"));
         m_walletLabel->setIndent(0);
 
@@ -569,7 +569,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QStringLiteral("menubar"));
-        menubar->setGeometry(QRect(0, 0, 1273, 20));
+        menubar->setGeometry(QRect(0, 0, 1060, 20));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuSettings = new QMenu(menubar);

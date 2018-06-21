@@ -32,7 +32,8 @@ QString LightStyle::statusBarFontColor() const {
 }
 
 QString LightStyle::headerBackgroundColor() const {
-  return "#EDF4FC";
+  //return "#EDF4FC";
+  return "#A9C1E0";
 }
 
 QString LightStyle::headerBorderColor() const {
@@ -40,7 +41,7 @@ QString LightStyle::headerBorderColor() const {
 }
 
 QString LightStyle::addressFontColor() const {
-  return "#2A4268";
+  return "#15315E";
 }
 
 QString LightStyle::balanceFontColor() const {
