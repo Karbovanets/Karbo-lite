@@ -86,15 +86,15 @@ QString formatTimeDiff(quint64 _timeDiff) {
 
 WalletStatusBar::WalletStatusBar(QWidget* _parent) : QStatusBar(_parent), m_cryptoNoteAdapter(nullptr), m_nodeStateModel(nullptr), m_syncStatusLabel(new QLabel(this)),
   m_syncStatusIconLabel(new QLabel(this)), m_encryptionStatusIconLabel(new QLabel(this)),
-  m_peerCountLabel(new QLabel(this)), m_syncMovie(new QMovie(this)), m_walletIsSynchronized(false), m_checkSyncStateTimerId(-1) {
+  m_connectionStateLabel(new QLabel(this)), m_syncMovie(new QMovie(this)), m_walletIsSynchronized(false), m_checkSyncStateTimerId(-1) {
   m_syncStatusLabel->setObjectName("m_syncStatusLabel");
   m_syncStatusIconLabel->setObjectName("m_syncStatusIconLabel");
   m_encryptionStatusIconLabel->setObjectName("m_encryptionStatusIconLabel");
-  m_peerCountLabel->setObjectName("m_peerCountLabel");
+  m_connectionStateLabel->setObjectName("m_connectionStateLabel");
   m_syncMovie->setFileName(Settings::instance().getCurrentStyle().getWalletSyncGifFile());
   m_syncMovie->setScaledSize(QSize(16, 16));
   addWidget(m_syncStatusLabel);
-  addPermanentWidget(m_peerCountLabel);
+  addPermanentWidget(m_connectionStateLabel);
   addPermanentWidget(m_encryptionStatusIconLabel);
   addPermanentWidget(m_syncStatusIconLabel);
 
@@ -115,7 +115,7 @@ void WalletStatusBar::setNodeStateModel(QAbstractItemModel* _model) {
   m_nodeStateModel = _model;
   QDataWidgetMapper* stateMapper = new QDataWidgetMapper(this);
   stateMapper->setModel(m_nodeStateModel);
-  stateMapper->addMapping(m_peerCountLabel, NodeStateModel::COLUMN_PEER_COUNT, "text");
+  stateMapper->addMapping(m_connectionStateLabel, NodeStateModel::COLUMN_CONNECTION_STATE, "text");
   stateMapper->setCurrentIndex(0);
   connect(m_nodeStateModel, &QAbstractItemModel::dataChanged, this, &WalletStatusBar::nodeStateChanged);
 }

@@ -66,7 +66,7 @@ private:
   QLabel* m_syncStatusLabel;
   QLabel* m_syncStatusIconLabel;
   QLabel* m_encryptionStatusIconLabel;
-  QLabel* m_peerCountLabel;
+  QLabel* m_connectionStateLabel;
   QMovie* m_syncMovie;
   bool m_walletIsSynchronized;
   int m_checkSyncStateTimerId;
