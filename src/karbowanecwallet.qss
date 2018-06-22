@@ -352,7 +352,7 @@ QCalendarWidget QMenu {
 
 
 #MainWindow > #centralwidget > #m_syncProgress {
-  border-top: 1px solid %borderColor%;
+  border-top: none;
   background-color: %statusBarBackgroundColor%;
   min-height: 5px;
   max-height: 5px;

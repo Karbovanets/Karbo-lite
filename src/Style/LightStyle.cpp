@@ -37,7 +37,7 @@ QString LightStyle::headerBackgroundColor() const {
 }
 
 QString LightStyle::headerBorderColor() const {
-  return "#dddddd";
+  return "#9DB4D1";
 }
 
 QString LightStyle::addressFontColor() const {
@@ -69,7 +69,7 @@ QString LightStyle::toolButtonFontColorDisabled() const {
 }
 
 QString LightStyle::toolBarBorderColor() const {
-  return "#dddddd";
+  return "#9DB4D1";
 }
 
 QString LightStyle::getWalletSyncGifFile() const {
