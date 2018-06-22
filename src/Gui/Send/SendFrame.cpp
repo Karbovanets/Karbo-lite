@@ -75,7 +75,7 @@ const char SEND_FRAME_STYLE_SHEET[] =
 
 const quint64 MAXIMUM_UNSYNCED_BLOCKS_WHEN_SEND_AVAILABLE = 5;
 const quint64 DEFAULT_MIXIN_VALUE = 6;
-const quint64 MAX_MIXIN_VALUE = 1000;
+const quint64 MAX_MIXIN_VALUE = 19;
 const quint64 CRITICAL_MIXIN_BOUND = 3;
 const quint64 NORMAL_MIXIN_BOUND = 6;
 const char PAYMENT_URL_AMOUNT_TAG[] = "amount";
@@ -555,11 +555,11 @@ void SendFrame::amountStringChanged(const QString& _amountString) {
   remote_node_fee = 0;
   if (!remote_node_fee_address.isEmpty() ) {
        remote_node_fee = static_cast<qint64>(totalSendAmount * 0.0025); // fee is 0.25%
-    if (remote_node_fee < m_cryptoNoteAdapter->getMinimalFee()) {
-        remote_node_fee = m_cryptoNoteAdapter->getMinimalFee();
-    }
-    if (remote_node_fee > 10000000000000) {
-        remote_node_fee = 10000000000000;
+    //if (remote_node_fee < m_cryptoNoteAdapter->getMinimalFee()) {
+    //    remote_node_fee = m_cryptoNoteAdapter->getMinimalFee();
+    //}
+    if (remote_node_fee > 1000000000000) {
+        remote_node_fee = 1000000000000;
     }
   }
   qreal total_fee = QLocale(QLocale::English).toDouble(m_cryptoNoteAdapter->formatAmount(remote_node_fee + m_cryptoNoteAdapter->getMinimalFee()));
