@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'SendFrame.ui'
 **
-** Created by: Qt User Interface Compiler version 5.6.0
+** Created by: Qt User Interface Compiler version 5.10.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -93,7 +93,7 @@ public:
         m_sendScrollarea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 866, 69));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 866, 68));
         QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
@@ -241,7 +241,7 @@ public:
         m_mixinSlider = new QSlider(m_mixinFrame);
         m_mixinSlider->setObjectName(QStringLiteral("m_mixinSlider"));
         m_mixinSlider->setMaximumSize(QSize(16777215, 16777215));
-        m_mixinSlider->setMaximum(50);
+        m_mixinSlider->setMaximum(19);
         m_mixinSlider->setPageStep(1);
         m_mixinSlider->setValue(7);
         m_mixinSlider->setTracking(false);
@@ -295,17 +295,17 @@ public:
 
     void retranslateUi(QFrame *SendFrame)
     {
-        SendFrame->setWindowTitle(QApplication::translate("SendFrame", "Frame", 0));
-        m_addRecipientButton->setText(QApplication::translate("SendFrame", "+ ADD RECIPIENT", 0));
-        m_paymentIdEdit->setPlaceholderText(QApplication::translate("SendFrame", "Payment identifier issued by payee (market, exchange or other entity)", 0));
-        label_3->setText(QApplication::translate("SendFrame", "FEE", 0));
-        m_paymentIdTextLabel->setText(QApplication::translate("SendFrame", "PAYMENT ID", 0));
-        m_generatePaymentIdButton->setText(QApplication::translate("SendFrame", "Generate", 0));
+        SendFrame->setWindowTitle(QApplication::translate("SendFrame", "Frame", nullptr));
+        m_addRecipientButton->setText(QApplication::translate("SendFrame", "+ ADD RECIPIENT", nullptr));
+        m_paymentIdEdit->setPlaceholderText(QApplication::translate("SendFrame", "Payment identifier issued by payee (market, exchange or other entity)", nullptr));
+        label_3->setText(QApplication::translate("SendFrame", "FEE", nullptr));
+        m_paymentIdTextLabel->setText(QApplication::translate("SendFrame", "PAYMENT ID", nullptr));
+        m_generatePaymentIdButton->setText(QApplication::translate("SendFrame", "Generate", nullptr));
         label->setText(QString());
-        m_totalAmountLabel->setText(QApplication::translate("SendFrame", "AMOUNT", 0));
-        m_sendButton->setText(QApplication::translate("SendFrame", "Send", 0));
-        label_2->setText(QApplication::translate("SendFrame", "TOTAL AMOUNT", 0));
-        m_mixinTextLabel->setText(QApplication::translate("SendFrame", "ANONYMITY LEVEL", 0));
+        m_totalAmountLabel->setText(QApplication::translate("SendFrame", "AMOUNT", nullptr));
+        m_sendButton->setText(QApplication::translate("SendFrame", "Send", nullptr));
+        label_2->setText(QApplication::translate("SendFrame", "TOTAL AMOUNT", nullptr));
+        m_mixinTextLabel->setText(QApplication::translate("SendFrame", "ANONYMITY LEVEL", nullptr));
     } // retranslateUi
 
 };
