@@ -70,6 +70,8 @@ private:
   OverviewHeaderGlassFrame* m_balancesGlassFrame;
   OverviewHeaderGlassFrame* m_transactionPoolGlassFrame;
 
+  bool m_isConnected = false;
+
   void copyAvailableBalance();
   void copyLockedBalance();
   void copyTotalBalance();

@@ -127,8 +127,7 @@ void OverviewHeaderFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAd
   m_ui->m_overviewTotalBalanceTickerLabel->setText(m_cryptoNoteAdapter->getCurrencyTicker().toUpper());
   m_cryptoNoteAdapter->addObserver(this);
 
-  m_ui->m_overviewMasternode->setText(QString("%1:%2").arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodeHost()).
-  arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodePort()));
+  m_ui->m_overviewMasternode->setText(QString("%1:%2").arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodeHost()).arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodePort()));
 }
 
 void OverviewHeaderFrame::setMainWindow(QWidget* _mainWindow) {
@@ -226,6 +225,13 @@ void OverviewHeaderFrame::walletStateModelDataChanged(const QModelIndex& _topLef
 
 void OverviewHeaderFrame::m_nodeStateModelDataChanged(const QModelIndex& _topLeft, const QModelIndex& _bottomRight,
   const QVector<int>& _roles) {
+
+  QString host = m_nodeStateModel->index(0, NodeStateModel::COLUMN_NODE_HOST).data(NodeStateModel::ROLE_NODE_HOST).toString();
+  QString port =  m_nodeStateModel->index(0, NodeStateModel::COLUMN_NODE_PORT).data(NodeStateModel::ROLE_NODE_PORT).toString();
+  m_ui->m_overviewMasternode->setText(QString("%1:%2").arg(host).arg(port));
+
+  m_isConnected = m_nodeStateModel->index(0, NodeStateModel::COLUMN_CONNECTION_STATE).data(NodeStateModel::ROLE_CONNECTION_STATE).toBool();
+  m_ui->m_overviewConnectionState->setText(m_isConnected ? "connected" : "disconnected");
   changeConnectionStateAppearance();
 }
 

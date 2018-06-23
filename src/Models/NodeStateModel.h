@@ -32,12 +32,12 @@ class NodeStateModel : public QAbstractItemModel, public INodeAdapterObserver, p
 public:
   enum Columns {
     COLUMN_NODE_TYPE = 0, COLUMN_PEER_COUNT, COLUMN_CONNECTION_STATE, COLUMN_LOCAL_BLOCK_COUNT, COLUMN_KNOWN_BLOCK_COUNT,
-     COLUMN_LAST_LOCAL_BLOCK_TIMESTAMP, COLUMN_LAST_LOCAL_BLOCK_DIFFICULTY, COLUMN_NETWORK_HASHRATE
+     COLUMN_LAST_LOCAL_BLOCK_TIMESTAMP, COLUMN_LAST_LOCAL_BLOCK_DIFFICULTY, COLUMN_NETWORK_HASHRATE, COLUMN_NODE_HOST, COLUMN_NODE_PORT
   };
 
   enum Roles {
     ROLE_NODE_TYPE = Qt::UserRole, ROLE_PEER_COUNT, ROLE_CONNECTION_STATE, ROLE_LOCAL_BLOCK_COUNT, ROLE_KNOWN_BLOCK_COUNT,
-    ROLE_LAST_LOCAL_BLOCK_TIMESTAMP, ROLE_LAST_LOCAL_BLOCK_DIFFICULTY, ROLE_NETWORK_HASHRATE
+    ROLE_LAST_LOCAL_BLOCK_TIMESTAMP, ROLE_LAST_LOCAL_BLOCK_DIFFICULTY, ROLE_NETWORK_HASHRATE, ROLE_NODE_HOST, ROLE_NODE_PORT
   };
 
   NodeStateModel(ICryptoNoteAdapter* _cryptoNoteAdapter, QObject* _parent);
@@ -72,6 +72,8 @@ private:
   quintptr m_peerCount;
   quint32 m_knownBlockCount;
   CryptoNote::BlockHeaderInfo m_lastLocalBlockInfo;
+  QString m_nodeHost;
+  quint16 m_nodePort;
 
   QVariant getDisplayRole(const QModelIndex& _index) const;
   QVariant getUserRole(int _role) const;

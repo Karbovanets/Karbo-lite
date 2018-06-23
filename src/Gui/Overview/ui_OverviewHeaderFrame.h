@@ -51,19 +51,19 @@ public:
     QSpacerItem *verticalSpacer_8;
     QFrame *m_overviewNodeFrame;
     QGridLayout *gridLayout_3;
-    WalletGui::WalletSmallBlackTextLabel *label_2;
+    WalletGui::WalletSmallBlackTextLabel *m_overviewNodeTextLabel;
     WalletGui::WalletNormalBlackTextLabel *m_overviewMasternode;
-    WalletGui::WalletSmallBlackTextLabel *label_6;
-    QSpacerItem *verticalSpacer_5;
-    WalletGui::WalletNormalBlackTextLabel *m_overviewConnectionState;
-    QSpacerItem *verticalSpacer_6;
+    WalletGui::WalletSmallBlackTextLabel *m_overviewNodeStateTextLabel;
     QSpacerItem *verticalSpacer_9;
-    WalletGui::WalletNormalBlackTextLabel *m_overviewBlockTimestamp;
-    QLabel *m_overviewNodeIconLabel;
-    WalletGui::WalletHeaderLabel *label_9;
-    QSpacerItem *horizontalSpacer_3;
+    WalletGui::WalletNormalBlackTextLabel *m_overviewConnectionState;
     QSpacerItem *horizontalSpacer_6;
     WalletGui::WalletSmallBlackTextLabel *label_10;
+    WalletGui::WalletNormalBlackTextLabel *m_overviewBlockTimestamp;
+    QSpacerItem *horizontalSpacer_3;
+    WalletGui::WalletHeaderLabel *label_9;
+    QLabel *m_overviewNodeIconLabel;
+    QSpacerItem *verticalSpacer_6;
+    QSpacerItem *verticalSpacer_5;
 
     void setupUi(QFrame *OverviewHeaderFrame)
     {
@@ -203,59 +203,36 @@ public:
         gridLayout_3->setSpacing(5);
         gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
         gridLayout_3->setContentsMargins(30, 25, -1, -1);
-        label_2 = new WalletGui::WalletSmallBlackTextLabel(m_overviewNodeFrame);
-        label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setBaseSize(QSize(0, 0));
+        m_overviewNodeTextLabel = new WalletGui::WalletSmallBlackTextLabel(m_overviewNodeFrame);
+        m_overviewNodeTextLabel->setObjectName(QStringLiteral("m_overviewNodeTextLabel"));
+        m_overviewNodeTextLabel->setMinimumSize(QSize(40, 0));
+        m_overviewNodeTextLabel->setBaseSize(QSize(0, 0));
+        m_overviewNodeTextLabel->setIndent(0);
 
-        gridLayout_3->addWidget(label_2, 3, 2, 1, 1);
+        gridLayout_3->addWidget(m_overviewNodeTextLabel, 3, 2, 1, 1);
 
         m_overviewMasternode = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
         m_overviewMasternode->setObjectName(QStringLiteral("m_overviewMasternode"));
+        m_overviewMasternode->setIndent(0);
 
         gridLayout_3->addWidget(m_overviewMasternode, 3, 3, 1, 1);
 
-        label_6 = new WalletGui::WalletSmallBlackTextLabel(m_overviewNodeFrame);
-        label_6->setObjectName(QStringLiteral("label_6"));
+        m_overviewNodeStateTextLabel = new WalletGui::WalletSmallBlackTextLabel(m_overviewNodeFrame);
+        m_overviewNodeStateTextLabel->setObjectName(QStringLiteral("m_overviewNodeStateTextLabel"));
+        m_overviewNodeStateTextLabel->setMinimumSize(QSize(40, 0));
+        m_overviewNodeStateTextLabel->setIndent(0);
 
-        gridLayout_3->addWidget(label_6, 4, 2, 1, 1);
-
-        verticalSpacer_5 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        gridLayout_3->addItem(verticalSpacer_5, 0, 0, 1, 5);
-
-        m_overviewConnectionState = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
-        m_overviewConnectionState->setObjectName(QStringLiteral("m_overviewConnectionState"));
-
-        gridLayout_3->addWidget(m_overviewConnectionState, 4, 3, 1, 1);
-
-        verticalSpacer_6 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        gridLayout_3->addItem(verticalSpacer_6, 6, 0, 1, 5);
+        gridLayout_3->addWidget(m_overviewNodeStateTextLabel, 4, 2, 1, 1);
 
         verticalSpacer_9 = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Fixed);
 
         gridLayout_3->addItem(verticalSpacer_9, 3, 2, 1, 3);
 
-        m_overviewBlockTimestamp = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
-        m_overviewBlockTimestamp->setObjectName(QStringLiteral("m_overviewBlockTimestamp"));
+        m_overviewConnectionState = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
+        m_overviewConnectionState->setObjectName(QStringLiteral("m_overviewConnectionState"));
+        m_overviewConnectionState->setIndent(2);
 
-        gridLayout_3->addWidget(m_overviewBlockTimestamp, 5, 3, 1, 1);
-
-        m_overviewNodeIconLabel = new QLabel(m_overviewNodeFrame);
-        m_overviewNodeIconLabel->setObjectName(QStringLiteral("m_overviewNodeIconLabel"));
-        m_overviewNodeIconLabel->setPixmap(QPixmap(QString::fromUtf8(":/icons/node")));
-
-        gridLayout_3->addWidget(m_overviewNodeIconLabel, 1, 0, 5, 1);
-
-        label_9 = new WalletGui::WalletHeaderLabel(m_overviewNodeFrame);
-        label_9->setObjectName(QStringLiteral("label_9"));
-        label_9->setIndent(0);
-
-        gridLayout_3->addWidget(label_9, 1, 2, 1, 4);
-
-        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout_3->addItem(horizontalSpacer_3, 3, 5, 3, 1);
+        gridLayout_3->addWidget(m_overviewConnectionState, 4, 3, 1, 1);
 
         horizontalSpacer_6 = new QSpacerItem(20, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
@@ -266,7 +243,35 @@ public:
 
         gridLayout_3->addWidget(label_10, 5, 2, 1, 1);
 
-        gridLayout_3->setColumnStretch(3, 1);
+        m_overviewBlockTimestamp = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
+        m_overviewBlockTimestamp->setObjectName(QStringLiteral("m_overviewBlockTimestamp"));
+
+        gridLayout_3->addWidget(m_overviewBlockTimestamp, 5, 3, 1, 1);
+
+        horizontalSpacer_3 = new QSpacerItem(300, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_3->addItem(horizontalSpacer_3, 3, 5, 3, 1);
+
+        label_9 = new WalletGui::WalletHeaderLabel(m_overviewNodeFrame);
+        label_9->setObjectName(QStringLiteral("label_9"));
+        label_9->setIndent(0);
+
+        gridLayout_3->addWidget(label_9, 1, 2, 1, 4);
+
+        m_overviewNodeIconLabel = new QLabel(m_overviewNodeFrame);
+        m_overviewNodeIconLabel->setObjectName(QStringLiteral("m_overviewNodeIconLabel"));
+        m_overviewNodeIconLabel->setPixmap(QPixmap(QString::fromUtf8(":/icons/node")));
+
+        gridLayout_3->addWidget(m_overviewNodeIconLabel, 1, 0, 5, 1);
+
+        verticalSpacer_6 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_3->addItem(verticalSpacer_6, 6, 0, 1, 6);
+
+        verticalSpacer_5 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_3->addItem(verticalSpacer_5, 0, 0, 1, 6);
+
 
         horizontalLayout->addWidget(m_overviewNodeFrame);
 
@@ -302,14 +307,14 @@ public:
         m_availableBalanceCopyLabel->setText(QApplication::translate("OverviewHeaderFrame", "Copied!", nullptr));
         m_lockedBalanceCopyLabel->setText(QApplication::translate("OverviewHeaderFrame", "Copied!", nullptr));
         m_totalBalanceCopyLabel->setText(QApplication::translate("OverviewHeaderFrame", "Copied!", nullptr));
-        label_2->setText(QApplication::translate("OverviewHeaderFrame", "Node", nullptr));
+        m_overviewNodeTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "Node", nullptr));
         m_overviewMasternode->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", nullptr));
-        label_6->setText(QApplication::translate("OverviewHeaderFrame", "State", nullptr));
+        m_overviewNodeStateTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "State", nullptr));
         m_overviewConnectionState->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", nullptr));
-        m_overviewBlockTimestamp->setText(QString());
-        m_overviewNodeIconLabel->setText(QString());
-        label_9->setText(QApplication::translate("OverviewHeaderFrame", "Node status", nullptr));
         label_10->setText(QString());
+        m_overviewBlockTimestamp->setText(QString());
+        label_9->setText(QApplication::translate("OverviewHeaderFrame", "Node status", nullptr));
+        m_overviewNodeIconLabel->setText(QString());
     } // retranslateUi
 
 };

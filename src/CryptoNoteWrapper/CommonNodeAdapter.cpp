@@ -21,7 +21,6 @@
 
 #include "CommonNodeAdapter.h"
 #include "BlockChainExplorerAdapter.h"
-//#include "InProcessNodeWorker.h"
 #include "WalletGreenAdapter.h"
 
 namespace WalletGui {

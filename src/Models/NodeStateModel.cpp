@@ -38,6 +38,8 @@ NodeStateModel::NodeStateModel(ICryptoNoteAdapter* _cryptoNoteAdapter, QObject* 
   m_cryptoNoteAdapter->addObserver(this);
   nodeAdapter->addObserver(this);
   m_nodeType = nodeAdapter->getNodeType();
+  m_nodeHost = nodeAdapter->getNodeHost();
+  m_nodePort = nodeAdapter->getNodePort();
   m_peerCount = nodeAdapter->getPeerCount();
   m_knownBlockCount = nodeAdapter->getKnownBlockCount();
   m_lastLocalBlockInfo = nodeAdapter->getLastLocalBlockInfo();
@@ -136,6 +138,8 @@ void NodeStateModel::cryptoNoteAdapterInitCompleted(int _status) {
     INodeAdapter* nodeAdapter = m_cryptoNoteAdapter->getNodeAdapter();
     nodeAdapter->addObserver(this);
     m_nodeType = nodeAdapter->getNodeType();
+    m_nodeHost = nodeAdapter->getNodeHost();
+    m_nodePort = nodeAdapter->getNodePort();
     m_peerCount = nodeAdapter->getPeerCount();
     m_lastLocalBlockInfo = nodeAdapter->getLastLocalBlockInfo();
     m_knownBlockCount = nodeAdapter->getKnownBlockCount();
@@ -182,6 +186,10 @@ QVariant NodeStateModel::getDisplayRole(const QModelIndex& _index) const {
     return QString::number(m_lastLocalBlockInfo.difficulty);
   case COLUMN_NETWORK_HASHRATE:
     return formatHashRate(m_lastLocalBlockInfo.difficulty / m_cryptoNoteAdapter->getTargetTime());
+  case COLUMN_NODE_HOST:
+    return m_nodeHost;
+  case COLUMN_NODE_PORT:
+    return m_nodePort;
   }
 
   return QVariant();
@@ -210,6 +218,10 @@ QVariant NodeStateModel::getUserRole(int _role) const {
     return m_lastLocalBlockInfo.difficulty / m_cryptoNoteAdapter->getTargetTime();
   case ROLE_CONNECTION_STATE:
     return m_isConnected;
+  case ROLE_NODE_HOST:
+    return m_nodeHost;
+  case ROLE_NODE_PORT:
+    return m_nodePort;
   }
 
   return QVariant();
@@ -217,6 +229,8 @@ QVariant NodeStateModel::getUserRole(int _role) const {
 
 void NodeStateModel::reset() {
   m_nodeType = NodeType::UNKNOWN;
+  m_nodeHost = "127.0.0.1";
+  m_nodePort = (quint16)32348;
   m_peerCount = 0;
   m_knownBlockCount = INVALID_BLOCK_COUNT;
   std::memset(&m_lastLocalBlockInfo, 0, sizeof(m_lastLocalBlockInfo));

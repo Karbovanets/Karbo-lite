@@ -81,7 +81,7 @@
       <item alignment="Qt::AlignTop">
        <widget class="WalletGui::WalletSmallGrayTextLabel" name="m_autoHelperLabel">
         <property name="text">
-         <string>Wallet will connect to local Karbo daemon process on default port 32348. In case of no local daemon running it will use an in-wallet embedded node implementation.</string>
+         <string>Wallet will connect to local Karbo daemon process on default port 32348. In case of no local daemon running it will use a random remote node.</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

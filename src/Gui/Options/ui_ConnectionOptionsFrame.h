@@ -256,7 +256,7 @@ public:
     {
         ConnectionOptionsFrame->setWindowTitle(QApplication::translate("ConnectionOptionsFrame", "Frame", nullptr));
         m_autoRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Auto selection", nullptr));
-        m_autoHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to local Karbo daemon process on default port 32348. In case of no local daemon running it will use an in-wallet embedded node implementation.", nullptr));
+        m_autoHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to local Karbo daemon process on default port 32348. In case of no local daemon running it will use a random remote node.", nullptr));
         m_localRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Local daemon", nullptr));
         label->setText(QApplication::translate("ConnectionOptionsFrame", "Port:", nullptr));
         m_localHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to local Karbo daemon process. Please specify daemon's port.", nullptr));
