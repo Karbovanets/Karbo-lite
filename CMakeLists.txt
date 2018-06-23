@@ -252,4 +252,6 @@ elseif (WIN32)
 
 endif (APPLE)
 
+add_definitions(-DUSE_LITE_WALLET)
+
 qt5_use_modules(${PROJECT_NAME} Widgets Gui Network)
