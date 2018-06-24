@@ -231,7 +231,7 @@ bool WalletApplication::initCryptoNoteAdapter() {
   for (;;) {
     if (m_splash != nullptr) {
       m_splash->show();
-      m_splash->showMessage(QObject::tr("Loading..."), Qt::AlignLeft | Qt::AlignBottom, Qt::blue);
+      m_splash->showMessage(QObject::tr("Loading..."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
       if (m_logWatcher == nullptr) {
         m_logWatcher = new LogFileWatcher(Settings::instance().getDataDir().absoluteFilePath(CORE_LOG_FILE_NAME), this);
         connect(m_logWatcher, &LogFileWatcher::newLogStringSignal, this, &WalletApplication::newLogString);
@@ -331,7 +331,7 @@ void WalletApplication::initUi() {
   m_donationManager = addressBookManager;
   m_optimizationManager = new OptimizationManager(m_cryptoNoteAdapter, this);
   if (m_splash != nullptr) {
-    m_splash->showMessage(QObject::tr("Initializing GUI..."), Qt::AlignLeft | Qt::AlignBottom, Qt::blue);
+    m_splash->showMessage(QObject::tr("Initializing GUI..."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
   }
 
   QFile styleSheetFile(":style/qss");

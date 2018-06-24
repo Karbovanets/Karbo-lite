@@ -197,7 +197,8 @@ QCalendarWidget QMenu {
 
 
 #MainWindow > #centralwidget > #m_headerFrame {
-  background-color: %headerBackgroundColor%;
+  /*background-color: %headerBackgroundColor%;*/
+  background:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 %headerBackgroundColor% stop: 1.0 %toolButtonBackgroundColorNormal%);
   border: none;
   border-bottom: 1px solid %headerBorderColor%;
   min-height: 105px;

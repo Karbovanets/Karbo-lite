@@ -248,7 +248,7 @@ public:
 
         gridLayout_3->addWidget(m_overviewBlockTimestamp, 5, 3, 1, 1);
 
-        horizontalSpacer_3 = new QSpacerItem(300, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         gridLayout_3->addItem(horizontalSpacer_3, 3, 5, 3, 1);
 
