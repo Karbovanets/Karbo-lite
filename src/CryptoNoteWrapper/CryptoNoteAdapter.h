@@ -92,6 +92,7 @@ private:
   System::Dispatcher m_dispatcher;
   INodeAdapter* m_nodeAdapter;
   int m_autoConnectionTimerId;
+  int findNodeAttempts;
 
   void initCoreLogger(bool _debug);
   void initWalletLogger(bool _debug);

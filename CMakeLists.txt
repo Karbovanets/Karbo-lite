@@ -170,6 +170,7 @@ if (WIN32)
   add_definitions(/D_CRT_SECURE_NO_WARNINGS /D_WIN32_WINNT=0x0600 /DSTATICLIB)
   include_directories(cryptonote/src/Platform/msc)
 
+  set( CMAKE_CXX_FLAGS "-bigobj -EHsc")
   set(PLATFORM_DIR Windows)
   set(BUILD_PLATFORM WIN32)
   set(BUILD_RESOURCES src/karbowanecwallet.rc)

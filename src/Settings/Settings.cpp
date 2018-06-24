@@ -378,7 +378,6 @@ QUrl Settings::getRemoteRpcUrl() const {
   if (m_settings.contains(OPTION_NODE_REMOTE_RPC_URL)) {
     res = QUrl::fromUserInput(m_settings.value(OPTION_NODE_REMOTE_RPC_URL).toString());
   }
-
   return res;
 }
 

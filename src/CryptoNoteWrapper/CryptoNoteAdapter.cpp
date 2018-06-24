@@ -457,10 +457,15 @@ bool CryptoNoteAdapter::isNodeAvailable(QUrl _node) {
 void CryptoNoteAdapter::getWorkingRandomNode(){
     QUrl random_node = Settings::instance().getRandomNode();
     if(isNodeAvailable(random_node)) {
-           m_remoteDaemonUrl = random_node;
-           Settings::instance().setRemoteRpcUrl(random_node);
+        m_remoteDaemonUrl = random_node;
+        Settings::instance().setRemoteRpcUrl(random_node);
+    } else {
+        if (findNodeAttempts > 10) {
+            WalletLogger::info(tr("[CryptoNote wrapper] Failed to find any working node after 10 attempts."));
         } else {
-        getWorkingRandomNode();
+            findNodeAttempts++;
+            getWorkingRandomNode();
+        }
     }
 }
 

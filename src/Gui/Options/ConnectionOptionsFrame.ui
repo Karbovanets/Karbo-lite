@@ -296,9 +296,18 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="m_remoteHostEdit">
-          <property name="enabled">
-           <bool>false</bool>
+         <widget class="QComboBox" name="remoteNodesComboBox">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="insertPolicy">
+           <enum>QComboBox::InsertAtTop</enum>
           </property>
          </widget>
         </item>
@@ -319,25 +328,52 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLabel" name="label_3">
+         <widget class="WalletGui::WalletNormalBlueButton" name="addNodeButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="text">
-           <string>Port:</string>
+           <string>Add</string>
           </property>
          </widget>
         </item>
-        <item alignment="Qt::AlignVCenter">
-         <widget class="QSpinBox" name="m_remotePortSpin">
-          <property name="enabled">
-           <bool>false</bool>
+        <item>
+         <widget class="WalletGui::WalletNormalBlueButton" name="removeNodeButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-          <property name="minimum">
-           <number>1</number>
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
           </property>
-          <property name="maximum">
-           <number>65535</number>
+          <property name="baseSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
           </property>
-          <property name="value">
-           <number>1</number>
+          <property name="text">
+           <string>Remove</string>
           </property>
          </widget>
         </item>
@@ -348,7 +384,7 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>40</width>
+            <width>30</width>
             <height>20</height>
            </size>
           </property>
@@ -411,25 +447,14 @@
    <extends>QLabel</extends>
    <header>Gui/Common/WalletTextLabel.h</header>
   </customwidget>
+  <customwidget>
+   <class>WalletGui::WalletNormalBlueButton</class>
+   <extends>QPushButton</extends>
+   <header>Gui/Common/WalletBlueButton.h</header>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections>
-  <connection>
-   <sender>m_remoteHostEdit</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>ConnectionOptionsFrame</receiver>
-   <slot>remoteHostNameChanged(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>390</x>
-     <y>319</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>372</x>
-     <y>197</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>m_connectionButtonGroup</sender>
    <signal>buttonClicked(int)</signal>
@@ -443,38 +468,6 @@
     <hint type="destinationlabel">
      <x>372</x>
      <y>197</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_remoteRadio</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>m_remoteHostEdit</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>88</x>
-     <y>264</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>312</x>
-     <y>263</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_remoteRadio</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>m_remotePortSpin</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>88</x>
-     <y>264</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>498</x>
-     <y>263</y>
     </hint>
    </hints>
   </connection>
@@ -494,10 +487,61 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>addNodeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ConnectionOptionsFrame</receiver>
+   <slot>addNodeClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>655</x>
+     <y>191</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>372</x>
+     <y>197</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>removeNodeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ConnectionOptionsFrame</receiver>
+   <slot>removeNodeClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>481</x>
+     <y>191</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>372</x>
+     <y>197</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>remoteNodesComboBox</sender>
+   <signal>editTextChanged(QString)</signal>
+   <receiver>ConnectionOptionsFrame</receiver>
+   <slot>remoteNodesComboChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>306</x>
+     <y>191</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>372</x>
+     <y>197</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>remoteHostNameChanged(QString)</slot>
   <slot>connectionButtonClicked(int)</slot>
+  <slot>remoteNodesComboChanged(QString)</slot>
+  <slot>addNodeClicked()</slot>
+  <slot>removeNodeClicked()</slot>
  </slots>
  <buttongroups>
   <buttongroup name="m_connectionButtonGroup"/>

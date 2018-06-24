@@ -227,7 +227,7 @@ void OverviewHeaderFrame::m_nodeStateModelDataChanged(const QModelIndex& _topLef
   const QVector<int>& _roles) {
 
   QString host = m_nodeStateModel->index(0, NodeStateModel::COLUMN_NODE_HOST).data(NodeStateModel::ROLE_NODE_HOST).toString();
-  QString port =  m_nodeStateModel->index(0, NodeStateModel::COLUMN_NODE_PORT).data(NodeStateModel::ROLE_NODE_PORT).toString();
+  QString port = m_nodeStateModel->index(0, NodeStateModel::COLUMN_NODE_PORT).data(NodeStateModel::ROLE_NODE_PORT).toString();
   m_ui->m_overviewMasternode->setText(QString("%1:%2").arg(host).arg(port));
 
   m_isConnected = m_nodeStateModel->index(0, NodeStateModel::COLUMN_CONNECTION_STATE).data(NodeStateModel::ROLE_CONNECTION_STATE).toBool();

@@ -13,16 +13,17 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include "Gui/Common/WalletBlueButton.h"
 #include "Gui/Common/WalletTextLabel.h"
 
 QT_BEGIN_NAMESPACE
@@ -50,10 +51,10 @@ public:
     QRadioButton *m_remoteRadio;
     QSpacerItem *horizontalSpacer_3;
     QLabel *label_2;
-    QLineEdit *m_remoteHostEdit;
+    QComboBox *remoteNodesComboBox;
     QSpacerItem *horizontalSpacer_5;
-    QLabel *label_3;
-    QSpinBox *m_remotePortSpin;
+    WalletGui::WalletNormalBlueButton *addNodeButton;
+    WalletGui::WalletNormalBlueButton *removeNodeButton;
     QSpacerItem *horizontalSpacer_4;
     WalletGui::WalletSmallGrayTextLabel *m_remoteHelperLabel;
     WalletGui::WalletExtraNormalGrayTextLabel *label_4;
@@ -188,31 +189,37 @@ public:
 
         horizontalLayout_2->addWidget(label_2);
 
-        m_remoteHostEdit = new QLineEdit(widget_4);
-        m_remoteHostEdit->setObjectName(QStringLiteral("m_remoteHostEdit"));
-        m_remoteHostEdit->setEnabled(false);
+        remoteNodesComboBox = new QComboBox(widget_4);
+        remoteNodesComboBox->setObjectName(QStringLiteral("remoteNodesComboBox"));
+        remoteNodesComboBox->setMinimumSize(QSize(200, 0));
+        remoteNodesComboBox->setEditable(true);
+        remoteNodesComboBox->setInsertPolicy(QComboBox::InsertAtTop);
 
-        horizontalLayout_2->addWidget(m_remoteHostEdit);
+        horizontalLayout_2->addWidget(remoteNodesComboBox);
 
         horizontalSpacer_5 = new QSpacerItem(15, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
         horizontalLayout_2->addItem(horizontalSpacer_5);
 
-        label_3 = new QLabel(widget_4);
-        label_3->setObjectName(QStringLiteral("label_3"));
+        addNodeButton = new WalletGui::WalletNormalBlueButton(widget_4);
+        addNodeButton->setObjectName(QStringLiteral("addNodeButton"));
+        sizePolicy.setHeightForWidth(addNodeButton->sizePolicy().hasHeightForWidth());
+        addNodeButton->setSizePolicy(sizePolicy);
+        addNodeButton->setMinimumSize(QSize(100, 0));
+        addNodeButton->setBaseSize(QSize(150, 0));
 
-        horizontalLayout_2->addWidget(label_3);
+        horizontalLayout_2->addWidget(addNodeButton);
 
-        m_remotePortSpin = new QSpinBox(widget_4);
-        m_remotePortSpin->setObjectName(QStringLiteral("m_remotePortSpin"));
-        m_remotePortSpin->setEnabled(false);
-        m_remotePortSpin->setMinimum(1);
-        m_remotePortSpin->setMaximum(65535);
-        m_remotePortSpin->setValue(1);
+        removeNodeButton = new WalletGui::WalletNormalBlueButton(widget_4);
+        removeNodeButton->setObjectName(QStringLiteral("removeNodeButton"));
+        sizePolicy.setHeightForWidth(removeNodeButton->sizePolicy().hasHeightForWidth());
+        removeNodeButton->setSizePolicy(sizePolicy);
+        removeNodeButton->setMinimumSize(QSize(100, 0));
+        removeNodeButton->setBaseSize(QSize(150, 0));
 
-        horizontalLayout_2->addWidget(m_remotePortSpin, 0, Qt::AlignVCenter);
+        horizontalLayout_2->addWidget(removeNodeButton);
 
-        horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer_4 = new QSpacerItem(30, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_2->addItem(horizontalSpacer_4);
 
@@ -243,11 +250,11 @@ public:
 
 
         retranslateUi(ConnectionOptionsFrame);
-        QObject::connect(m_remoteHostEdit, SIGNAL(textChanged(QString)), ConnectionOptionsFrame, SLOT(remoteHostNameChanged(QString)));
         QObject::connect(m_connectionButtonGroup, SIGNAL(buttonClicked(int)), ConnectionOptionsFrame, SLOT(connectionButtonClicked(int)));
-        QObject::connect(m_remoteRadio, SIGNAL(toggled(bool)), m_remoteHostEdit, SLOT(setEnabled(bool)));
-        QObject::connect(m_remoteRadio, SIGNAL(toggled(bool)), m_remotePortSpin, SLOT(setEnabled(bool)));
         QObject::connect(m_localRadio, SIGNAL(toggled(bool)), m_localPortSpin, SLOT(setEnabled(bool)));
+        QObject::connect(addNodeButton, SIGNAL(clicked()), ConnectionOptionsFrame, SLOT(addNodeClicked()));
+        QObject::connect(removeNodeButton, SIGNAL(clicked()), ConnectionOptionsFrame, SLOT(removeNodeClicked()));
+        QObject::connect(remoteNodesComboBox, SIGNAL(editTextChanged(QString)), ConnectionOptionsFrame, SLOT(remoteNodesComboChanged(QString)));
 
         QMetaObject::connectSlotsByName(ConnectionOptionsFrame);
     } // setupUi
@@ -262,7 +269,8 @@ public:
         m_localHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to local Karbo daemon process. Please specify daemon's port.", nullptr));
         m_remoteRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Remote daemon", nullptr));
         label_2->setText(QApplication::translate("ConnectionOptionsFrame", "Host:", nullptr));
-        label_3->setText(QApplication::translate("ConnectionOptionsFrame", "Port:", nullptr));
+        addNodeButton->setText(QApplication::translate("ConnectionOptionsFrame", "Add", nullptr));
+        removeNodeButton->setText(QApplication::translate("ConnectionOptionsFrame", "Remove", nullptr));
         m_remoteHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to Karbo node running on another PC in the local or global network. Please specify IP address or domain name and the port.", nullptr));
         label_4->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet sends 0.25% fee from each transaction to the remote node it is connected to, but no more than 1 KRB.", nullptr));
     } // retranslateUi

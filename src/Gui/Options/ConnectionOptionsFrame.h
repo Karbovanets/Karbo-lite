@@ -21,12 +21,15 @@
 
 #include "IOptionsPage.h"
 #include "Application/IWalletUiItem.h"
+#include "Models/NodeModel.h"
 
 namespace Ui {
   class ConnectionOptionsFrame;
 }
 
 namespace WalletGui {
+
+class NodeModel;
 
 class ConnectionOptionsFrame : public QFrame, public IOptionsPage, public IWalletUiItem {
   Q_OBJECT
@@ -50,9 +53,13 @@ public:
 private:
   QScopedPointer<Ui::ConnectionOptionsFrame> m_ui;
   ICryptoNoteAdapter* m_cryptoNoteAdapter;
+  NodeModel* m_nodeModel;
 
   Q_SLOT void remoteHostNameChanged(const QString& _host);
+  Q_SLOT void remoteNodesComboChanged(const QString& _host);
   Q_SLOT void connectionButtonClicked(int _buttonId);
+  Q_SLOT void addNodeClicked();
+  Q_SLOT void removeNodeClicked();
 
 Q_SIGNALS:
   void showRestartWarningSignal(bool _show) override;
