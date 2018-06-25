@@ -58,7 +58,7 @@ void ReceiveFrame::cryptoNoteAdapterDeinitCompleted() {
   // Do nothing
 }
 
-void ReceiveFrame::walletOpened(QString& _address) {
+void ReceiveFrame::walletOpened(QString _address) {
   m_address = _address;
   m_ui->m_amountRequestSpinBox->setSuffix(" " + m_cryptoNoteAdapter->getCurrencyTicker().toUpper());
   generateRequest();

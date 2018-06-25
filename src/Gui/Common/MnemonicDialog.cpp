@@ -48,10 +48,10 @@ void MnemonicDialog::initLanguages() {
 }
 
 void MnemonicDialog::languageChanged() {
-  getMnemonic(m_ui->m_languageCombo->currentText());
+   getMnemonic(m_ui->m_languageCombo->currentText());
 }
 
-void MnemonicDialog::getMnemonic(QString& _lang) {
+void MnemonicDialog::getMnemonic(QString _lang) {
   std::string seed_language = _lang.toUtf8().constData();
   std::string electrum_words;
   Crypto::ElectrumWords::bytes_to_words(m_keys.spendKeys.secretKey, electrum_words, seed_language);

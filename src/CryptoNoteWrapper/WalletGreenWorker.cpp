@@ -194,7 +194,11 @@ IWalletAdapter::WalletInitStatus WalletGreenWorker::loadLegacyKeys(const QString
     SemaphoreUnlocker unlocker(m_walletSemaphore);
     int errorCode = 0;
     try {
+#ifdef _WIN32
       std::ofstream outputStream(_walletPath.toStdWString(), std::ios::binary | std::ios::trunc);
+#else
+      std::ofstream outputStream(_walletPath.toStdString(), std::ios::binary | std::ios::trunc);
+#endif
       CryptoNote::importLegacyKeys(std::string(_legacyKeysFile.toLocal8Bit().data()), _password.toStdString(), outputStream);
       outputStream.flush();
       outputStream.close();

@@ -3,3 +3,4 @@ cryptonote/
 rocksdb/
 *~
 *.user
+.DS_Store

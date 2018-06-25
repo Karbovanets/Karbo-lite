@@ -39,7 +39,7 @@ private:
   AccountKeys m_keys;
 
   void initLanguages();
-  void getMnemonic(QString& _lang);
+  void getMnemonic(QString _lang);
 
   Q_SLOT void languageChanged();
 

@@ -45,7 +45,7 @@ public:
   Q_SLOT virtual void cryptoNoteAdapterInitCompleted(int _status) override;
   Q_SLOT virtual void cryptoNoteAdapterDeinitCompleted() override;
 
-  Q_SLOT void walletOpened(QString& _address);
+  Q_SLOT void walletOpened(QString _address);
   Q_SLOT void walletClosed();
 
   QString m_address;
