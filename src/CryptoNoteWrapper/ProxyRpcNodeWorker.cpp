@@ -88,6 +88,11 @@ quint16 ProxyRpcNodeWorker::getNodePort() const {
   return m_nodePort;
 }
 
+quint64 ProxyRpcNodeWorker::getMinimalFee() const {
+  Q_ASSERT(!m_node.isNull());
+  return m_node->getMinimalFee();
+}
+
 void ProxyRpcNodeWorker::addObserver(INodeAdapterObserver* _observer) {
   QObject* observer = dynamic_cast<QObject*>(_observer);
   Q_ASSERT(observer != nullptr);

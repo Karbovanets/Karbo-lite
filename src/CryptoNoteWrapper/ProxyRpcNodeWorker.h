@@ -59,6 +59,7 @@ public:
   virtual void removeObserver(INodeAdapterObserver* _observer) override;
   virtual IBlockChainExplorerAdapter* getBlockChainExplorerAdapter() override;
   virtual IWalletAdapter* getWalletAdapter() override;
+  virtual quint64 getMinimalFee() const override;
 
   QString getNodeHost() const;
   quint16 getNodePort() const;

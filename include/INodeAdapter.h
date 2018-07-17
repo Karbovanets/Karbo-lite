@@ -59,14 +59,14 @@ public:
   virtual quintptr getPeerCount() const = 0;
   virtual quint32 getKnownBlockCount() const = 0;
   virtual quint32 getLocalBlockCount() const = 0;
+  virtual QString getNodeHost() const = 0;
+  virtual quint16 getNodePort() const = 0;
+  virtual quint64 getMinimalFee() const = 0;
   virtual CryptoNote::BlockHeaderInfo getLastLocalBlockInfo() const = 0;
   virtual void addObserver(INodeAdapterObserver* _observer) = 0;
   virtual void removeObserver(INodeAdapterObserver* _observer) = 0;
   virtual IBlockChainExplorerAdapter* getBlockChainExplorerAdapter() = 0;
   virtual IWalletAdapter* getWalletAdapter() = 0;
-
-  virtual QString getNodeHost() const = 0;
-  virtual quint16 getNodePort() const = 0;
 };
 
 }

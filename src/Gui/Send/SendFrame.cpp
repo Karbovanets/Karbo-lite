@@ -144,6 +144,7 @@ void SendFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAdapter) {
   m_cryptoNoteAdapter->addObserver(this);
   m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->addObserver(this);
   m_ui->m_feeSpin->setSuffix(" " + m_cryptoNoteAdapter->getCurrencyTicker().toUpper());
+  m_ui->m_feeSpin->setMinimum(m_cryptoNoteAdapter->formatAmount(m_cryptoNoteAdapter->getMinimalFee()).toDouble());
 
   for (auto& transfer : m_transfers) {
     transfer->setCryptoNoteAdapter(_cryptoNoteAdapter);
@@ -336,7 +337,7 @@ void SendFrame::clearAll() {
 
   QApplication::processEvents();
   m_transfers.clear();
-  m_ui->m_feeSpin->setValue(m_ui->m_feeSpin->minimum());
+  m_ui->m_feeSpin->setMinimum(m_cryptoNoteAdapter->formatAmount(m_cryptoNoteAdapter->getMinimalFee()).toDouble());
   m_ui->m_paymentIdEdit->clear();
   m_ui->m_mixinSlider->setValue(DEFAULT_MIXIN_VALUE);
   m_ui->m_sendScrollarea->widget()->adjustSize();
