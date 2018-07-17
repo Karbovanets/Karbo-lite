@@ -109,9 +109,11 @@ private:
   Q_SLOT void clearAll();
   Q_SLOT void sendClicked();
   Q_SLOT void mixinValueChanged(int _value);
+  Q_SLOT void priorityValueChanged(int _value);
   Q_SLOT void validatePaymentId(const QString& _paymentId);
   Q_SLOT void generatePaymentIdClicked();
   Q_SLOT void insertPaymentIdReceived(const QString& _paymentId);
+  Q_SLOT void enableManualFee(bool _enable);
 
 Q_SIGNALS:
   void showTransactionsFrameSignal();

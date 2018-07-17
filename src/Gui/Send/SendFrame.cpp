@@ -27,6 +27,7 @@
 #include "Settings/Settings.h"
 #include "Gui/Common/QuestionDialog.h"
 #include "Gui/Common/OpenUriDialog.h"
+#include "Gui/Common/WalletTextLabel.h"
 #include "ICryptoNoteAdapter.h"
 #include "IDonationManager.h"
 #include "INodeAdapter.h"
@@ -71,6 +72,12 @@ const char SEND_FRAME_STYLE_SHEET[] =
     "border: none;"
     "border-top: 1px solid %borderColor%;"
     "border-bottom: 1px solid %borderColor%;"
+
+  "WalletGui--SendFrame--WalletTinyGrayTextLabel {"
+      "padding: 0;"
+      "margin: 0;"
+  "}"
+
   "}";
 
 const quint64 MAXIMUM_UNSYNCED_BLOCKS_WHEN_SEND_AVAILABLE = 5;
@@ -82,10 +89,10 @@ const char PAYMENT_URL_AMOUNT_TAG[] = "amount";
 const char PAYMENT_URL_PAYMENT_ID_TAG[] = "payment_id";
 const char PAYMENT_URL_MESSAGE_TAG[] = "message";
 const char PAYMENT_URL_LABEL_TAG[] = "label";
-const char MIXIN_CRITICAL_COLOR[] = "#ea161f";
-const char MIXIN_NORMAL_COLOR[] = "#fdce00";
-const char MIXIN_GOOD_COLOR[] = "#6ca025";
-const char MIXIN_SLIDER_STYLE_SHEET_TEMPLATE[] =
+const char SLIDER_CRITICAL_COLOR[] = "#ea161f";
+const char SLIDER_NORMAL_COLOR[] = "#fdce00";
+const char SLIDER_GOOD_COLOR[] = "#6ca025";
+const char SLIDER_STYLE_SHEET_TEMPLATE[] =
   "QSlider::sub-page:horizontal {"
       "background-color: %COLOR%;"
       "border: 1px solid %COLOR%;"
@@ -119,7 +126,19 @@ SendFrame::SendFrame(QWidget* _parent) : QFrame(_parent), m_ui(new Ui::SendFrame
       m_addressProvider->getAddress(currentRemoteRpcUrl);
       connect(m_addressProvider, &AddressProvider::addressFoundSignal, this, &SendFrame::onAddressFound, Qt::QueuedConnection);
   }
-
+  QLabel *label1 = new WalletGui::WalletTinyGrayTextLabel(this);
+  label1->setText(tr("Low"));
+  QLabel *label2 = new WalletGui::WalletTinyGrayTextLabel(this);
+  label2->setText(tr("Normal"));
+  QLabel *label3 = new WalletGui::WalletTinyGrayTextLabel(this);
+  label3->setText(tr("High"));
+  QLabel *label4 = new WalletGui::WalletTinyGrayTextLabel(this);
+  label4->setText(tr("Highest"));
+  m_ui->m_priorityGridLayout->addWidget(m_ui->m_prioritySlider, 0, 0, 1, 4);
+  m_ui->m_priorityGridLayout->addWidget(label1, 1, 0, 1, 1, Qt::AlignHCenter);
+  m_ui->m_priorityGridLayout->addWidget(label2, 1, 1, 1, 1, Qt::AlignHCenter);
+  m_ui->m_priorityGridLayout->addWidget(label3, 1, 2, 1, 1, Qt::AlignHCenter);
+  m_ui->m_priorityGridLayout->addWidget(label4, 1, 3, 1, 1, Qt::AlignHCenter);
 }
 
 SendFrame::~SendFrame() {
@@ -145,7 +164,7 @@ void SendFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAdapter) {
   m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->addObserver(this);
   m_ui->m_feeSpin->setSuffix(" " + m_cryptoNoteAdapter->getCurrencyTicker().toUpper());
   m_ui->m_feeSpin->setMinimum(m_cryptoNoteAdapter->formatAmount(m_cryptoNoteAdapter->getMinimalFee()).toDouble());
-
+  priorityValueChanged(m_ui->m_prioritySlider->value());
   for (auto& transfer : m_transfers) {
     transfer->setCryptoNoteAdapter(_cryptoNoteAdapter);
   }
@@ -451,6 +470,20 @@ void SendFrame::mixinValueChanged(int _value) {
   updateSliderStyleSheet();
 }
 
+void SendFrame::priorityValueChanged(int _value) {
+  m_ui->m_feeSpin->setValue(m_cryptoNoteAdapter->formatAmount(m_cryptoNoteAdapter->getMinimalFee() * _value + remote_node_fee).toDouble());
+
+  QString color = SLIDER_GOOD_COLOR;
+  if (_value < 2) {
+    color = SLIDER_CRITICAL_COLOR;
+  } else if (_value < 3) {
+    color = SLIDER_NORMAL_COLOR;
+  }
+
+  QString prioritySliderStyleSheet = QString(SLIDER_STYLE_SHEET_TEMPLATE).replace("%COLOR%", color);
+  m_ui->m_prioritySlider->setStyleSheet(prioritySliderStyleSheet);
+}
+
 void SendFrame::validatePaymentId(const QString& _paymentId) {
   bool validPaymentId = isValidPaymentId(_paymentId);
   if (!validPaymentId) {
@@ -530,14 +563,14 @@ void SendFrame::setMixinError(bool _error) {
 
 void SendFrame::updateSliderStyleSheet() {
   int mixinValue = m_ui->m_mixinSpin->value();
-  QString color = MIXIN_GOOD_COLOR;
+  QString color = SLIDER_GOOD_COLOR;
   if (mixinValue < CRITICAL_MIXIN_BOUND) {
-    color = MIXIN_CRITICAL_COLOR;
+    color = SLIDER_CRITICAL_COLOR;
   } else if (mixinValue < NORMAL_MIXIN_BOUND) {
-    color = MIXIN_NORMAL_COLOR;
+    color = SLIDER_NORMAL_COLOR;
   }
 
-  QString mixinSliderStyleSheet = QString(MIXIN_SLIDER_STYLE_SHEET_TEMPLATE).replace("%COLOR%", color);
+  QString mixinSliderStyleSheet = QString(SLIDER_STYLE_SHEET_TEMPLATE).replace("%COLOR%", color);
   m_ui->m_mixinSlider->setStyleSheet(mixinSliderStyleSheet);
 }
 
@@ -563,7 +596,10 @@ void SendFrame::amountStringChanged(const QString& _amountString) {
         remote_node_fee = 1000000000000;
     }
   }
-  qreal total_fee = QLocale(QLocale::English).toDouble(m_cryptoNoteAdapter->formatAmount(remote_node_fee + m_cryptoNoteAdapter->getMinimalFee()));
+
+  quint64 priorityFee = m_cryptoNoteAdapter->getMinimalFee() * m_ui->m_prioritySlider->value();
+  qreal total_fee = QLocale(QLocale::English).toDouble(m_cryptoNoteAdapter->formatAmount(priorityFee + remote_node_fee));
+
   m_ui->m_feeSpin->setMinimum(total_fee);
   m_ui->m_feeSpin->setValue(total_fee);
 }
@@ -594,6 +630,10 @@ void SendFrame::generatePaymentIdClicked() {
 
 void SendFrame::insertPaymentIdReceived(const QString& _paymentId) {
   m_ui->m_paymentIdEdit->setText(_paymentId);
+}
+
+void SendFrame::enableManualFee(bool _enable) {
+  m_ui->m_feeSpin->setEnabled(_enable);
 }
 
 }

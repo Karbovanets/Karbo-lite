@@ -924,6 +924,7 @@
     <addaction name="m_autostartAction"/>
     <addaction name="m_minimizeToTrayAction"/>
     <addaction name="m_closeToTrayAction"/>
+    <addaction name="m_manualFeeAction"/>
     <addaction name="separator"/>
     <addaction name="m_preferencesAction"/>
     <addaction name="menuThemes"/>
@@ -1148,6 +1149,14 @@
   <action name="m_createPaymentRequestAction">
    <property name="text">
     <string>Create payment request</string>
+   </property>
+  </action>
+  <action name="m_manualFeeAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Enable manual fee override</string>
    </property>
   </action>
  </widget>
@@ -1727,6 +1736,22 @@
     <hint type="destinationlabel">
      <x>80</x>
      <y>195</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_manualFeeAction</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>m_sendFrame</receiver>
+   <slot>enableManualFee(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>636</x>
+     <y>411</y>
     </hint>
    </hints>
   </connection>

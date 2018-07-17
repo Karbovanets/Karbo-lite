@@ -68,6 +68,7 @@ public:
     QAction *m_createNondeterministicWalletAction;
     QAction *m_openPaymentRequestAction;
     QAction *m_createPaymentRequestAction;
+    QAction *m_manualFeeAction;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout_2;
     QFrame *m_headerFrame;
@@ -211,6 +212,9 @@ public:
         m_openPaymentRequestAction->setObjectName(QStringLiteral("m_openPaymentRequestAction"));
         m_createPaymentRequestAction = new QAction(MainWindow);
         m_createPaymentRequestAction->setObjectName(QStringLiteral("m_createPaymentRequestAction"));
+        m_manualFeeAction = new QAction(MainWindow);
+        m_manualFeeAction->setObjectName(QStringLiteral("m_manualFeeAction"));
+        m_manualFeeAction->setCheckable(true);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         verticalLayout_2 = new QVBoxLayout(centralwidget);
@@ -602,6 +606,7 @@ public:
         menuSettings->addAction(m_autostartAction);
         menuSettings->addAction(m_minimizeToTrayAction);
         menuSettings->addAction(m_closeToTrayAction);
+        menuSettings->addAction(m_manualFeeAction);
         menuSettings->addSeparator();
         menuSettings->addAction(m_preferencesAction);
         menuSettings->addAction(menuThemes->menuAction());
@@ -658,6 +663,7 @@ public:
         QObject::connect(m_openPaymentRequestAction, SIGNAL(triggered()), MainWindow, SLOT(openPaymentRequestClicked()));
         QObject::connect(m_receiveButton, SIGNAL(toggled(bool)), m_receiveFrame, SLOT(setVisible(bool)));
         QObject::connect(m_createPaymentRequestAction, SIGNAL(triggered()), m_receiveButton, SLOT(toggle()));
+        QObject::connect(m_manualFeeAction, SIGNAL(triggered(bool)), m_sendFrame, SLOT(enableManualFee(bool)));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -706,6 +712,7 @@ public:
         m_createNondeterministicWalletAction->setText(QApplication::translate("MainWindow", "Create nondeterministic wallet", nullptr));
         m_openPaymentRequestAction->setText(QApplication::translate("MainWindow", "Open payment request", nullptr));
         m_createPaymentRequestAction->setText(QApplication::translate("MainWindow", "Create payment request", nullptr));
+        m_manualFeeAction->setText(QApplication::translate("MainWindow", "Enable manual fee override", nullptr));
         m_noWalletLabel->setText(QApplication::translate("MainWindow", "No active wallet", nullptr));
         m_walletLabel->setText(QApplication::translate("MainWindow", "Your wallet:", nullptr));
 #ifndef QT_NO_TOOLTIP
