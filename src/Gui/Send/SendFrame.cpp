@@ -373,7 +373,7 @@ void SendFrame::sendClicked() {
 
   const quint64 actualBalance = m_walletStateModel->index(0, 0).data(WalletStateModel::ROLE_ACTUAL_BALANCE).value<quint64>();
   quint64 transferSum = 0;
-  const qint64 fee = m_cryptoNoteAdapter->getMinimalFee();
+  const qint64 fee = m_cryptoNoteAdapter->parseAmount(m_ui->m_feeSpin->cleanText()) - remote_node_fee;
   for (TransferFrame* transfer : m_transfers) {
     QString address = transfer->getAddress();
     if (!m_cryptoNoteAdapter->isValidAddress(address)) {
@@ -411,7 +411,7 @@ void SendFrame::sendClicked() {
   if(on_remote && !remote_node_fee_address.isEmpty()) {
     CryptoNote::WalletOrder walletTransfer;
     walletTransfer.address = remote_node_fee_address.toStdString();
-    walletTransfer.amount = m_cryptoNoteAdapter->parseAmount(m_ui->m_feeSpin->cleanText()) - m_cryptoNoteAdapter->getMinimalFee();
+    walletTransfer.amount = remote_node_fee;
     transactionParameters.destinations.push_back(walletTransfer);
   }
 
@@ -575,8 +575,6 @@ void SendFrame::updateSliderStyleSheet() {
 }
 
 void SendFrame::amountStringChanged(const QString& _amountString) {
-  m_ui->m_feeSpin->setValue(m_ui->m_feeSpin->minimum());
-  m_ui->m_feeSpin->setMinimum(m_ui->m_feeSpin->minimum());
   quint64 totalSendAmount = 0;
   for (TransferFrame* transfer : m_transfers) {
     quint64 amount = m_cryptoNoteAdapter->parseUnsignedAmount(transfer->getAmountString());
@@ -587,20 +585,18 @@ void SendFrame::amountStringChanged(const QString& _amountString) {
   arg(m_cryptoNoteAdapter->getCurrencyTicker().toUpper()));
 
   remote_node_fee = 0;
-  if (!remote_node_fee_address.isEmpty() ) {
+  if (on_remote && !remote_node_fee_address.isEmpty()) {
        remote_node_fee = static_cast<qint64>(totalSendAmount * 0.0025); // fee is 0.25%
-    //if (remote_node_fee < m_cryptoNoteAdapter->getMinimalFee()) {
-    //    remote_node_fee = m_cryptoNoteAdapter->getMinimalFee();
-    //}
-    if (remote_node_fee > 1000000000000) {
-        remote_node_fee = 1000000000000;
+    if (remote_node_fee < m_cryptoNoteAdapter->getMinimalFee()) {
+        remote_node_fee = m_cryptoNoteAdapter->getMinimalFee();
+    }
+    if (remote_node_fee > 1000000000000ULL) {
+        remote_node_fee = 1000000000000ULL;
     }
   }
 
   quint64 priorityFee = m_cryptoNoteAdapter->getMinimalFee() * m_ui->m_prioritySlider->value();
   qreal total_fee = QLocale(QLocale::English).toDouble(m_cryptoNoteAdapter->formatAmount(priorityFee + remote_node_fee));
-
-  m_ui->m_feeSpin->setMinimum(total_fee);
   m_ui->m_feeSpin->setValue(total_fee);
 }
 
