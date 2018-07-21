@@ -227,6 +227,7 @@ void SendFrame::walletOpenError(int _initStatus) {
 }
 
 void SendFrame::walletClosed() {
+  remote_node_fee = 0;
   clearAll();
 }
 
