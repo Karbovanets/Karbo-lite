@@ -79,6 +79,7 @@ public:
   virtual WalletInitStatus load(const QString& _walletPath, const QString& _password) = 0;
   virtual WalletInitStatus loadLegacyKeys(const QString& _legacyKeysFile, const QString& _walletPath, const QString& _password) = 0;
   virtual WalletInitStatus createWithKeys(const QString& _walletPath, const AccountKeys& _accountKeys) = 0;
+  virtual WalletInitStatus createWithKeysAndTimestamp(const QString& _walletPath, const AccountKeys& _accountKeys, const uint64_t& _creationTimestamp) = 0;
   virtual WalletSaveStatus save(CryptoNote::WalletSaveLevel _saveLevel, bool _saveUserData) = 0;
   virtual WalletSaveStatus exportWallet(const QString& _path, bool _encrypt, CryptoNote::WalletSaveLevel _saveLevel, bool _saveUserData) = 0;
   virtual PasswordStatus changePassword(const QString& _oldPassword, const QString& _newPassword) = 0;

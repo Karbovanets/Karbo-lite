@@ -21,7 +21,6 @@
 
 #include "CommonNodeAdapter.h"
 #include "BlockChainExplorerAdapter.h"
-#include "InProcessNodeWorker.h"
 #include "WalletGreenAdapter.h"
 
 namespace WalletGui {
@@ -91,6 +90,21 @@ quint32 CommonNodeAdapter::getLocalBlockCount() const {
 CryptoNote::BlockHeaderInfo CommonNodeAdapter::getLastLocalBlockInfo() const {
   Q_ASSERT(m_worker != nullptr);
   return m_worker->getLastLocalBlockInfo();
+}
+
+QString CommonNodeAdapter::getNodeHost() const {
+  Q_ASSERT(m_worker != nullptr);
+  return m_worker->getNodeHost();
+}
+
+quint16 CommonNodeAdapter::getNodePort() const {
+  Q_ASSERT(m_worker != nullptr);
+  return m_worker->getNodePort();
+}
+
+quint64 CommonNodeAdapter::getMinimalFee() const {
+  Q_ASSERT(m_worker != nullptr);
+  return m_worker->getMinimalFee();
 }
 
 void CommonNodeAdapter::addObserver(INodeAdapterObserver* _observer) {

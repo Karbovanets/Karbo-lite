@@ -34,7 +34,7 @@ namespace WalletGui {
 
 namespace {
 
-  const char OLD_LOG_FILE_NAME[] = "karbowanecwalletgui.log";
+  const char OLD_LOG_FILE_NAME[] = "karbowalletgui.log";
   const char LOG_FILE_NAME[] = "walletgui.log";
 
 }

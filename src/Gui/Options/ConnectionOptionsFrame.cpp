@@ -16,6 +16,7 @@
 // along with Karbovanets.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QUrl>
+#include <QComboBox>
 
 #include <CryptoNoteConfig.h>
 
@@ -56,13 +57,14 @@ bool isIpOrHostName(const QString& _string) {
 }
 
 ConnectionOptionsFrame::ConnectionOptionsFrame(QWidget* _parent) : QFrame(_parent),
-  m_ui(new Ui::ConnectionOptionsFrame), m_cryptoNoteAdapter(nullptr) {
+  m_ui(new Ui::ConnectionOptionsFrame), m_cryptoNoteAdapter(nullptr), m_nodeModel(new NodeModel(this)) {
   m_ui->setupUi(this);
+  m_ui->remoteNodesComboBox->setModel(m_nodeModel);
   m_ui->m_connectionButtonGroup->setId(m_ui->m_autoRadio, static_cast<int>(ConnectionMethod::AUTO));
-  m_ui->m_connectionButtonGroup->setId(m_ui->m_embeddedRadio, static_cast<int>(ConnectionMethod::EMBEDDED));
   m_ui->m_connectionButtonGroup->setId(m_ui->m_localRadio, static_cast<int>(ConnectionMethod::LOCAL));
   m_ui->m_connectionButtonGroup->setId(m_ui->m_remoteRadio, static_cast<int>(ConnectionMethod::REMOTE));
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(CONNECTION_OPTIONS_STYLE_SHEET_TEMPLATE));
+  m_ui->addNodeButton->setEnabled(false);
 }
 
 ConnectionOptionsFrame::~ConnectionOptionsFrame() {
@@ -71,19 +73,15 @@ ConnectionOptionsFrame::~ConnectionOptionsFrame() {
 void ConnectionOptionsFrame::load() {
   m_ui->m_localPortSpin->setValue(Settings::instance().getLocalRpcPort());
   QUrl remoteUrl = Settings::instance().getRemoteRpcUrl();
-  if (remoteUrl.isEmpty()) {
-    m_ui->m_remotePortSpin->setValue(CryptoNote::RPC_DEFAULT_PORT);
-  } else {
-    m_ui->m_remoteHostEdit->setText(remoteUrl.host());
-    m_ui->m_remotePortSpin->setValue(remoteUrl.port());
+  if (!remoteUrl.isEmpty()) {
+    int index = m_ui->remoteNodesComboBox->findData(remoteUrl.host());
+    if (index != -1) {
+       m_ui->remoteNodesComboBox->setCurrentIndex(index);
+    }
   }
-
   switch (Settings::instance().getConnectionMethod()) {
   case ConnectionMethod::AUTO:
     m_ui->m_autoRadio->toggle();
-    break;
-  case ConnectionMethod::EMBEDDED:
-    m_ui->m_embeddedRadio->toggle();
     break;
   case ConnectionMethod::LOCAL:
     m_ui->m_localRadio->toggle();
@@ -92,14 +90,15 @@ void ConnectionOptionsFrame::load() {
     m_ui->m_remoteRadio->toggle();
     break;
   }
-
-  remoteHostNameChanged(m_ui->m_remoteHostEdit->text());
+  m_ui->removeNodeButton->setEnabled(m_ui->remoteNodesComboBox->count() != 0);
+  // remoteHostNameChanged(m_ui->remoteNodesComboBox->currentText().split(":")[0]);
 }
 
 void ConnectionOptionsFrame::save() {
   Settings::instance().setConnectionMethod(static_cast<ConnectionMethod>(m_ui->m_connectionButtonGroup->checkedId()));
   Settings::instance().setLocalRpcPort(m_ui->m_localPortSpin->value());
-  Settings::instance().setRemoteRpcUrl(QUrl::fromUserInput(QString("%1:%2").arg(m_ui->m_remoteHostEdit->text()).arg(m_ui->m_remotePortSpin->value())));
+  Settings::instance().setRemoteRpcUrl(QUrl::fromUserInput(m_ui->remoteNodesComboBox->currentText()));
+
 }
 
 void ConnectionOptionsFrame::setData(const QVariantMap& _data) {
@@ -116,7 +115,7 @@ bool ConnectionOptionsFrame::needToRestartApplication() const {
 
 bool ConnectionOptionsFrame::canAccept() const {
   if (m_ui->m_remoteRadio->isChecked()) {
-    return isIpOrHostName(m_ui->m_remoteHostEdit->text());
+    return isIpOrHostName(m_ui->remoteNodesComboBox->currentText().split(":")[0]);
   } else {
     return true;
   }
@@ -136,7 +135,39 @@ void ConnectionOptionsFrame::remoteHostNameChanged(const QString& _host) {
 }
 
 void ConnectionOptionsFrame::connectionButtonClicked(int _buttonId) {
-  remoteHostNameChanged(m_ui->m_remoteHostEdit->text());
+  remoteHostNameChanged(m_ui->remoteNodesComboBox->currentText().split(":")[0]);
+}
+
+void ConnectionOptionsFrame::addNodeClicked() {
+  QUrl url = QUrl::fromUserInput(m_ui->remoteNodesComboBox->currentText());
+  QString host = url.host();
+  quint16 port = url.port(Settings::instance().getLocalRpcPort());
+  if (isIpOrHostName(host)) {
+    int index = m_ui->remoteNodesComboBox->findData(host);
+    if (index == -1) {
+      m_nodeModel->addNode(host, port);
+    }
+  } else {
+    // error highlight
+  }
+  m_ui->addNodeButton->setEnabled(false);
+  m_ui->removeNodeButton->setEnabled(m_ui->remoteNodesComboBox->count() != 0);
+}
+
+void ConnectionOptionsFrame::removeNodeClicked() {
+  m_nodeModel->removeRow(m_ui->remoteNodesComboBox->currentIndex());
+  Settings::instance().setRemoteNodeList(m_nodeModel->stringList());
+  m_ui->removeNodeButton->setEnabled(m_ui->remoteNodesComboBox->count() != 0);
+  remoteHostNameChanged(m_ui->remoteNodesComboBox->currentText().split(":")[0]);
+}
+
+void ConnectionOptionsFrame::remoteNodesComboChanged(const QString& _host) {
+  QUrl url = QUrl::fromUserInput(m_ui->remoteNodesComboBox->currentText());
+  QString host = url.host();
+  int index = m_ui->remoteNodesComboBox->findData(host);
+  if (index == -1 && isIpOrHostName(host)) {
+    m_ui->addNodeButton->setEnabled(true);
+  }
 }
 
 }

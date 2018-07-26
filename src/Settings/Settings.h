@@ -46,7 +46,6 @@ public:
   bool hasAllowLocalIpOption() const;
   bool hasHideMyPortOption() const;
   bool isEncrypted() const;
-  bool isMiningOnLockedScreenEnabled(bool _defaultValue) const;
   bool isSystemTrayAvailable() const;
   bool isRunMinimizedEnabled() const;
   bool isStartOnLoginEnabled() const;
@@ -57,16 +56,15 @@ public:
   QDir getDataDir() const;
   QString getLegacyAddressBookFile() const;
   QString getCurrentTheme() const;
-  QString getMiningPoolSwitchStrategy(const QString& _defaultValue) const;
   QString getP2pBindIp() const;
   QString getVersion() const;
   QString getWalletFile() const;
   quint16 getLocalRpcPort() const;
   quint16 getP2pBindPort() const;
   quint16 getP2pExternalPort() const;
-  quint32 getMiningCpuCoreCount(quint32 _defaultValue) const;
   QStringList getExclusiveNodes() const;
-  QStringList getMiningPoolList() const;
+  QStringList getRemoteNodeList() const;
+  QUrl getRandomNode() const;
   QStringList getPeers() const;
   QStringList getPriorityNodes() const;
   QStringList getRecentWalletList() const;
@@ -90,19 +88,17 @@ public:
   bool isCloseToTrayEnabled() const;
 
   void init();
-  void restoreDefaultPoolList();
+  void restoreDefaultNodeList();
+  void setDefaultRemoteNode();
   void setCommandLineParser(CommandLineParser* _cmdLineParser);
   void setConnectionMethod(ConnectionMethod _connectionMethod);
   void setLocalRpcPort(quint16 _port);
   void setRemoteRpcUrl(const QUrl& _url);
   void setP2pBindPort(quint16 _p2pBindPort);
+  void setRemoteNodeList(const QStringList& _remoteNodeList);
   void setWalletFile(const QString& _file);
   void setCurrentTheme(const QString& _theme);
   void setRecentWalletList(const QStringList& _recentWalletList);
-  void setMiningCpuCoreCount(quint32 _cpuCoreCount);
-  void setMiningOnLockedScreenEnabled(bool _enable);
-  void setMiningPoolList(const QStringList& _miningPoolList);
-  void setMiningPoolSwitchStrategy(const QString& _miningPoolSwitchStrategy);
   void setStartOnLoginEnabled(bool _enable);
 
   void setOptimizationEnabled(bool _enable);
@@ -120,13 +116,17 @@ public:
   void addObserver(ISettingsObserver* _settingsObserver);
   void removeObserver(ISettingsObserver* _settingsObserver);
 
+  void setOnRemote(bool _on);
+  bool isOnRemote();
+  bool m_onRemote = false;
+
 #ifdef Q_OS_WIN
   void setUrlHandler();
 #endif
 
 private:
-  QJsonObject m_settings;
-  QStringList m_defaultPoolList;
+  QJsonObject m_settings;  
+  QStringList m_defaultNodeList;
   quint16 m_p2pBindPort;
   CommandLineParser* m_cmdLineParser;
   mutable QReadWriteLock m_lock;

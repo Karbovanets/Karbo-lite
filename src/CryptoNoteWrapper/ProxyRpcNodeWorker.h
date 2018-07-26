@@ -35,6 +35,8 @@ namespace CryptoNote {
 
 namespace WalletGui {
 
+//class IBlockChainExplorerAdapter;
+
 class ProxyRpcNodeWorker : public QObject, public INodeAdapter, public CryptoNote::INodeObserver,
   public CryptoNote::INodeRpcProxyObserver {
   Q_OBJECT
@@ -57,6 +59,10 @@ public:
   virtual void removeObserver(INodeAdapterObserver* _observer) override;
   virtual IBlockChainExplorerAdapter* getBlockChainExplorerAdapter() override;
   virtual IWalletAdapter* getWalletAdapter() override;
+  virtual quint64 getMinimalFee() const override;
+
+  QString getNodeHost() const;
+  quint16 getNodePort() const;
 
   // CryptoNote::INodeObserver
   virtual void peerCountUpdated(size_t _count) override;
@@ -73,6 +79,7 @@ private:
   const QString m_nodeHost;
   const quint16 m_nodePort;
   QScopedPointer<CryptoNote::NodeRpcProxy> m_node;
+  //IBlockChainExplorerAdapter* m_blockchainExplorerAdapter;
   QMap<INodeAdapterObserver*, QList<QMetaObject::Connection>> m_observerConnections;
 
   Q_INVOKABLE void initImpl();

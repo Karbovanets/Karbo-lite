@@ -55,7 +55,6 @@ private:
   QAbstractItemModel* m_donationAddressesModel;
 
   int findDonationAddress(const QString& _address) const;
-  Q_SLOT void donationMiningAmountChanged(int _value);
   Q_SLOT void donationChangeAmountChanged(int _value);
   Q_SLOT void donationChangeAmountChanged(double _value);
 

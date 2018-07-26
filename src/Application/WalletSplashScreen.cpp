@@ -38,7 +38,7 @@ const char HIDE_BUTTON_STYLE_SHEET_TEMPLATE[] =
     "font-size: %fontSizeLarge%;"
     "min-width: 5px;"
     "min-height: 5px;"
-    "color: #0023D1;"
+    "color: #ffffff;"
   "}"
 
   "QPushButton:hover {"

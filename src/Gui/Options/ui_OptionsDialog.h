@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'OptionsDialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -26,7 +26,6 @@
 #include "Gui/Options/ConnectionOptionsFrame.h"
 #include "Gui/Options/DonationOptionsFrame.h"
 #include "Gui/Options/OptimizationOptionsFrame.h"
-#include "Gui/Options/PrivacyFrame.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -38,7 +37,6 @@ public:
     WalletGui::ConnectionOptionsFrame *m_connectionTab;
     WalletGui::OptimizationOptionsFrame *m_optimizationTab;
     WalletGui::DonationOptionsFrame *m_donationTab;
-    WalletGui::PrivacyFrame *m_privacyTab;
     QFrame *m_buttonFrame;
     QHBoxLayout *horizontalLayout_2;
     QSpacerItem *horizontalSpacer_6;
@@ -74,9 +72,6 @@ public:
         m_donationTab = new WalletGui::DonationOptionsFrame();
         m_donationTab->setObjectName(QStringLiteral("m_donationTab"));
         m_optionsTabWidget->addTab(m_donationTab, QString());
-        m_privacyTab = new WalletGui::PrivacyFrame();
-        m_privacyTab->setObjectName(QStringLiteral("m_privacyTab"));
-        m_optionsTabWidget->addTab(m_privacyTab, QString());
 
         verticalLayout->addWidget(m_optionsTabWidget);
 
@@ -132,7 +127,6 @@ public:
         m_optionsTabWidget->setTabText(m_optionsTabWidget->indexOf(m_connectionTab), QApplication::translate("OptionsDialog", "Connection", 0));
         m_optionsTabWidget->setTabText(m_optionsTabWidget->indexOf(m_optimizationTab), QApplication::translate("OptionsDialog", "Wallet optimization", 0));
         m_optionsTabWidget->setTabText(m_optionsTabWidget->indexOf(m_donationTab), QApplication::translate("OptionsDialog", "Donations", 0));
-        m_optionsTabWidget->setTabText(m_optionsTabWidget->indexOf(m_privacyTab), QApplication::translate("OptionsDialog", "Privacy", 0));
         m_warningLabel->setText(QApplication::translate("OptionsDialog", "Attention! Restart application to apply changes.", 0));
         m_cancelButton->setText(QApplication::translate("OptionsDialog", "Cancel", 0));
         m_okButton->setText(QApplication::translate("OptionsDialog", "Save", 0));

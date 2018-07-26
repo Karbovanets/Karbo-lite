@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ConnectionOptionsFrame.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.10.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -13,16 +13,17 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include "Gui/Common/WalletBlueButton.h"
 #include "Gui/Common/WalletTextLabel.h"
 
 QT_BEGIN_NAMESPACE
@@ -35,10 +36,6 @@ public:
     QVBoxLayout *verticalLayout;
     QRadioButton *m_autoRadio;
     WalletGui::WalletSmallGrayTextLabel *m_autoHelperLabel;
-    QWidget *widget_2;
-    QVBoxLayout *verticalLayout_2;
-    QRadioButton *m_embeddedRadio;
-    WalletGui::WalletSmallGrayTextLabel *m_embeddedHelperLabel;
     QWidget *widget_3;
     QVBoxLayout *verticalLayout_3;
     QHBoxLayout *horizontalLayout;
@@ -54,12 +51,13 @@ public:
     QRadioButton *m_remoteRadio;
     QSpacerItem *horizontalSpacer_3;
     QLabel *label_2;
-    QLineEdit *m_remoteHostEdit;
+    QComboBox *remoteNodesComboBox;
     QSpacerItem *horizontalSpacer_5;
-    QLabel *label_3;
-    QSpinBox *m_remotePortSpin;
+    WalletGui::WalletNormalBlueButton *addNodeButton;
+    WalletGui::WalletNormalBlueButton *removeNodeButton;
     QSpacerItem *horizontalSpacer_4;
     WalletGui::WalletSmallGrayTextLabel *m_remoteHelperLabel;
+    WalletGui::WalletExtraNormalGrayTextLabel *label_4;
     QSpacerItem *verticalSpacer;
     QButtonGroup *m_connectionButtonGroup;
 
@@ -106,34 +104,6 @@ public:
         verticalLayout->setStretch(1, 1);
 
         verticalLayout_5->addWidget(widget);
-
-        widget_2 = new QWidget(ConnectionOptionsFrame);
-        widget_2->setObjectName(QStringLiteral("widget_2"));
-        sizePolicy.setHeightForWidth(widget_2->sizePolicy().hasHeightForWidth());
-        widget_2->setSizePolicy(sizePolicy);
-        widget_2->setMinimumSize(QSize(0, 70));
-        widget_2->setMaximumSize(QSize(16777215, 70));
-        verticalLayout_2 = new QVBoxLayout(widget_2);
-        verticalLayout_2->setSpacing(3);
-        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
-        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
-        m_embeddedRadio = new QRadioButton(widget_2);
-        m_connectionButtonGroup->addButton(m_embeddedRadio);
-        m_embeddedRadio->setObjectName(QStringLiteral("m_embeddedRadio"));
-
-        verticalLayout_2->addWidget(m_embeddedRadio);
-
-        m_embeddedHelperLabel = new WalletGui::WalletSmallGrayTextLabel(widget_2);
-        m_embeddedHelperLabel->setObjectName(QStringLiteral("m_embeddedHelperLabel"));
-        m_embeddedHelperLabel->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
-        m_embeddedHelperLabel->setWordWrap(true);
-        m_embeddedHelperLabel->setIndent(0);
-
-        verticalLayout_2->addWidget(m_embeddedHelperLabel, 0, Qt::AlignTop);
-
-        verticalLayout_2->setStretch(1, 1);
-
-        verticalLayout_5->addWidget(widget_2);
 
         widget_3 = new QWidget(ConnectionOptionsFrame);
         widget_3->setObjectName(QStringLiteral("widget_3"));
@@ -219,31 +189,37 @@ public:
 
         horizontalLayout_2->addWidget(label_2);
 
-        m_remoteHostEdit = new QLineEdit(widget_4);
-        m_remoteHostEdit->setObjectName(QStringLiteral("m_remoteHostEdit"));
-        m_remoteHostEdit->setEnabled(false);
+        remoteNodesComboBox = new QComboBox(widget_4);
+        remoteNodesComboBox->setObjectName(QStringLiteral("remoteNodesComboBox"));
+        remoteNodesComboBox->setMinimumSize(QSize(200, 0));
+        remoteNodesComboBox->setEditable(true);
+        remoteNodesComboBox->setInsertPolicy(QComboBox::InsertAtTop);
 
-        horizontalLayout_2->addWidget(m_remoteHostEdit);
+        horizontalLayout_2->addWidget(remoteNodesComboBox);
 
         horizontalSpacer_5 = new QSpacerItem(15, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
         horizontalLayout_2->addItem(horizontalSpacer_5);
 
-        label_3 = new QLabel(widget_4);
-        label_3->setObjectName(QStringLiteral("label_3"));
+        addNodeButton = new WalletGui::WalletNormalBlueButton(widget_4);
+        addNodeButton->setObjectName(QStringLiteral("addNodeButton"));
+        sizePolicy.setHeightForWidth(addNodeButton->sizePolicy().hasHeightForWidth());
+        addNodeButton->setSizePolicy(sizePolicy);
+        addNodeButton->setMinimumSize(QSize(100, 0));
+        addNodeButton->setBaseSize(QSize(150, 0));
 
-        horizontalLayout_2->addWidget(label_3);
+        horizontalLayout_2->addWidget(addNodeButton);
 
-        m_remotePortSpin = new QSpinBox(widget_4);
-        m_remotePortSpin->setObjectName(QStringLiteral("m_remotePortSpin"));
-        m_remotePortSpin->setEnabled(false);
-        m_remotePortSpin->setMinimum(1);
-        m_remotePortSpin->setMaximum(65535);
-        m_remotePortSpin->setValue(1);
+        removeNodeButton = new WalletGui::WalletNormalBlueButton(widget_4);
+        removeNodeButton->setObjectName(QStringLiteral("removeNodeButton"));
+        sizePolicy.setHeightForWidth(removeNodeButton->sizePolicy().hasHeightForWidth());
+        removeNodeButton->setSizePolicy(sizePolicy);
+        removeNodeButton->setMinimumSize(QSize(100, 0));
+        removeNodeButton->setBaseSize(QSize(150, 0));
 
-        horizontalLayout_2->addWidget(m_remotePortSpin, 0, Qt::AlignVCenter);
+        horizontalLayout_2->addWidget(removeNodeButton);
 
-        horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer_4 = new QSpacerItem(30, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_2->addItem(horizontalSpacer_4);
 
@@ -262,35 +238,41 @@ public:
 
         verticalLayout_5->addWidget(widget_4);
 
+        label_4 = new WalletGui::WalletExtraNormalGrayTextLabel(ConnectionOptionsFrame);
+        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setWordWrap(true);
+
+        verticalLayout_5->addWidget(label_4);
+
         verticalSpacer = new QSpacerItem(665, 61, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout_5->addItem(verticalSpacer);
 
 
         retranslateUi(ConnectionOptionsFrame);
-        QObject::connect(m_remoteHostEdit, SIGNAL(textChanged(QString)), ConnectionOptionsFrame, SLOT(remoteHostNameChanged(QString)));
         QObject::connect(m_connectionButtonGroup, SIGNAL(buttonClicked(int)), ConnectionOptionsFrame, SLOT(connectionButtonClicked(int)));
-        QObject::connect(m_remoteRadio, SIGNAL(toggled(bool)), m_remoteHostEdit, SLOT(setEnabled(bool)));
-        QObject::connect(m_remoteRadio, SIGNAL(toggled(bool)), m_remotePortSpin, SLOT(setEnabled(bool)));
         QObject::connect(m_localRadio, SIGNAL(toggled(bool)), m_localPortSpin, SLOT(setEnabled(bool)));
+        QObject::connect(addNodeButton, SIGNAL(clicked()), ConnectionOptionsFrame, SLOT(addNodeClicked()));
+        QObject::connect(removeNodeButton, SIGNAL(clicked()), ConnectionOptionsFrame, SLOT(removeNodeClicked()));
+        QObject::connect(remoteNodesComboBox, SIGNAL(editTextChanged(QString)), ConnectionOptionsFrame, SLOT(remoteNodesComboChanged(QString)));
 
         QMetaObject::connectSlotsByName(ConnectionOptionsFrame);
     } // setupUi
 
     void retranslateUi(QFrame *ConnectionOptionsFrame)
     {
-        ConnectionOptionsFrame->setWindowTitle(QApplication::translate("ConnectionOptionsFrame", "Frame", 0));
-        m_autoRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Auto selection", 0));
-        m_autoHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to local Karbovanets daemon process on port 8081. In case of no local daemon running it will use an in-wallet embedded node implementation.", 0));
-        m_embeddedRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Embedded", 0));
-        m_embeddedHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "An in-wallet embedded Karbovanets node will be used.", 0));
-        m_localRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Local daemon", 0));
-        label->setText(QApplication::translate("ConnectionOptionsFrame", "Port:", 0));
-        m_localHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to local Karbovanets daemon process. Please specify daemon's port.", 0));
-        m_remoteRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Remote daemon", 0));
-        label_2->setText(QApplication::translate("ConnectionOptionsFrame", "Host:", 0));
-        label_3->setText(QApplication::translate("ConnectionOptionsFrame", "Port:", 0));
-        m_remoteHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to Karbovanets node running on another PC in the local or global network. Please specify IP address or domain name and the port.", 0));
+        ConnectionOptionsFrame->setWindowTitle(QApplication::translate("ConnectionOptionsFrame", "Frame", nullptr));
+        m_autoRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Auto selection", nullptr));
+        m_autoHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to local Karbo daemon process on default port 32348. In case of no local daemon running it will use a random remote node.", nullptr));
+        m_localRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Local daemon", nullptr));
+        label->setText(QApplication::translate("ConnectionOptionsFrame", "Port:", nullptr));
+        m_localHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to local Karbo daemon process. Please specify daemon's port.", nullptr));
+        m_remoteRadio->setText(QApplication::translate("ConnectionOptionsFrame", "Remote daemon", nullptr));
+        label_2->setText(QApplication::translate("ConnectionOptionsFrame", "Host:", nullptr));
+        addNodeButton->setText(QApplication::translate("ConnectionOptionsFrame", "Add", nullptr));
+        removeNodeButton->setText(QApplication::translate("ConnectionOptionsFrame", "Remove", nullptr));
+        m_remoteHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to Karbo node running on another PC in the local or global network. Please specify IP address or domain name and the port.", nullptr));
+        label_4->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet sends 0.25% fee from each transaction to the remote node it is connected to, but no more than 1 KRB.", nullptr));
     } // retranslateUi
 
 };

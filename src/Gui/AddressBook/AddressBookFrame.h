@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <QMetaType>
 #include <QFrame>
 #include <QPair>
 
@@ -32,7 +33,6 @@ class AddressBookFrame;
 namespace WalletGui {
 
 typedef QPair<QString, QString> RecepientPair;
-Q_DECLARE_METATYPE(RecepientPair);
 
 class AddressBookDelegate;
 
@@ -80,3 +80,6 @@ Q_SIGNALS:
 };
 
 }
+
+Q_DECLARE_METATYPE(WalletGui::RecepientPair);
+

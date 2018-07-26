@@ -345,7 +345,7 @@ public:
         m_optimizationTimeCheck->setText(QApplication::translate("OptimizationOptionsFrame", "Specific time for optimization transactions", 0));
         label_4->setText(QApplication::translate("OptimizationOptionsFrame", "Send optimization transactions each", 0));
         m_showFusionTransactionsCheck->setText(QApplication::translate("OptimizationOptionsFrame", "Show optimization transactions", 0));
-        m_helpLabel->setText(QApplication::translate("OptimizationOptionsFrame", "Wallet optimization is a background task performed in order to aggregate transactions outputs that are below optimization target into bigger ones. It makes it cheaper to send larger amounts of Karbovanetss within one transaction.\n"
+        m_helpLabel->setText(QApplication::translate("OptimizationOptionsFrame", "Wallet optimization is a background task performed in order to aggregate transactions outputs that are below optimization target into bigger ones. It makes it cheaper to send larger amounts of KRB within one transaction.\n"
 "Wallet optimization is free for all users but takes some time.", 0));
     } // retranslateUi
 

@@ -49,7 +49,7 @@ const char WALLET_TEXT_LABEL_STYLE_SHEET_TEMPLATE[] =
   "}"
 
   "WalletGui--WalletSmallBlackTextLabel {"
-    "color: #000000;"
+    "color: #15315e;"
     "font-size: %fontSizeSmall%;"
   "}"
 
@@ -70,27 +70,28 @@ const char WALLET_TEXT_LABEL_STYLE_SHEET_TEMPLATE[] =
   "}"
 
   "WalletGui--WalletNormalBlackTextLabel {"
-    "color: #000000;"
+    "color: #15315e;"
     "font-size: %fontSizeNormal%;"
   "}"
 
   "WalletGui--WalletExtraNormalBlackTextLabel {"
-    "color: #000000;"
+    "color: #15315e;"
     "font-size: %fontSizeExtraNormal%;"
   "}"
 
   "WalletGui--WalletLargeBlackTextLabel {"
-    "color: #000000;"
+    "color: #15315e;"
     "font-size: %fontSizeLarge%;"
   "}"
 
   "WalletGui--WalletExtraLargeBlackTextLabel {"
-    "color: #000000;"
+    "color: #15315e;"
     "font-size: %fontSizeExtraLarge%;"
   "}"
 
   "WalletGui--WalletHeaderLabel {"
     "min-height: 17;"
+	"color: #15315e;"
     "font-size: %fontSizeLarge%;"
     "font-weight: bold;"
   "}";

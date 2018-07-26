@@ -293,7 +293,7 @@ void BlockChainExplorerWorker::poolUpdated(const std::vector<CryptoNote::Transac
 }
 
 void BlockChainExplorerWorker::blockchainSynchronized(const CryptoNote::BlockDetails& _topBlock) {
-  WalletLogger::info(tr("[Blockchain explorer] Event: Blockchain synchronized, top block: %1").arg(_topBlock.index));
+  WalletLogger::info(tr("[Blockchain explorer] Event: Blockchain synchronized, top block: %1").arg(_topBlock.height));
   Q_EMIT blockchainSynchronizedSignal(_topBlock);
 }
 
@@ -329,7 +329,7 @@ void BlockChainExplorerWorker::preloadBlocksImpl(quint32 _minBlockIndex, quint32
     return;
   }
 
-  quint32 maxBlockIndex = std::min(_maxBlockIndex, topBlock.index);
+  quint32 maxBlockIndex = std::min(_maxBlockIndex, topBlock.height);
   if (maxBlockIndex < _minBlockIndex) {
     WalletLogger::critical(tr("[Blockchain explorer] Preload blocks error: Incorrect interval, min=%1 max=%2").arg(_minBlockIndex).arg(maxBlockIndex));
     Q_EMIT blocksPreloadCompletedSignal(PRELOAD_FAIL, INVALID_BLOCK_HEIGHT, INVALID_BLOCK_HEIGHT);
@@ -405,12 +405,12 @@ void BlockChainExplorerWorker::preloadBlocksImpl(const QVector<quint32>& _blockI
   for(quint32 i = 0; i < blocks.size(); ++i) {
     CryptoNote::BlockDetails *block = new CryptoNote::BlockDetails;
     *block = std::move(blocks[i][0]);
-    if (block->index < minBlockIndex) {
-      minBlockIndex = block->index;
+    if (block->height < minBlockIndex) {
+      minBlockIndex = block->height;
     }
 
-    if (block->index > maxBlockIndex) {
-      maxBlockIndex = block->index;
+    if (block->height > maxBlockIndex) {
+      maxBlockIndex = block->height;
     }
 
     m_blocksCache.insert(blockIndexes[i], block);
@@ -450,7 +450,7 @@ void BlockChainExplorerWorker::preloadBlocksImpl(const QDateTime& _timestampBegi
   quint32 minBlockIndex = INVALID_BLOCK_HEIGHT;
   quint32 maxBlockIndex = 0;
   if (!blocks.empty()) {
-    minBlockIndex = blocks.at(0).index;
+    minBlockIndex = blocks.at(0).height;
     maxBlockIndex = minBlockIndex + blockCountWithinTimestamps - 1;
   }
 
@@ -487,15 +487,15 @@ void BlockChainExplorerWorker::preloadBlocksImpl(const QVector<Crypto::Hash>& _b
   for(quint32 i = 0; i < blocks.size(); ++i) {
     CryptoNote::BlockDetails *block = new CryptoNote::BlockDetails;
     *block = std::move(blocks[i]);
-    if (block->index < minBlockIndex) {
-      minBlockIndex = block->index;
+    if (block->height < minBlockIndex) {
+      minBlockIndex = block->height;
     }
 
-    if (block->index > maxBlockIndex) {
-      maxBlockIndex = block->index;
+    if (block->height > maxBlockIndex) {
+      maxBlockIndex = block->height;
     }
 
-    m_blocksCache.insert(block->index, block);
+    m_blocksCache.insert(block->height, block);
   }
 
   Q_EMIT blocksPreloadCompletedSignal(PRELOAD_SUCCESS, minBlockIndex, maxBlockIndex);

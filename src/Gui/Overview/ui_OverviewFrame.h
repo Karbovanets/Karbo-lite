@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'OverviewFrame.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -43,7 +43,6 @@ public:
     QSpacerItem *horizontalSpacer_9;
     QFrame *m_newsFrame;
     QHBoxLayout *horizontalLayout_4;
-    WalletGui::NewsFrame *m_blogFrame;
 
     void setupUi(QFrame *OverviewFrame)
     {
@@ -139,13 +138,6 @@ public:
         horizontalLayout_4->setSpacing(0);
         horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
         horizontalLayout_4->setContentsMargins(0, 0, 0, 0);
-        m_blogFrame = new WalletGui::NewsFrame(m_newsFrame);
-        m_blogFrame->setObjectName(QStringLiteral("m_blogFrame"));
-        m_blogFrame->setFrameShape(QFrame::NoFrame);
-        m_blogFrame->setFrameShadow(QFrame::Raised);
-
-        horizontalLayout_4->addWidget(m_blogFrame);
-
 
         verticalLayout->addWidget(m_newsFrame);
 

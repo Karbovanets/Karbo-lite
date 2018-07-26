@@ -24,7 +24,7 @@ DarkStyle::DarkStyle() : Style("dark", "Dark") {
 }
 
 QString DarkStyle::statusBarBackgroundColor() const {
-  return "#202020";
+  return "#2E466C";
 }
 
 QString DarkStyle::statusBarFontColor() const {
@@ -32,11 +32,11 @@ QString DarkStyle::statusBarFontColor() const {
 }
 
 QString DarkStyle::headerBackgroundColor() const {
-  return "#202020";
+  return "#2E466C";
 }
 
 QString DarkStyle::headerBorderColor() const {
-  return "#202020";
+  return "#2E466C";
 }
 
 QString DarkStyle::addressFontColor() const {
@@ -48,15 +48,15 @@ QString DarkStyle::balanceFontColor() const {
 }
 
 QString DarkStyle::toolButtonBackgroundColorNormal() const {
-  return "#2e4558";
+  return "#1D3254";
 }
 
 QString DarkStyle::toolButtonBackgroundColorHover() const {
-  return "#253949";
+  return "#6582AA";
 }
 
 QString DarkStyle::toolButtonBackgroundColorPressed() const {
-  return "#1c2e3c";
+  return "#425A80";
 }
 
 QString DarkStyle::toolButtonFontColorNormal() const {

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'OverviewHeaderFrame.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.10.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -18,11 +18,9 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 #include "Gui/Common/CopyMagicLabel.h"
 #include "Gui/Common/WalletTextLabel.h"
-#include "Gui/Overview/OverviewTransactionPoolTreeView.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -51,36 +49,21 @@ public:
     WalletGui::CopyMagicLabel *m_lockedBalanceCopyLabel;
     WalletGui::CopyMagicLabel *m_totalBalanceCopyLabel;
     QSpacerItem *verticalSpacer_8;
-    QFrame *m_overviewMiningFrame;
-    QGridLayout *gridLayout_2;
-    WalletGui::WalletSmallBlackTextLabel *label_3;
-    QSpacerItem *verticalSpacer_4;
-    WalletGui::WalletNormalBlackTextLabel *m_overviewNetworkDifficultyLabel;
-    QSpacerItem *horizontalSpacer_5;
-    WalletGui::WalletSmallBlackTextLabel *label_7;
-    QLabel *m_overviewMiningIconLabel;
-    QHBoxLayout *horizontalLayout_2;
-    WalletGui::WalletHeaderLabel *m_miningStatusTextLabel;
-    QPushButton *m_startMiningButton;
-    QHBoxLayout *horizontalLayout_3;
-    WalletGui::WalletNormalBlackTextLabel *m_overviewHashRateLabel;
-    QLabel *m_miningStateLabel;
-    QSpacerItem *verticalSpacer_3;
-    QSpacerItem *horizontalSpacer_2;
-    WalletGui::WalletNormalBlackTextLabel *m_overviewNetworkHashrateLabel;
-    WalletGui::WalletSmallBlackTextLabel *label_5;
-    QSpacerItem *verticalSpacer_7;
-    QFrame *m_overviewPoolFrame;
+    QFrame *m_overviewNodeFrame;
     QGridLayout *gridLayout_3;
-    QSpacerItem *verticalSpacer_6;
-    QSpacerItem *horizontalSpacer_3;
-    WalletGui::WalletNormalBlackTextLabel *m_overviewPoolSizeLabel;
-    QSpacerItem *horizontalSpacer_6;
-    QSpacerItem *verticalSpacer_5;
-    WalletGui::OverviewTransactionPoolTreeView *m_overviewTransactionPoolView;
-    WalletGui::WalletHeaderLabel *label_9;
-    QLabel *m_overviewPoolIconLabel;
+    WalletGui::WalletSmallBlackTextLabel *m_overviewNodeTextLabel;
+    WalletGui::WalletNormalBlackTextLabel *m_overviewMasternode;
+    WalletGui::WalletSmallBlackTextLabel *m_overviewNodeStateTextLabel;
     QSpacerItem *verticalSpacer_9;
+    WalletGui::WalletNormalBlackTextLabel *m_overviewConnectionState;
+    QSpacerItem *horizontalSpacer_6;
+    WalletGui::WalletSmallBlackTextLabel *label_10;
+    WalletGui::WalletNormalBlackTextLabel *m_overviewBlockTimestamp;
+    QSpacerItem *horizontalSpacer_3;
+    WalletGui::WalletHeaderLabel *label_9;
+    QLabel *m_overviewNodeIconLabel;
+    QSpacerItem *verticalSpacer_6;
+    QSpacerItem *verticalSpacer_5;
 
     void setupUi(QFrame *OverviewHeaderFrame)
     {
@@ -212,220 +195,126 @@ public:
 
         horizontalLayout->addWidget(m_overviewBalanceFrame);
 
-        m_overviewMiningFrame = new QFrame(OverviewHeaderFrame);
-        m_overviewMiningFrame->setObjectName(QStringLiteral("m_overviewMiningFrame"));
-        m_overviewMiningFrame->setFrameShape(QFrame::NoFrame);
-        m_overviewMiningFrame->setFrameShadow(QFrame::Raised);
-        gridLayout_2 = new QGridLayout(m_overviewMiningFrame);
-        gridLayout_2->setSpacing(5);
-        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
-        gridLayout_2->setContentsMargins(30, 25, -1, 15);
-        label_3 = new WalletGui::WalletSmallBlackTextLabel(m_overviewMiningFrame);
-        label_3->setObjectName(QStringLiteral("label_3"));
-        label_3->setIndent(0);
-
-        gridLayout_2->addWidget(label_3, 3, 2, 1, 1);
-
-        verticalSpacer_4 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        gridLayout_2->addItem(verticalSpacer_4, 6, 0, 1, 6);
-
-        m_overviewNetworkDifficultyLabel = new WalletGui::WalletNormalBlackTextLabel(m_overviewMiningFrame);
-        m_overviewNetworkDifficultyLabel->setObjectName(QStringLiteral("m_overviewNetworkDifficultyLabel"));
-
-        gridLayout_2->addWidget(m_overviewNetworkDifficultyLabel, 5, 3, 1, 1, Qt::AlignLeft);
-
-        horizontalSpacer_5 = new QSpacerItem(20, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
-
-        gridLayout_2->addItem(horizontalSpacer_5, 1, 1, 5, 1);
-
-        label_7 = new WalletGui::WalletSmallBlackTextLabel(m_overviewMiningFrame);
-        label_7->setObjectName(QStringLiteral("label_7"));
-        label_7->setIndent(0);
-
-        gridLayout_2->addWidget(label_7, 5, 2, 1, 1);
-
-        m_overviewMiningIconLabel = new QLabel(m_overviewMiningFrame);
-        m_overviewMiningIconLabel->setObjectName(QStringLiteral("m_overviewMiningIconLabel"));
-        m_overviewMiningIconLabel->setPixmap(QPixmap(QString::fromUtf8(":/icons/miner-big")));
-
-        gridLayout_2->addWidget(m_overviewMiningIconLabel, 1, 0, 5, 1);
-
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setSpacing(10);
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        m_miningStatusTextLabel = new WalletGui::WalletHeaderLabel(m_overviewMiningFrame);
-        m_miningStatusTextLabel->setObjectName(QStringLiteral("m_miningStatusTextLabel"));
-        m_miningStatusTextLabel->setIndent(0);
-
-        horizontalLayout_2->addWidget(m_miningStatusTextLabel, 0, Qt::AlignVCenter);
-
-        m_startMiningButton = new QPushButton(m_overviewMiningFrame);
-        m_startMiningButton->setObjectName(QStringLiteral("m_startMiningButton"));
-        m_startMiningButton->setFocusPolicy(Qt::NoFocus);
-        m_startMiningButton->setCheckable(true);
-
-        horizontalLayout_2->addWidget(m_startMiningButton, 0, Qt::AlignLeft|Qt::AlignVCenter);
-
-        horizontalLayout_2->setStretch(1, 1);
-
-        gridLayout_2->addLayout(horizontalLayout_2, 1, 2, 1, 2);
-
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setSpacing(20);
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        horizontalLayout_3->setContentsMargins(0, -1, -1, -1);
-        m_overviewHashRateLabel = new WalletGui::WalletNormalBlackTextLabel(m_overviewMiningFrame);
-        m_overviewHashRateLabel->setObjectName(QStringLiteral("m_overviewHashRateLabel"));
-
-        horizontalLayout_3->addWidget(m_overviewHashRateLabel, 0, Qt::AlignLeft);
-
-        m_miningStateLabel = new QLabel(m_overviewMiningFrame);
-        m_miningStateLabel->setObjectName(QStringLiteral("m_miningStateLabel"));
-        m_miningStateLabel->setIndent(0);
-
-        horizontalLayout_3->addWidget(m_miningStateLabel, 0, Qt::AlignLeft);
-
-        horizontalLayout_3->setStretch(1, 1);
-
-        gridLayout_2->addLayout(horizontalLayout_3, 3, 3, 1, 1);
-
-        verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        gridLayout_2->addItem(verticalSpacer_3, 0, 0, 1, 6);
-
-        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout_2->addItem(horizontalSpacer_2, 3, 5, 3, 1);
-
-        m_overviewNetworkHashrateLabel = new WalletGui::WalletNormalBlackTextLabel(m_overviewMiningFrame);
-        m_overviewNetworkHashrateLabel->setObjectName(QStringLiteral("m_overviewNetworkHashrateLabel"));
-
-        gridLayout_2->addWidget(m_overviewNetworkHashrateLabel, 4, 3, 1, 1, Qt::AlignLeft);
-
-        label_5 = new WalletGui::WalletSmallBlackTextLabel(m_overviewMiningFrame);
-        label_5->setObjectName(QStringLiteral("label_5"));
-        label_5->setIndent(0);
-
-        gridLayout_2->addWidget(label_5, 4, 2, 1, 1);
-
-        verticalSpacer_7 = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Fixed);
-
-        gridLayout_2->addItem(verticalSpacer_7, 2, 2, 1, 2);
-
-
-        horizontalLayout->addWidget(m_overviewMiningFrame);
-
-        m_overviewPoolFrame = new QFrame(OverviewHeaderFrame);
-        m_overviewPoolFrame->setObjectName(QStringLiteral("m_overviewPoolFrame"));
-        m_overviewPoolFrame->setFrameShape(QFrame::NoFrame);
-        m_overviewPoolFrame->setFrameShadow(QFrame::Raised);
-        gridLayout_3 = new QGridLayout(m_overviewPoolFrame);
+        m_overviewNodeFrame = new QFrame(OverviewHeaderFrame);
+        m_overviewNodeFrame->setObjectName(QStringLiteral("m_overviewNodeFrame"));
+        m_overviewNodeFrame->setFrameShape(QFrame::NoFrame);
+        m_overviewNodeFrame->setFrameShadow(QFrame::Raised);
+        gridLayout_3 = new QGridLayout(m_overviewNodeFrame);
         gridLayout_3->setSpacing(5);
         gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
         gridLayout_3->setContentsMargins(30, 25, -1, -1);
-        verticalSpacer_6 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        m_overviewNodeTextLabel = new WalletGui::WalletSmallBlackTextLabel(m_overviewNodeFrame);
+        m_overviewNodeTextLabel->setObjectName(QStringLiteral("m_overviewNodeTextLabel"));
+        m_overviewNodeTextLabel->setMinimumSize(QSize(40, 0));
+        m_overviewNodeTextLabel->setBaseSize(QSize(0, 0));
+        m_overviewNodeTextLabel->setIndent(0);
 
-        gridLayout_3->addItem(verticalSpacer_6, 4, 0, 1, 5);
+        gridLayout_3->addWidget(m_overviewNodeTextLabel, 3, 2, 1, 1);
 
-        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        m_overviewMasternode = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
+        m_overviewMasternode->setObjectName(QStringLiteral("m_overviewMasternode"));
+        m_overviewMasternode->setIndent(0);
 
-        gridLayout_3->addItem(horizontalSpacer_3, 3, 4, 1, 1);
+        gridLayout_3->addWidget(m_overviewMasternode, 3, 3, 1, 1);
 
-        m_overviewPoolSizeLabel = new WalletGui::WalletNormalBlackTextLabel(m_overviewPoolFrame);
-        m_overviewPoolSizeLabel->setObjectName(QStringLiteral("m_overviewPoolSizeLabel"));
-        m_overviewPoolSizeLabel->setIndent(0);
+        m_overviewNodeStateTextLabel = new WalletGui::WalletSmallBlackTextLabel(m_overviewNodeFrame);
+        m_overviewNodeStateTextLabel->setObjectName(QStringLiteral("m_overviewNodeStateTextLabel"));
+        m_overviewNodeStateTextLabel->setMinimumSize(QSize(40, 0));
+        m_overviewNodeStateTextLabel->setIndent(0);
 
-        gridLayout_3->addWidget(m_overviewPoolSizeLabel, 1, 3, 1, 2);
-
-        horizontalSpacer_6 = new QSpacerItem(20, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
-
-        gridLayout_3->addItem(horizontalSpacer_6, 1, 1, 3, 1);
-
-        verticalSpacer_5 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        gridLayout_3->addItem(verticalSpacer_5, 0, 0, 1, 5);
-
-        m_overviewTransactionPoolView = new WalletGui::OverviewTransactionPoolTreeView(m_overviewPoolFrame);
-        m_overviewTransactionPoolView->setObjectName(QStringLiteral("m_overviewTransactionPoolView"));
-        m_overviewTransactionPoolView->setFrameShape(QFrame::NoFrame);
-        m_overviewTransactionPoolView->setSelectionMode(QAbstractItemView::NoSelection);
-        m_overviewTransactionPoolView->setTextElideMode(Qt::ElideMiddle);
-        m_overviewTransactionPoolView->setRootIsDecorated(false);
-        m_overviewTransactionPoolView->setUniformRowHeights(true);
-        m_overviewTransactionPoolView->setItemsExpandable(false);
-        m_overviewTransactionPoolView->header()->setVisible(false);
-        m_overviewTransactionPoolView->header()->setStretchLastSection(false);
-
-        gridLayout_3->addWidget(m_overviewTransactionPoolView, 3, 2, 1, 2);
-
-        label_9 = new WalletGui::WalletHeaderLabel(m_overviewPoolFrame);
-        label_9->setObjectName(QStringLiteral("label_9"));
-        label_9->setIndent(0);
-
-        gridLayout_3->addWidget(label_9, 1, 2, 1, 1, Qt::AlignLeft);
-
-        m_overviewPoolIconLabel = new QLabel(m_overviewPoolFrame);
-        m_overviewPoolIconLabel->setObjectName(QStringLiteral("m_overviewPoolIconLabel"));
-        m_overviewPoolIconLabel->setPixmap(QPixmap(QString::fromUtf8(":/icons/pool-stats")));
-
-        gridLayout_3->addWidget(m_overviewPoolIconLabel, 1, 0, 3, 1);
+        gridLayout_3->addWidget(m_overviewNodeStateTextLabel, 4, 2, 1, 1);
 
         verticalSpacer_9 = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Fixed);
 
-        gridLayout_3->addItem(verticalSpacer_9, 2, 2, 1, 2);
+        gridLayout_3->addItem(verticalSpacer_9, 3, 2, 1, 3);
 
-        gridLayout_3->setColumnStretch(3, 1);
+        m_overviewConnectionState = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
+        m_overviewConnectionState->setObjectName(QStringLiteral("m_overviewConnectionState"));
+        m_overviewConnectionState->setIndent(2);
 
-        horizontalLayout->addWidget(m_overviewPoolFrame);
+        gridLayout_3->addWidget(m_overviewConnectionState, 4, 3, 1, 1);
+
+        horizontalSpacer_6 = new QSpacerItem(20, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        gridLayout_3->addItem(horizontalSpacer_6, 1, 1, 5, 1);
+
+        label_10 = new WalletGui::WalletSmallBlackTextLabel(m_overviewNodeFrame);
+        label_10->setObjectName(QStringLiteral("label_10"));
+
+        gridLayout_3->addWidget(label_10, 5, 2, 1, 1);
+
+        m_overviewBlockTimestamp = new WalletGui::WalletNormalBlackTextLabel(m_overviewNodeFrame);
+        m_overviewBlockTimestamp->setObjectName(QStringLiteral("m_overviewBlockTimestamp"));
+
+        gridLayout_3->addWidget(m_overviewBlockTimestamp, 5, 3, 1, 1);
+
+        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_3->addItem(horizontalSpacer_3, 3, 5, 3, 1);
+
+        label_9 = new WalletGui::WalletHeaderLabel(m_overviewNodeFrame);
+        label_9->setObjectName(QStringLiteral("label_9"));
+        label_9->setIndent(0);
+
+        gridLayout_3->addWidget(label_9, 1, 2, 1, 4);
+
+        m_overviewNodeIconLabel = new QLabel(m_overviewNodeFrame);
+        m_overviewNodeIconLabel->setObjectName(QStringLiteral("m_overviewNodeIconLabel"));
+        m_overviewNodeIconLabel->setPixmap(QPixmap(QString::fromUtf8(":/icons/node")));
+
+        gridLayout_3->addWidget(m_overviewNodeIconLabel, 1, 0, 5, 1);
+
+        verticalSpacer_6 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_3->addItem(verticalSpacer_6, 6, 0, 1, 6);
+
+        verticalSpacer_5 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_3->addItem(verticalSpacer_5, 0, 0, 1, 6);
+
+
+        horizontalLayout->addWidget(m_overviewNodeFrame);
 
 
         retranslateUi(OverviewHeaderFrame);
-        QObject::connect(m_overviewTransactionPoolView, SIGNAL(doubleClicked(QModelIndex)), OverviewHeaderFrame, SLOT(poolTransactionClicked(QModelIndex)));
-        QObject::connect(m_startMiningButton, SIGNAL(clicked(bool)), OverviewHeaderFrame, SLOT(startMiningClicked(bool)));
 
         QMetaObject::connectSlotsByName(OverviewHeaderFrame);
     } // setupUi
 
     void retranslateUi(QFrame *OverviewHeaderFrame)
     {
-        OverviewHeaderFrame->setWindowTitle(QApplication::translate("OverviewHeaderFrame", "Frame", 0));
-        label->setText(QApplication::translate("OverviewHeaderFrame", "Balance", 0));
-        m_overviewLockedBalanceTickerLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
-        m_overviewAvailableBalanceTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "Available", 0));
-        m_overviewLockedBalanceTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "Locked", 0));
-        m_overviewTotalBalanceTickerLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
+        OverviewHeaderFrame->setWindowTitle(QApplication::translate("OverviewHeaderFrame", "Frame", nullptr));
+        label->setText(QApplication::translate("OverviewHeaderFrame", "Balance", nullptr));
+        m_overviewLockedBalanceTickerLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", nullptr));
+        m_overviewAvailableBalanceTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "Available", nullptr));
+        m_overviewLockedBalanceTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "Locked", nullptr));
+        m_overviewTotalBalanceTickerLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", nullptr));
 #ifndef QT_NO_TOOLTIP
-        m_overviewAvailableBalanceLabel->setToolTip(QApplication::translate("OverviewHeaderFrame", "Click to copy", 0));
+        m_overviewAvailableBalanceLabel->setToolTip(QApplication::translate("OverviewHeaderFrame", "Click to copy", nullptr));
 #endif // QT_NO_TOOLTIP
-        m_overviewAvailableBalanceLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
+        m_overviewAvailableBalanceLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", nullptr));
         m_overviewBalanceIconLabel->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        m_overviewLockedBalanceLabel->setToolTip(QApplication::translate("OverviewHeaderFrame", "Click to copy", 0));
+        m_overviewLockedBalanceLabel->setToolTip(QApplication::translate("OverviewHeaderFrame", "Click to copy", nullptr));
 #endif // QT_NO_TOOLTIP
-        m_overviewLockedBalanceLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
+        m_overviewLockedBalanceLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", nullptr));
 #ifndef QT_NO_TOOLTIP
-        m_overviewTotalBalanceLabel->setToolTip(QApplication::translate("OverviewHeaderFrame", "Click to copy", 0));
+        m_overviewTotalBalanceLabel->setToolTip(QApplication::translate("OverviewHeaderFrame", "Click to copy", nullptr));
 #endif // QT_NO_TOOLTIP
-        m_overviewTotalBalanceLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
-        m_overviewAvailableBalanceTickerLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
-        m_overviewTotalBalanceTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "Total", 0));
-        m_availableBalanceCopyLabel->setText(QApplication::translate("OverviewHeaderFrame", "Copied!", 0));
-        m_lockedBalanceCopyLabel->setText(QApplication::translate("OverviewHeaderFrame", "Copied!", 0));
-        m_totalBalanceCopyLabel->setText(QApplication::translate("OverviewHeaderFrame", "Copied!", 0));
-        label_3->setText(QApplication::translate("OverviewHeaderFrame", "Your", 0));
-        m_overviewNetworkDifficultyLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
-        label_7->setText(QApplication::translate("OverviewHeaderFrame", "Difficulty", 0));
-        m_overviewMiningIconLabel->setText(QString());
-        m_miningStatusTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "Mining status", 0));
-        m_startMiningButton->setText(QApplication::translate("OverviewHeaderFrame", "Start mining", 0));
-        m_overviewHashRateLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
-        m_miningStateLabel->setText(QApplication::translate("OverviewHeaderFrame", "mining off", 0));
-        m_overviewNetworkHashrateLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", 0));
-        label_5->setText(QApplication::translate("OverviewHeaderFrame", "Network", 0));
-        m_overviewPoolSizeLabel->setText(QApplication::translate("OverviewHeaderFrame", "0 transactions", 0));
-        label_9->setText(QApplication::translate("OverviewHeaderFrame", "Pool stats", 0));
-        m_overviewPoolIconLabel->setText(QString());
+        m_overviewTotalBalanceLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", nullptr));
+        m_overviewAvailableBalanceTickerLabel->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", nullptr));
+        m_overviewTotalBalanceTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "Total", nullptr));
+        m_availableBalanceCopyLabel->setText(QApplication::translate("OverviewHeaderFrame", "Copied!", nullptr));
+        m_lockedBalanceCopyLabel->setText(QApplication::translate("OverviewHeaderFrame", "Copied!", nullptr));
+        m_totalBalanceCopyLabel->setText(QApplication::translate("OverviewHeaderFrame", "Copied!", nullptr));
+        m_overviewNodeTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "Node", nullptr));
+        m_overviewMasternode->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", nullptr));
+        m_overviewNodeStateTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "State", nullptr));
+        m_overviewConnectionState->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", nullptr));
+        label_10->setText(QString());
+        m_overviewBlockTimestamp->setText(QString());
+        label_9->setText(QApplication::translate("OverviewHeaderFrame", "Node status", nullptr));
+        m_overviewNodeIconLabel->setText(QString());
     } // retranslateUi
 
 };

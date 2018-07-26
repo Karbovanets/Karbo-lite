@@ -26,6 +26,7 @@
 
 #include "Logging/LoggerManager.h"
 #include "CryptoNoteCore/Currency.h"
+#include "System/Dispatcher.h"
 
 class QDir;
 
@@ -64,6 +65,9 @@ public:
   virtual void addObserver(ICryptoNoteAdapterObserver* _observer) override;
   virtual void removeObserver(ICryptoNoteAdapterObserver* _observer) override;
 
+  bool isNodeAvailable(QUrl _node);
+  void getWorkingRandomNode();
+
   // INodeAdapterObserver
   Q_SLOT virtual void initCompleted(int _status) override;
   Q_SLOT virtual void deinitCompleted() override;
@@ -85,14 +89,16 @@ private:
   Logging::LoggerManager m_coreLogger;
   Logging::LoggerManager m_walletLogger;
   CryptoNote::Currency m_currency;
+  System::Dispatcher m_dispatcher;
   INodeAdapter* m_nodeAdapter;
   int m_autoConnectionTimerId;
+  int findNodeAttempts;
 
   void initCoreLogger(bool _debug);
   void initWalletLogger(bool _debug);
   void initNode();
   void initAutoConnection();
-  void initInProcessNode();
+  //void initInProcessNode();
   void initLocalRpcNode();
   void initRemoteRpcNode();
   void onLocalDaemonNotFound();

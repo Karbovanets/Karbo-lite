@@ -55,6 +55,7 @@ public:
   virtual WalletInitStatus load(const QString& _walletPath, const QString& _password) override;
   virtual WalletInitStatus loadLegacyKeys(const QString& _legacyKeysFile, const QString& _walletPath, const QString& _password) override;
   virtual WalletInitStatus createWithKeys(const QString& _walletPath, const AccountKeys& _accountKeys) override;
+  virtual WalletInitStatus createWithKeysAndTimestamp(const QString& _walletPath, const AccountKeys& _accountKeys, const uint64_t& _creationTimestamp) override;
   virtual WalletSaveStatus save(CryptoNote::WalletSaveLevel _saveLevel, bool _saveUserData) override;
   virtual WalletSaveStatus exportWallet(const QString& _path, bool _encrypt, CryptoNote::WalletSaveLevel _saveLevel, bool _saveUserData) override;
   virtual PasswordStatus changePassword(const QString& _oldPassword, const QString& _newPassword) override;

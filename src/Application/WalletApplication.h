@@ -34,7 +34,6 @@ class IApplicationEventHandler;
 class ICryptoNoteAdapter;
 class IDonationManager;
 class IOptimizationManager;
-class IMiningManager;
 class INewsReader;
 class LogFileWatcher;
 
@@ -61,8 +60,6 @@ private:
   IAddressBookManager* m_addressBookManager;
   IDonationManager* m_donationManager;
   IOptimizationManager* m_optimizationManager;
-  IMiningManager* m_miningManager;
-  INewsReader* m_blogReader;
   QMainWindow* m_mainWindow;
   QSplashScreen* m_splash;
   LogFileWatcher* m_logWatcher;

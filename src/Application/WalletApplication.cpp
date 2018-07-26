@@ -36,7 +36,6 @@
 #include "WalletApplication.h"
 #include "AddressBookManager.h"
 #include "ApplicationEventHandler.h"
-#include "BlogReader.h"
 #include "CommandLineParser.h"
 #include "Gui/Common/ExitWidget.h"
 #include "Gui/Common/P2pBindPortErrorDialog.h"
@@ -47,7 +46,6 @@
 #include "LogFileWatcher.h"
 #include "WalletLogger/WalletLogger.h"
 #include "Gui/MainWindow/MainWindow.h"
-#include "MiningManager.h"
 #include "OptimizationManager.h"
 #include "QJsonRpc/JsonRpcServer.h"
 #include "Settings/Settings.h"
@@ -102,7 +100,7 @@ bool rmDir(const QString& dirPath) {
 
 WalletApplication::WalletApplication(int& _argc, char** _argv) : QApplication(_argc, _argv), m_lockFile(nullptr),
   m_systemTrayIcon(new QSystemTrayIcon(this)), m_applicationEventHandler(new ApplicationEventHandler(this)),
-  m_optimizationManager(nullptr), m_blogReader(new BlogReader(this)), m_mainWindow(nullptr), m_splash(nullptr),
+  m_optimizationManager(nullptr), m_donationManager(nullptr), m_mainWindow(nullptr), m_splash(nullptr),
   m_logWatcher(nullptr), m_isAboutToQuit(false) {
   setApplicationName("karbowanecwallet");
   setApplicationVersion(Settings::instance().getVersion());
@@ -140,7 +138,7 @@ bool WalletApplication::init() {
   makeDataDir();
   WalletLogger::init(Settings::instance().getDataDir(), Settings::instance().hasDebugOption(), this);
   WalletLogger::info(tr("[Application] Initializing..."));
-  m_lockFile = new QLockFile(Settings::instance().getDataDir().absoluteFilePath("karbowanecwallet.lock"));
+  m_lockFile = new QLockFile(Settings::instance().getDataDir().absoluteFilePath("karbowallet.lock"));
   QUrl paymentUrl = QUrl::fromUserInput(arguments().last());
   if (paymentUrl.scheme() != URI_SCHEME_NAME) {
     paymentUrl = QUrl();
@@ -161,10 +159,7 @@ bool WalletApplication::init() {
   }
 
   m_applicationEventHandler->init();
-  if (Settings::instance().isNewsEnabled()) {
-    m_blogReader->init();
-  }
-
+  
   SignalHandler::instance().init();
   QObject::connect(&SignalHandler::instance(), &SignalHandler::quitSignal, this, &WalletApplication::quit);
   if (!Settings::instance().isRunMinimizedEnabled()) {
@@ -198,11 +193,7 @@ void WalletApplication::dockClickHandler() {
 }
 
 void WalletApplication::settingsUpdated() {
-  if (Settings::instance().isNewsEnabled()) {
-    m_blogReader->init();
-  } else {
-    m_blogReader->deinit();
-  }
+  
 }
 
 void WalletApplication::loadFonts() {
@@ -240,7 +231,7 @@ bool WalletApplication::initCryptoNoteAdapter() {
   for (;;) {
     if (m_splash != nullptr) {
       m_splash->show();
-      m_splash->showMessage(QObject::tr("Loading blockchain..."), Qt::AlignLeft | Qt::AlignBottom, Qt::blue);
+      m_splash->showMessage(QObject::tr("Loading..."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
       if (m_logWatcher == nullptr) {
         m_logWatcher = new LogFileWatcher(Settings::instance().getDataDir().absoluteFilePath(CORE_LOG_FILE_NAME), this);
         connect(m_logWatcher, &LogFileWatcher::newLogStringSignal, this, &WalletApplication::newLogString);
@@ -262,7 +253,7 @@ bool WalletApplication::initCryptoNoteAdapter() {
       okButton->setText(QObject::tr("Ok"));
       dlg.addButton(okButton, QMessageBox::AcceptRole);
       dlg.setText(QObject::tr("The database is currently used by another application or service.\n"
-      "If you have karbowanecd with non-default RPC port, you should terminate it and relaunch KarboWallet\n"
+      "If you have karbowanecd with non-default RPC port, you should terminate it and relaunch wallet\n"
       "or\n"
       "Set the Local deamon required port in KarboWallet Menu/Preferences/Connection settings."));
       dlg.exec();
@@ -338,10 +329,9 @@ void WalletApplication::initUi() {
   AddressBookManager* addressBookManager = new AddressBookManager(m_cryptoNoteAdapter, this);
   m_addressBookManager = addressBookManager;
   m_donationManager = addressBookManager;
-  m_optimizationManager= new OptimizationManager(m_cryptoNoteAdapter, this);
-  m_miningManager = new MiningManager(m_cryptoNoteAdapter, m_donationManager, this);
+  m_optimizationManager = new OptimizationManager(m_cryptoNoteAdapter, this);
   if (m_splash != nullptr) {
-    m_splash->showMessage(QObject::tr("Initializing GUI..."), Qt::AlignLeft | Qt::AlignBottom, Qt::blue);
+    m_splash->showMessage(QObject::tr("Initializing GUI..."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
   }
 
   QFile styleSheetFile(":style/qss");
@@ -350,7 +340,7 @@ void WalletApplication::initUi() {
   styleSheetFile.close();
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(styleSheet));
   m_mainWindow = new MainWindow(m_cryptoNoteAdapter, m_addressBookManager, m_donationManager, m_optimizationManager,
-    m_miningManager, m_applicationEventHandler, m_blogReader, styleSheet, nullptr);
+    m_applicationEventHandler, styleSheet, nullptr);
   connect(static_cast<MainWindow*>(m_mainWindow), &MainWindow::reinitCryptoNoteAdapterSignal,
     this, &WalletApplication::reinitCryptoNoteAdapter);
   if (m_splash != nullptr) {
@@ -418,9 +408,6 @@ void WalletApplication::trayActivated(QSystemTrayIcon::ActivationReason _reason)
 
 void WalletApplication::prepareToQuit() {
   WalletLogger::debug(tr("[Application] Prepare to quit..."));
-  if (Settings::instance().isNewsEnabled()) {
-    m_blogReader->deinit();
-  }
 
   Settings::instance().removeObserver(this);
   m_isAboutToQuit = true;

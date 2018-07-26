@@ -181,20 +181,13 @@ void NewAddressDialog::donationCheckStateChanged(int _checkState) {
     return;
   }
 
-  bool donationMiningIsEnabled = m_donationManager->isDonationMiningEnabled();
   bool donationChangeIsEnabled = m_donationManager->isDonationChangeEnabled();
-  if (!donationMiningIsEnabled && !donationChangeIsEnabled) {
+  if (!donationChangeIsEnabled) {
     m_ui->m_donationWarningLabel->hide();
     return;
   }
 
   bool showWarning = false;
-  if (donationMiningIsEnabled) {
-    QString donationMiningAddress = m_donationManager->getDonationMiningAddress();
-    if (donationMiningAddress == m_ui->m_addressEdit->text()) {
-      showWarning = true;
-    }
-  }
 
   if (donationChangeIsEnabled) {
     QString donationChangeAddress = m_donationManager->getDonationChangeAddress();

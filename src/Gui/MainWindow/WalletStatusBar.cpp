@@ -33,7 +33,7 @@ namespace WalletGui {
 
 namespace {
 
-const QDateTime EPOCH_DATE_TIME = QDateTime::fromMSecsSinceEpoch(0);
+const QDateTime EPOCH_DATE_TIME = QDateTime::fromMSecsSinceEpoch(0).toUTC();
 const int TEMP_MESSAGE_DURATION = 3000;
 const int MSECS_IN_MINUTE = 60 * 1000;
 const int MSECS_IN_HOUR = 60 * MSECS_IN_MINUTE;
@@ -85,16 +85,18 @@ QString formatTimeDiff(quint64 _timeDiff) {
 }
 
 WalletStatusBar::WalletStatusBar(QWidget* _parent) : QStatusBar(_parent), m_cryptoNoteAdapter(nullptr), m_nodeStateModel(nullptr), m_syncStatusLabel(new QLabel(this)),
-  m_syncStatusIconLabel(new QLabel(this)), m_encryptionStatusIconLabel(new QLabel(this)),
-  m_peerCountLabel(new QLabel(this)), m_syncMovie(new QMovie(this)), m_walletIsSynchronized(false), m_checkSyncStateTimerId(-1) {
+  m_syncStatusIconLabel(new QLabel(this)), m_encryptionStatusIconLabel(new QLabel(this)), m_connectionStateIconLabel(new QLabel(this)),
+  m_connectionStateLabel(new QLabel(this)), m_syncMovie(new QMovie(this)), m_walletIsSynchronized(false), m_checkSyncStateTimerId(-1) {
   m_syncStatusLabel->setObjectName("m_syncStatusLabel");
   m_syncStatusIconLabel->setObjectName("m_syncStatusIconLabel");
   m_encryptionStatusIconLabel->setObjectName("m_encryptionStatusIconLabel");
-  m_peerCountLabel->setObjectName("m_peerCountLabel");
+  m_connectionStateIconLabel->setObjectName("m_connectionStateIconLabel");
+  m_connectionStateLabel->setObjectName("m_connectionStateLabel");
   m_syncMovie->setFileName(Settings::instance().getCurrentStyle().getWalletSyncGifFile());
   m_syncMovie->setScaledSize(QSize(16, 16));
   addWidget(m_syncStatusLabel);
-  addPermanentWidget(m_peerCountLabel);
+  addPermanentWidget(m_connectionStateLabel);
+  addPermanentWidget(m_connectionStateIconLabel);
   addPermanentWidget(m_encryptionStatusIconLabel);
   addPermanentWidget(m_syncStatusIconLabel);
 
@@ -115,9 +117,10 @@ void WalletStatusBar::setNodeStateModel(QAbstractItemModel* _model) {
   m_nodeStateModel = _model;
   QDataWidgetMapper* stateMapper = new QDataWidgetMapper(this);
   stateMapper->setModel(m_nodeStateModel);
-  stateMapper->addMapping(m_peerCountLabel, NodeStateModel::COLUMN_PEER_COUNT, "text");
+  //stateMapper->addMapping(m_connectionStateLabel, NodeStateModel::COLUMN_CONNECTION_STATE, "text");
   stateMapper->setCurrentIndex(0);
   connect(m_nodeStateModel, &QAbstractItemModel::dataChanged, this, &WalletStatusBar::nodeStateChanged);
+  updateStatusConnection();
 }
 
 void WalletStatusBar::updateStyle() {
@@ -228,7 +231,17 @@ void WalletStatusBar::timerEvent(QTimerEvent* _event) {
 void WalletStatusBar::nodeStateChanged(const QModelIndex& _topLeft, const QModelIndex& _bottomRight, const QVector<int>& _roles) {
   if (_roles.contains(NodeStateModel::ROLE_LOCAL_BLOCK_COUNT)) {
     updateStatusDescription();
+  } else if (_roles.contains(NodeStateModel::COLUMN_CONNECTION_STATE)) {
+    updateStatusConnection();
   }
+}
+
+void WalletStatusBar::updateStatusConnection() {
+  m_isConnected = m_nodeStateModel->index(0, NodeStateModel::COLUMN_CONNECTION_STATE).data(NodeStateModel::ROLE_CONNECTION_STATE).toBool();
+  QString connectionIconPath = m_isConnected ? ":icons/light/connected" : ":icons/light/disconnected";
+  QPixmap connectionIcon = QPixmap(connectionIconPath).scaled(16, 16, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+  m_connectionStateIconLabel->setPixmap(connectionIcon);
+  m_connectionStateIconLabel->setToolTip(QString(tr("%1").arg(m_isConnected ? tr("connected") : tr("disconnected"))));
 }
 
 void WalletStatusBar::updateStatusDescription() {

@@ -32,15 +32,16 @@ QString LightStyle::statusBarFontColor() const {
 }
 
 QString LightStyle::headerBackgroundColor() const {
-  return "#EDF4FC";
+  //return "#EDF4FC";
+  return "#A9C1E0";
 }
 
 QString LightStyle::headerBorderColor() const {
-  return "#dddddd";
+  return "#9DB4D1";
 }
 
 QString LightStyle::addressFontColor() const {
-  return "#2A4268";
+  return "#15315E";
 }
 
 QString LightStyle::balanceFontColor() const {
@@ -68,7 +69,7 @@ QString LightStyle::toolButtonFontColorDisabled() const {
 }
 
 QString LightStyle::toolBarBorderColor() const {
-  return "#dddddd";
+  return "#9DB4D1";
 }
 
 QString LightStyle::getWalletSyncGifFile() const {

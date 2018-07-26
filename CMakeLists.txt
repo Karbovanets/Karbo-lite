@@ -14,7 +14,6 @@ include_directories(${CMAKE_BINARY_DIR}
   src
   include
   cryptonote/external
-  cryptonote/external/rocksdb/include/
   cryptonote/include
   cryptonote/src
   libqrencode
@@ -24,8 +23,6 @@ find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Network REQUIRED)
 find_package(Qt5DBus REQUIRED)
-
-include_directories(${Qt5DBus_INCLUDE_DIRS} cryptonote/external/rocksdb/include/ include src external "${CMAKE_CURRENT_BINARY_DIR}/version")
 
 set(Boost_USE_STATIC_LIBS ON)
 if(WIN32)
@@ -134,8 +131,9 @@ file(GLOB_RECURSE CRYPTONOTE_SOURCES
   cryptonote/src/JsonRpcServer/*.cpp
   cryptonote/src/PaymentGate/*.cpp
   cryptonote/src/PaymentGateService/*.cpp
-  cryptonote/src/Miner/*.cpp
 )
+
+file(GLOB_RECURSE Mnemonics cryptonote/src/mnemonics/*)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
 file(GLOB_RECURSE HEADERS src/*.h)
@@ -166,17 +164,26 @@ if (WIN32)
   if (NOT MSVC)
     message(FATAL_ERROR "Only MSVC is supported on this platform")
   endif ()
+  
+  set(STATIC ${MSVC} CACHE BOOL "Link libraries statically")
 
   add_definitions(/D_CRT_SECURE_NO_WARNINGS /D_WIN32_WINNT=0x0600 /DSTATICLIB)
   include_directories(cryptonote/src/Platform/msc)
 
+  set( CMAKE_CXX_FLAGS "-bigobj -EHsc")
   set(PLATFORM_DIR Windows)
   set(BUILD_PLATFORM WIN32)
   set(BUILD_RESOURCES src/karbowanecwallet.rc)
   set(QTMAIN Qt5::WinMain)
 
 elseif (UNIX)
-
+  
+  add_custom_target(
+     rocksdb
+     COMMAND make static_lib -Wno-undef -Wno-unused-result -Wno-unused-value
+     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cryptonote/external/rocksdb
+  )
+  
   set(CRYPTONOTE_SOURCES ${CRYPTONOTE_SOURCES} cryptonote/external/miniupnpc/minissdpc.c)
 
   if (APPLE)
@@ -198,8 +205,8 @@ elseif (UNIX)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -maes -D_DARWIN_C_SOURCE")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework Cocoa -framework OpenGL -framework CoreFoundation -framework Carbon -framework IOKit -L/usr/lib")
 
-    set(MACOSX_BUNDLE_ICON_FILE cryptonote.icns)
-    set(APPLICATION_ICON src/images/cryptonote.icns)
+    set(MACOSX_BUNDLE_ICON_FILE Karbovanets.icns)
+    set(APPLICATION_ICON src/images/Karbovanets.icns)
     set_source_files_properties(${APPLICATION_ICON} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 
     set(BUILD_PLATFORM MACOSX_BUNDLE)
@@ -221,27 +228,31 @@ file(GLOB PLATFORM_SOURCES cryptonote/src/Platform/${PLATFORM_DIR}/System/*)
 set(CRYPTONOTE_SOURCES ${CRYPTONOTE_SOURCES} ${PLATFORM_SOURCES} ${CRYPTONOTE_PLATFORM})
 
 if(MSVC)
-  add_library(rocksdblib STATIC IMPORTED GLOBAL)
-  set_target_properties(rocksdblib PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/rocksdblib.lib)
-else(MSVC)
-  add_subdirectory(cryptonote/external)
+#else(MSVC)
+#  add_subdirectory(cryptonote/external)
 endif(MSVC)
 
 add_library(${CRYPTONOTE_LIB} STATIC ${CRYPTONOTE_SOURCES})
+add_library(Mnemonics ${Mnemonics})
 set_target_properties(${CRYPTONOTE_LIB} PROPERTIES COMPILE_DEFINITIONS _GNU_SOURCE)
-target_link_libraries(${CRYPTONOTE_LIB} ${Boost_LIBRARIES} ${Qt5DBus_LIBRARIES} rocksdblib)
+target_link_libraries(${CRYPTONOTE_LIB} ${Boost_LIBRARIES} ${Qt5DBus_LIBRARIES})
+set_target_properties(Mnemonics PROPERTIES COMPILE_DEFINITIONS _GNU_SOURCE)
+target_link_libraries(Mnemonics ${Boost_LIBRARIES})
 
 add_executable(${PROJECT_NAME} ${BUILD_PLATFORM} ${BUILD_RESOURCES} ${SOURCES} ${HEADERS} ${UIS} ${RCC})
-  
+
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS _GNU_SOURCE)
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${QTMAIN} ${CRYPTONOTE_LIB} ${Qt5DBus_LIBRARIES} ${QRENCODE_LIB})
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${QTMAIN} ${CRYPTONOTE_LIB} ${Qt5DBus_LIBRARIES} ${QRENCODE_LIB} Mnemonics)
 
 if (APPLE)
   qt5_use_modules(${PROJECT_NAME} PrintSupport)
 elseif (UNIX)
   target_link_libraries(${PROJECT_NAME} -lpthread)
 elseif (WIN32)
-  target_link_libraries(${PROJECT_NAME} Shlwapi.lib Rpcrt4.lib Wtsapi32.lib Imm32 Iphlpapi Winmm)
+  target_link_libraries(${PROJECT_NAME} Imm32 Iphlpapi Winmm UxTheme d3d9 dxguid Rpcrt4 Wtsapi32 WSock32 ws2_32 Dwmapi)
+
 endif (APPLE)
+
+add_definitions(-DUSE_LITE_WALLET)
 
 qt5_use_modules(${PROJECT_NAME} Widgets Gui Network)

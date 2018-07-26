@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'SendFrame.ui'
 **
-** Created by: Qt User Interface Compiler version 5.6.0
+** Created by: Qt User Interface Compiler version 5.10.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -45,15 +45,18 @@ public:
     QSpacerItem *horizontalSpacer_2;
     QSpacerItem *verticalSpacer_2;
     QFrame *m_sendFeeFrame;
-    QGridLayout *gridLayout_2;
-    WalletGui::ClearableLineEdit *m_paymentIdEdit;
-    QDoubleSpinBox *m_feeSpin;
+    QGridLayout *gridLayout_4;
     WalletGui::WalletNormalGrayTextLabel *label_3;
+    QDoubleSpinBox *m_feeSpin;
+    WalletGui::ClearableLineEdit *m_paymentIdEdit;
     QHBoxLayout *horizontalLayout_3;
     WalletGui::WalletNormalGrayTextLabel *m_paymentIdTextLabel;
     QSpacerItem *horizontalSpacer_6;
     WalletGui::WalletTinyLinkLikeButton *m_generatePaymentIdButton;
     QSpacerItem *horizontalSpacer_5;
+    QGridLayout *m_priorityGridLayout;
+    QSlider *m_prioritySlider;
+    QSpacerItem *horizontalSpacer_7;
     QFrame *m_mixinFrame;
     QGridLayout *gridLayout;
     QLabel *label;
@@ -144,35 +147,35 @@ public:
         m_sendFeeFrame->setSizePolicy(sizePolicy2);
         m_sendFeeFrame->setFrameShape(QFrame::Box);
         m_sendFeeFrame->setFrameShadow(QFrame::Plain);
-        gridLayout_2 = new QGridLayout(m_sendFeeFrame);
-        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
-        gridLayout_2->setHorizontalSpacing(18);
-        gridLayout_2->setContentsMargins(25, 20, 25, 17);
+        gridLayout_4 = new QGridLayout(m_sendFeeFrame);
+        gridLayout_4->setObjectName(QStringLiteral("gridLayout_4"));
+        gridLayout_4->setContentsMargins(25, 11, 25, 11);
+        label_3 = new WalletGui::WalletNormalGrayTextLabel(m_sendFeeFrame);
+        label_3->setObjectName(QStringLiteral("label_3"));
+        label_3->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+
+        gridLayout_4->addWidget(label_3, 0, 0, 1, 1);
+
+        m_feeSpin = new QDoubleSpinBox(m_sendFeeFrame);
+        m_feeSpin->setObjectName(QStringLiteral("m_feeSpin"));
+        m_feeSpin->setEnabled(false);
+        m_feeSpin->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
+        m_feeSpin->setSuffix(QStringLiteral("KRB"));
+        m_feeSpin->setDecimals(12);
+        m_feeSpin->setMinimum(0.0002);
+        m_feeSpin->setMaximum(999);
+        m_feeSpin->setSingleStep(0.01);
+        m_feeSpin->setValue(0.01);
+
+        gridLayout_4->addWidget(m_feeSpin, 0, 1, 1, 1);
+
         m_paymentIdEdit = new WalletGui::ClearableLineEdit(m_sendFeeFrame);
         m_paymentIdEdit->setObjectName(QStringLiteral("m_paymentIdEdit"));
         m_paymentIdEdit->setStyleSheet(QLatin1String("[errorState=\"true\"] {\n"
 "  border-color: #ef3131;\n"
 "}"));
 
-        gridLayout_2->addWidget(m_paymentIdEdit, 2, 1, 1, 1);
-
-        m_feeSpin = new QDoubleSpinBox(m_sendFeeFrame);
-        m_feeSpin->setObjectName(QStringLiteral("m_feeSpin"));
-        m_feeSpin->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
-        m_feeSpin->setSuffix(QStringLiteral("KRB"));
-        m_feeSpin->setDecimals(12);
-        m_feeSpin->setMinimum(0.0001);
-        m_feeSpin->setMaximum(1e+09);
-        m_feeSpin->setSingleStep(0.01);
-        m_feeSpin->setValue(0.0001);
-
-        gridLayout_2->addWidget(m_feeSpin, 2, 0, 1, 1);
-
-        label_3 = new WalletGui::WalletNormalGrayTextLabel(m_sendFeeFrame);
-        label_3->setObjectName(QStringLiteral("label_3"));
-        label_3->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-
-        gridLayout_2->addWidget(label_3, 0, 0, 1, 1);
+        gridLayout_4->addWidget(m_paymentIdEdit, 1, 3, 1, 1);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
@@ -205,7 +208,26 @@ public:
         horizontalLayout_3->addItem(horizontalSpacer_5);
 
 
-        gridLayout_2->addLayout(horizontalLayout_3, 0, 1, 1, 1);
+        gridLayout_4->addLayout(horizontalLayout_3, 0, 3, 1, 1);
+
+        m_priorityGridLayout = new QGridLayout();
+        m_priorityGridLayout->setObjectName(QStringLiteral("m_priorityGridLayout"));
+        m_prioritySlider = new QSlider(m_sendFeeFrame);
+        m_prioritySlider->setObjectName(QStringLiteral("m_prioritySlider"));
+        m_prioritySlider->setMinimum(1);
+        m_prioritySlider->setMaximum(4);
+        m_prioritySlider->setPageStep(1);
+        m_prioritySlider->setValue(2);
+        m_prioritySlider->setOrientation(Qt::Horizontal);
+
+        m_priorityGridLayout->addWidget(m_prioritySlider, 0, 0, 1, 1);
+
+
+        gridLayout_4->addLayout(m_priorityGridLayout, 1, 0, 1, 2);
+
+        horizontalSpacer_7 = new QSpacerItem(10, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        gridLayout_4->addItem(horizontalSpacer_7, 0, 2, 1, 1);
 
 
         verticalLayout->addWidget(m_sendFeeFrame);
@@ -241,7 +263,7 @@ public:
         m_mixinSlider = new QSlider(m_mixinFrame);
         m_mixinSlider->setObjectName(QStringLiteral("m_mixinSlider"));
         m_mixinSlider->setMaximumSize(QSize(16777215, 16777215));
-        m_mixinSlider->setMaximum(50);
+        m_mixinSlider->setMaximum(19);
         m_mixinSlider->setPageStep(1);
         m_mixinSlider->setValue(7);
         m_mixinSlider->setTracking(false);
@@ -289,23 +311,24 @@ public:
         QObject::connect(m_paymentIdEdit, SIGNAL(textChanged(QString)), SendFrame, SLOT(validatePaymentId(QString)));
         QObject::connect(m_mixinSpin, SIGNAL(valueChanged(int)), SendFrame, SLOT(mixinValueChanged(int)));
         QObject::connect(m_generatePaymentIdButton, SIGNAL(clicked()), SendFrame, SLOT(generatePaymentIdClicked()));
+        QObject::connect(m_prioritySlider, SIGNAL(valueChanged(int)), SendFrame, SLOT(priorityValueChanged(int)));
 
         QMetaObject::connectSlotsByName(SendFrame);
     } // setupUi
 
     void retranslateUi(QFrame *SendFrame)
     {
-        SendFrame->setWindowTitle(QApplication::translate("SendFrame", "Frame", 0));
-        m_addRecipientButton->setText(QApplication::translate("SendFrame", "+ ADD RECIPIENT", 0));
-        m_paymentIdEdit->setPlaceholderText(QApplication::translate("SendFrame", "Payment identifier issued by payee (market, exchange or other entity)", 0));
-        label_3->setText(QApplication::translate("SendFrame", "FEE", 0));
-        m_paymentIdTextLabel->setText(QApplication::translate("SendFrame", "PAYMENT ID", 0));
-        m_generatePaymentIdButton->setText(QApplication::translate("SendFrame", "Generate", 0));
+        SendFrame->setWindowTitle(QApplication::translate("SendFrame", "Frame", nullptr));
+        m_addRecipientButton->setText(QApplication::translate("SendFrame", "+ ADD RECIPIENT", nullptr));
+        label_3->setText(QApplication::translate("SendFrame", "PRIORITY (FEE)", nullptr));
+        m_paymentIdEdit->setPlaceholderText(QApplication::translate("SendFrame", "Payment identifier issued by payee (market, exchange or other entity)", nullptr));
+        m_paymentIdTextLabel->setText(QApplication::translate("SendFrame", "PAYMENT ID", nullptr));
+        m_generatePaymentIdButton->setText(QApplication::translate("SendFrame", "Generate", nullptr));
         label->setText(QString());
-        m_totalAmountLabel->setText(QApplication::translate("SendFrame", "AMOUNT", 0));
-        m_sendButton->setText(QApplication::translate("SendFrame", "Send", 0));
-        label_2->setText(QApplication::translate("SendFrame", "TOTAL AMOUNT", 0));
-        m_mixinTextLabel->setText(QApplication::translate("SendFrame", "ANONYMITY LEVEL", 0));
+        m_totalAmountLabel->setText(QApplication::translate("SendFrame", "AMOUNT", nullptr));
+        m_sendButton->setText(QApplication::translate("SendFrame", "Send", nullptr));
+        label_2->setText(QApplication::translate("SendFrame", "TOTAL AMOUNT", nullptr));
+        m_mixinTextLabel->setText(QApplication::translate("SendFrame", "ANONYMITY LEVEL", nullptr));
     } // retranslateUi
 
 };
