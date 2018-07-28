@@ -106,6 +106,10 @@ void TransferFrame::disableRemoveButton(bool _disable) {
   m_ui->m_removeButton->setHidden(_disable);
 }
 
+void TransferFrame::disableSendAllButton(bool _disable) {
+  m_ui->m_sendAllButton->setHidden(_disable);
+}
+
 void TransferFrame::hideBorder() {
   setProperty("hideTopBorder", true);
   style()->unpolish(this);
@@ -267,6 +271,10 @@ void TransferFrame::addressBookClicked() {
 
 void TransferFrame::pasteClicked() {
   m_ui->m_sendAddressEdit->setText(QApplication::clipboard()->text());
+}
+
+void TransferFrame::sendAllClicked() {
+  Q_EMIT sendAllClickedSignal();
 }
 
 void TransferFrame::addressChanged(const QString& _address) {

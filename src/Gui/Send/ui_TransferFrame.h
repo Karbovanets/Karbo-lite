@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'TransferFrame.ui'
 **
-** Created by: Qt User Interface Compiler version 5.6.0
+** Created by: Qt User Interface Compiler version 5.10.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -38,6 +38,7 @@ public:
     WalletGui::ClearableLineEdit *m_sendAddressEdit;
     QGridLayout *gridLayout_2;
     WalletGui::WalletNormalGrayTextLabel *m_amountTextLabel;
+    WalletGui::WalletTinyLinkLikeButton *m_sendAllButton;
     WalletGui::WalletNormalGrayTextLabel *m_labelTextLabel;
     QDoubleSpinBox *m_sendAmountSpin;
     WalletGui::ClearableLineEdit *m_sendLabelEdit;
@@ -126,20 +127,34 @@ public:
         gridLayout_2->setVerticalSpacing(5);
         m_amountTextLabel = new WalletGui::WalletNormalGrayTextLabel(TransferFrame);
         m_amountTextLabel->setObjectName(QStringLiteral("m_amountTextLabel"));
+        sizePolicy1.setHeightForWidth(m_amountTextLabel->sizePolicy().hasHeightForWidth());
+        m_amountTextLabel->setSizePolicy(sizePolicy1);
         m_amountTextLabel->setAlignment(Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft);
         m_amountTextLabel->setIndent(0);
 
         gridLayout_2->addWidget(m_amountTextLabel, 0, 0, 1, 1);
+
+        m_sendAllButton = new WalletGui::WalletTinyLinkLikeButton(TransferFrame);
+        m_sendAllButton->setObjectName(QStringLiteral("m_sendAllButton"));
+        sizePolicy1.setHeightForWidth(m_sendAllButton->sizePolicy().hasHeightForWidth());
+        m_sendAllButton->setSizePolicy(sizePolicy1);
+        m_sendAllButton->setCursor(QCursor(Qt::PointingHandCursor));
+        m_sendAllButton->setFocusPolicy(Qt::NoFocus);
+        m_sendAllButton->setLayoutDirection(Qt::LeftToRight);
+        m_sendAllButton->setFlat(true);
+
+        gridLayout_2->addWidget(m_sendAllButton, 0, 1, 1, 1);
 
         m_labelTextLabel = new WalletGui::WalletNormalGrayTextLabel(TransferFrame);
         m_labelTextLabel->setObjectName(QStringLiteral("m_labelTextLabel"));
         m_labelTextLabel->setAlignment(Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft);
         m_labelTextLabel->setIndent(0);
 
-        gridLayout_2->addWidget(m_labelTextLabel, 0, 1, 1, 1);
+        gridLayout_2->addWidget(m_labelTextLabel, 0, 2, 1, 1);
 
         m_sendAmountSpin = new QDoubleSpinBox(TransferFrame);
         m_sendAmountSpin->setObjectName(QStringLiteral("m_sendAmountSpin"));
+        m_sendAmountSpin->setMaximumSize(QSize(16777215, 16777215));
         m_sendAmountSpin->setFocusPolicy(Qt::ClickFocus);
         m_sendAmountSpin->setLayoutDirection(Qt::LeftToRight);
         m_sendAmountSpin->setStyleSheet(QLatin1String("[errorState=\"true\"] {\n"
@@ -150,7 +165,7 @@ public:
         m_sendAmountSpin->setDecimals(12);
         m_sendAmountSpin->setMaximum(1e+12);
 
-        gridLayout_2->addWidget(m_sendAmountSpin, 1, 0, 1, 1);
+        gridLayout_2->addWidget(m_sendAmountSpin, 1, 0, 1, 2);
 
         m_sendLabelEdit = new WalletGui::ClearableLineEdit(TransferFrame);
         m_sendLabelEdit->setObjectName(QStringLiteral("m_sendLabelEdit"));
@@ -158,7 +173,7 @@ public:
 "  border-color: #ef3131;\n"
 "}"));
 
-        gridLayout_2->addWidget(m_sendLabelEdit, 1, 1, 1, 1);
+        gridLayout_2->addWidget(m_sendLabelEdit, 1, 2, 1, 1);
 
 
         verticalLayout->addLayout(gridLayout_2);
@@ -179,19 +194,21 @@ public:
         QObject::connect(m_sendLabelEdit, SIGNAL(textChanged(QString)), TransferFrame, SLOT(labelOrAddressChanged(QString)));
         QObject::connect(m_sendAmountSpin, SIGNAL(valueChanged(QString)), TransferFrame, SLOT(amountStringChanged(QString)));
         QObject::connect(m_sendAddressEdit, SIGNAL(textChanged(QString)), TransferFrame, SLOT(addressChanged(QString)));
+        QObject::connect(m_sendAllButton, SIGNAL(clicked()), TransferFrame, SLOT(sendAllClicked()));
 
         QMetaObject::connectSlotsByName(TransferFrame);
     } // setupUi
 
     void retranslateUi(QFrame *TransferFrame)
     {
-        TransferFrame->setWindowTitle(QApplication::translate("TransferFrame", "Frame", 0));
-        m_payToTextLabel->setText(QApplication::translate("TransferFrame", "PAY TO", 0));
-        m_addressBookButton->setText(QApplication::translate("TransferFrame", "Add from contacts", 0));
-        m_removeButton->setText(QApplication::translate("TransferFrame", "Remove recipient", 0));
-        m_amountTextLabel->setText(QApplication::translate("TransferFrame", "AMOUNT", 0));
-        m_labelTextLabel->setText(QApplication::translate("TransferFrame", "LABEL", 0));
-        m_sendLabelEdit->setPlaceholderText(QApplication::translate("TransferFrame", "Enter a label for this address to add it to your address book", 0));
+        TransferFrame->setWindowTitle(QApplication::translate("TransferFrame", "Frame", nullptr));
+        m_payToTextLabel->setText(QApplication::translate("TransferFrame", "PAY TO", nullptr));
+        m_addressBookButton->setText(QApplication::translate("TransferFrame", "Add from contacts", nullptr));
+        m_removeButton->setText(QApplication::translate("TransferFrame", "Remove recipient", nullptr));
+        m_amountTextLabel->setText(QApplication::translate("TransferFrame", "AMOUNT", nullptr));
+        m_sendAllButton->setText(QApplication::translate("TransferFrame", "Send all", nullptr));
+        m_labelTextLabel->setText(QApplication::translate("TransferFrame", "LABEL", nullptr));
+        m_sendLabelEdit->setPlaceholderText(QApplication::translate("TransferFrame", "Enter a label for this address to add it to your address book", nullptr));
     } // retranslateUi
 
 };
