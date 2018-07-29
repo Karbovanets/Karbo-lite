@@ -50,6 +50,7 @@ public:
   void setLabel(const QString& _label);
 
   void disableRemoveButton(bool _disable);
+  void disableSendAllButton(bool _disable);
   void hideBorder();
 
   void setAddressError(bool _error = true);
@@ -89,11 +90,13 @@ private:
   Q_SLOT void labelOrAddressChanged(const QString& _text);
   Q_SLOT void addressBookClicked();
   Q_SLOT void pasteClicked();
+  Q_SLOT void sendAllClicked();
 
 Q_SIGNALS:
   void amountStringChangedSignal(const QString& _amountString);
   void addressChangedSignal(const QString& _address);
   void insertPaymentIdSignal(QString _paymentid);
+  void sendAllClickedSignal();
 };
 
 }
