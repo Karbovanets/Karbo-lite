@@ -19,6 +19,9 @@
 #include <QClipboard>
 #include <QDataWidgetMapper>
 
+#include "crypto/crypto.h"
+#include "CryptoNoteCore/CryptoNoteBasic.h"
+#include "Common/StringTools.h"
 #include "TransactionDetailsDialog.h"
 #include "Settings/Settings.h"
 #include "CopyColumnDelegate.h"
@@ -147,6 +150,15 @@ TransactionDetailsDialog::TransactionDetailsDialog(ICryptoNoteAdapter* _cryptoNo
     QModelIndex index = transfersModel->index(i, TransfersModel::COLUMN_ADDRESS);
     m_ui->m_transfersView->openPersistentEditor(index);
   }
+
+  Crypto::SecretKey tx_key = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getTransactionSecretKey(static_cast<size_t>(m_index.row()));
+  QString transactionKey;
+  if (tx_key != CryptoNote::NULL_SECRET_KEY) {
+    transactionKey = QString::fromStdString(Common::podToHex(tx_key));
+  } else {
+    transactionKey = QString("(n/a)");
+  }
+  m_ui->m_txKeyLabel->setText(transactionKey);
 
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(TRANSACTION_DETAILS_DIALOG_STYLE_SHEET_TEMPLATE));
   m_ui->m_hashLabel->installEventFilter(this);

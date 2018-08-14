@@ -573,6 +573,26 @@ bool WalletGreenWorker::getTransaction(quintptr _transactionIndex, CryptoNote::W
   return result;
 }
 
+Crypto::SecretKey WalletGreenWorker::getTransactionSecretKey(quintptr _transactionIndex) const {
+  Q_ASSERT(!m_wallet.isNull());
+  SemaphoreLocker locker(m_walletSemaphore);
+  CryptoNote::WalletTransaction _transaction;
+  Crypto::SecretKey txKey;
+  m_dispatcher->remoteSpawn([this, _transactionIndex, &_transaction, &txKey]() {
+    SemaphoreUnlocker unlocker(m_walletSemaphore);
+    try {
+      _transaction = m_wallet->getTransaction(_transactionIndex);
+      txKey = _transaction.secretKey;
+    } catch (const std::exception& _error) {
+      WalletLogger::critical(tr("[Wallet] Get transaction key error: %1").arg(_error.what()));
+      txKey = CryptoNote::NULL_SECRET_KEY;
+    }
+  });
+
+  locker.wait();
+  return txKey;
+}
+
 bool WalletGreenWorker::getFullTransactionInfo(quintptr _transactionIndex, FullTransactionInfo& _transactionInfo) const {
   Q_ASSERT(!m_wallet.isNull());
   SemaphoreLocker locker(m_walletSemaphore);

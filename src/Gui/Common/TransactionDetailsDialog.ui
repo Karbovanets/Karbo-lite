@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>739</width>
-    <height>296</height>
+    <height>325</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -273,6 +273,29 @@
          </item>
          <item row="6" column="1">
           <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_paymentIdLabel">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+           <property name="indent">
+            <number>0</number>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="WalletGui::WalletNormalGrayTextLabel" name="m_txKeyTextLabel">
+           <property name="text">
+            <string>KEY</string>
+           </property>
+           <property name="indent">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_txKeyLabel">
            <property name="text">
             <string>TextLabel</string>
            </property>

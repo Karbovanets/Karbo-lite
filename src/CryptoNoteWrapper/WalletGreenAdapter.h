@@ -64,6 +64,7 @@ public:
   virtual bool getTransactionTransfer(quintptr _transactionIndex, quintptr _transferIndex, CryptoNote::WalletTransfer& _transfer) const override;
   virtual bool isFusionTransaction(quintptr _transactionIndex) const override;
   virtual QByteArray getUserData() const override;
+  virtual Crypto::SecretKey getTransactionSecretKey(quintptr _transactionIndex) const override;
 
   virtual SendTransactionStatus sendTransaction(const CryptoNote::TransactionParameters& _transactionParameters) override;
   virtual bool createFusionTransaction(quint64 _threshold, quint64 _mixin, const QString& _destinationAddress) override;

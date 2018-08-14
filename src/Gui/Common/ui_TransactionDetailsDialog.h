@@ -52,6 +52,8 @@ public:
     WalletGui::WalletNormalBlackTextLabel *m_feeLabel;
     WalletGui::WalletNormalGrayTextLabel *m_paymentIdTextLabel;
     WalletGui::WalletNormalBlackTextLabel *m_paymentIdLabel;
+    WalletGui::WalletNormalGrayTextLabel *m_txKeyTextLabel;
+    WalletGui::WalletNormalBlackTextLabel *m_txKeyLabel;
     QWidget *m_transfersTab;
     QVBoxLayout *verticalLayout_3;
     WalletGui::WalletTreeView *m_transfersView;
@@ -199,6 +201,19 @@ public:
         m_paymentIdLabel->setTextInteractionFlags(Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse);
 
         gridLayout->addWidget(m_paymentIdLabel, 6, 1, 1, 1);
+		
+		m_txKeyTextLabel = new WalletGui::WalletNormalGrayTextLabel(m_transactionTab);
+        m_txKeyTextLabel->setObjectName(QStringLiteral("m_txKeyTextLabel"));
+        m_txKeyTextLabel->setIndent(0);
+
+        gridLayout->addWidget(m_txKeyTextLabel, 7, 0, 1, 1);
+
+        m_txKeyLabel = new WalletGui::WalletNormalBlackTextLabel(m_transactionTab);
+        m_txKeyLabel->setObjectName(QStringLiteral("m_txKeyLabel"));
+        m_txKeyLabel->setIndent(0);
+        m_txKeyLabel->setTextInteractionFlags(Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse);
+
+        gridLayout->addWidget(m_txKeyLabel, 7, 1, 1, 1);
 
         gridLayout->setColumnStretch(1, 1);
 
@@ -261,6 +276,7 @@ public:
         m_feeLabel->setText(QApplication::translate("TransactionDetailsDialog", "TextLabel", 0));
         m_paymentIdTextLabel->setText(QApplication::translate("TransactionDetailsDialog", "PAYMENT ID", 0));
         m_paymentIdLabel->setText(QApplication::translate("TransactionDetailsDialog", "TextLabel", 0));
+		m_txKeyTextLabel->setText(QApplication::translate("TransactionDetailsDialog", "KEY", 0));
         m_transactionDetailsTabBar->setTabText(m_transactionDetailsTabBar->indexOf(m_transactionTab), QApplication::translate("TransactionDetailsDialog", "General", 0));
         m_transactionDetailsTabBar->setTabText(m_transactionDetailsTabBar->indexOf(m_transfersTab), QApplication::translate("TransactionDetailsDialog", "Transfers", 0));
     } // retranslateUi

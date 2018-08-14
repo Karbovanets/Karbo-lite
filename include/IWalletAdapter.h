@@ -95,6 +95,7 @@ public:
   virtual quintptr getTransactionCount() const = 0;
   virtual quintptr getTransactionTransferCount(quintptr _transactionIndex) const = 0;
   virtual bool getTransaction(quintptr _transactionIndex, CryptoNote::WalletTransaction& _transaction) const = 0;
+  virtual Crypto::SecretKey getTransactionSecretKey(size_t transactionIndex) const = 0;
   virtual bool getFullTransactionInfo(quintptr _transactionIndex, FullTransactionInfo& _transactionInfo) const = 0;
   virtual bool getAllTransactions(QHash<quintptr, FullTransactionInfo>& _transactionInfos) const = 0;
   virtual bool getTransactionTransfer(quintptr _transactionIndex, quintptr _transferIndex, CryptoNote::WalletTransfer& _transfer) const = 0;
