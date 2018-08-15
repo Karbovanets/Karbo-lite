@@ -18,6 +18,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <Common/Base58.h>
+#include <Common/StringTools.h>
 
 #include "KeyDialog.h"
 #include "IWalletAdapter.h"
@@ -40,17 +41,22 @@ const char KEY_DIALOG_STYLE_SHEET_TEMPLATE[] =
     "border: 1px solid %borderColorDark%;"
   "}";
 
+AccountKeys convertByteArrayToAccountKeys(const QByteArray& _array) {
+  AccountKeys accountKeys;
+  QDataStream KeysDataStream(_array);
+  KeysDataStream.readRawData(reinterpret_cast<char*>(&accountKeys.spendKeys.publicKey), sizeof(Crypto::PublicKey));
+  KeysDataStream.readRawData(reinterpret_cast<char*>(&accountKeys.viewKeys.publicKey), sizeof(Crypto::PublicKey));
+  KeysDataStream.readRawData(reinterpret_cast<char*>(&accountKeys.spendKeys.secretKey), sizeof(Crypto::SecretKey));
+  KeysDataStream.readRawData(reinterpret_cast<char*>(&accountKeys.viewKeys.secretKey), sizeof(Crypto::SecretKey));
+  return accountKeys;
+}
+
 bool isTrackingKeys(const QByteArray& _array) {
   if (_array.size() < sizeof(AccountKeys)) {
     return false;
   }
 
-  AccountKeys accountKeys;
-  QDataStream trackingKeysDataStream(_array);
-  trackingKeysDataStream.readRawData(reinterpret_cast<char*>(&accountKeys.spendKeys.publicKey), sizeof(Crypto::PublicKey));
-  trackingKeysDataStream.readRawData(reinterpret_cast<char*>(&accountKeys.viewKeys.publicKey), sizeof(Crypto::PublicKey));
-  trackingKeysDataStream.readRawData(reinterpret_cast<char*>(&accountKeys.spendKeys.secretKey), sizeof(Crypto::SecretKey));
-  trackingKeysDataStream.readRawData(reinterpret_cast<char*>(&accountKeys.viewKeys.secretKey), sizeof(Crypto::SecretKey));
+  AccountKeys accountKeys = convertByteArrayToAccountKeys(_array);
   return (std::memcmp(&accountKeys.spendKeys.secretKey, &CryptoNote::NULL_SECRET_KEY, sizeof(Crypto::SecretKey)) == 0);
 }
 
@@ -67,20 +73,37 @@ KeyDialog::KeyDialog(const QByteArray& _key, bool _isTracking, QWidget *_parent)
   m_ui->m_fileButton->setText(tr("Save to file"));
   m_ui->m_okButton->setText(tr("Close"));
   m_ui->m_keyEdit->setReadOnly(true);
+  m_ui->m_viewKeyLineEdit->setReadOnly(true);
+  m_ui->m_spendKeyLineEdit->setReadOnly(true);
+
+  AccountKeys accountKeys;
+  QDataStream keysDataStream(_key);
+  keysDataStream.readRawData(reinterpret_cast<char*>(&accountKeys.spendKeys.publicKey), sizeof(Crypto::PublicKey));
+  keysDataStream.readRawData(reinterpret_cast<char*>(&accountKeys.viewKeys.publicKey), sizeof(Crypto::PublicKey));
+  keysDataStream.readRawData(reinterpret_cast<char*>(&accountKeys.spendKeys.secretKey), sizeof(Crypto::SecretKey));
+  keysDataStream.readRawData(reinterpret_cast<char*>(&accountKeys.viewKeys.secretKey), sizeof(Crypto::SecretKey));
+
+  m_ui->m_viewKeyLineEdit->setText(QString::fromStdString(Common::podToHex(accountKeys.viewKeys.secretKey)));
 
   if (m_isTracking) {
     m_ui->m_keyEdit->setPlainText(m_key.toHex().toUpper());
     m_ui->m_descriptionLabel->setText(tr("Tracking key allows other people to see all incoming transactions of this wallet.\n"
       "It doesn't allow spending your funds."));
+
+   m_ui->m_spendKeyLabel->setVisible(false);
+   m_ui->m_spendKeyLineEdit->setVisible(false);
+
   } else {
     QString privateKeys = QString::fromStdString(Tools::Base58::encode_addr(Settings::instance().getAddressPrefix(),
             std::string(m_key.constData(), m_key.length())));
     m_ui->m_keyEdit->setPlainText(privateKeys);
+
+    m_ui->m_spendKeyLineEdit->setText(QString::fromStdString(Common::podToHex(accountKeys.spendKeys.secretKey)));
   }
 
   setWindowTitle(m_isTracking ? tr("Export tracking key") : tr("Export key"));
   m_ui->m_cancelButton->hide();
-  setFixedHeight(195);
+  setFixedHeight(250);
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(KEY_DIALOG_STYLE_SHEET_TEMPLATE));
 }
 
@@ -97,7 +120,7 @@ KeyDialog::KeyDialog(QWidget* _parent)
       "It doesn't allow spending funds."));
   }
 
-  setFixedHeight(195);
+  setFixedHeight(250);
 }
 
 KeyDialog::~KeyDialog() {
@@ -108,7 +131,7 @@ QByteArray KeyDialog::getKey() const {
 }
 
 QString KeyDialog::getKeyString() const {
-  return m_ui->m_keyEdit->toPlainText().toLatin1().trimmed();
+  return m_keys;
 }
 
 void KeyDialog::saveKey() {
@@ -170,13 +193,60 @@ void KeyDialog::fileClicked() {
 }
 
 void KeyDialog::keyChanged() {
-  m_isTracking = isTrackingKeys(getKey());
+  m_ui->m_viewKeyLineEdit->clear();
+  m_ui->m_spendKeyLineEdit->clear();
+  m_keys.clear();
+  uint64_t addressPrefix;
+  std::string data;
+  AccountKeys accountKeys;
+  QString keyString = m_ui->m_keyEdit->toPlainText().toLatin1().trimmed();
+  if (Tools::Base58::decode_addr(keyString.toStdString(), addressPrefix, data) && addressPrefix == Settings::instance().getAddressPrefix() && data.size() == sizeof(accountKeys)) {
+    accountKeys = convertByteArrayToAccountKeys(QByteArray::fromStdString(data));
+    m_ui->m_viewKeyLineEdit->setText(QString::fromStdString(Common::podToHex(accountKeys.viewKeys.secretKey)));
+    m_ui->m_spendKeyLineEdit->setText(QString::fromStdString(Common::podToHex(accountKeys.spendKeys.secretKey)));
+    m_keys = keyString;
+  } else {
+    QByteArray _array = getKey();
+    if (_array.size() < sizeof(AccountKeys)) {
+      return;
+    }
+    accountKeys = convertByteArrayToAccountKeys(_array);
+  }
+
+  m_isTracking = (std::memcmp(&accountKeys.spendKeys.secretKey, &CryptoNote::NULL_SECRET_KEY, sizeof(Crypto::SecretKey)) == 0);
+
   setWindowTitle(m_isTracking ? tr("Import tracking key") : tr("Import key"));
   if (m_isTracking) {
+    m_ui->m_viewKeyLineEdit->setText(QString::fromStdString(Common::podToHex(accountKeys.viewKeys.secretKey)));
     m_ui->m_descriptionLabel->setText(tr("Import a tracking key of a wallet to see all its incoming transactions.\n"
       "It doesn't allow spending funds."));
   } else {
     m_ui->m_descriptionLabel->clear();
+  }
+}
+
+void KeyDialog::keysChanged() {
+  std::string private_spend_key_string = m_ui->m_spendKeyLineEdit->text().toLatin1().trimmed().toStdString();
+  std::string private_view_key_string = m_ui->m_viewKeyLineEdit->text().toLatin1().trimmed().toStdString();
+  if (!private_spend_key_string.empty() && !private_view_key_string.empty()) {
+    m_ui->m_keyEdit->clear();
+    m_keys.clear();
+    Crypto::Hash private_spend_key_hash;
+    Crypto::Hash private_view_key_hash;
+    size_t size1, size2;
+    if((Common::fromHex(private_spend_key_string, &private_spend_key_hash, sizeof(private_spend_key_hash), size1)
+            || size1 == sizeof(private_spend_key_hash)) &&
+            (Common::fromHex(private_view_key_string, &private_view_key_hash, sizeof(private_view_key_hash), size2)
+            || size2 == sizeof(private_view_key_hash))) {
+      CryptoNote::AccountKeys keys;
+      keys.spendSecretKey = *(struct Crypto::SecretKey *) &private_spend_key_hash;
+      keys.viewSecretKey = *(struct Crypto::SecretKey *) &private_view_key_hash;
+      Crypto::secret_key_to_public_key(keys.spendSecretKey, keys.address.spendPublicKey);
+      Crypto::secret_key_to_public_key( keys.viewSecretKey, keys.address.viewPublicKey);
+      m_keys = QString::fromStdString(Tools::Base58::encode_addr(Settings::instance().getAddressPrefix(),
+        std::string(reinterpret_cast<char*>(&keys), sizeof(keys))));
+      m_ui->m_keyEdit->setText(m_keys);
+    }
   }
 }
 
