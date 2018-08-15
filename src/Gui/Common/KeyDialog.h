@@ -43,12 +43,14 @@ private:
   bool m_isTracking;
   bool m_isExport;
   QByteArray m_key;
+  QString m_keys;
 
   void saveKey();
   void loadKey();
 
   Q_SLOT void fileClicked();
   Q_SLOT void keyChanged();
+  Q_SLOT void keysChanged();
 };
 
 }

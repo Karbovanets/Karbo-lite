@@ -252,6 +252,7 @@ void MainWindow::walletOpened() {
     m_ui->m_sendButton->setEnabled(false);
     m_ui->m_addressBookButton->setEnabled(false);
     m_ui->m_openPaymentRequestAction->setEnabled(false);
+    m_ui->m_exportKeyAction->setEnabled(false);
   }
   AccountKeys accountKeys = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAccountKeys(0);
   if (!m_deterministicAdapter.isDeterministic(accountKeys)) {
@@ -792,9 +793,6 @@ void MainWindow::importKey() {
   if (dlg.exec() == QDialog::Accepted) {
     QByteArray key = dlg.getKey();
     QString keyString = dlg.getKeyString();
-    if (keyString.isEmpty()) {
-      return;
-    }
 
     QString filePath = QFileDialog::getSaveFileName(this, tr("Save wallet to..."),
 #ifdef Q_OS_WIN
@@ -803,7 +801,7 @@ void MainWindow::importKey() {
     QDir::homePath(),
 #endif
     tr("Wallets (*.wallet)"));
-    if (filePath.isEmpty() || keyString.isEmpty()) {
+    if (filePath.isEmpty()) {
       return;
     }
 
@@ -830,7 +828,7 @@ void MainWindow::importKey() {
     std::string data;
     AccountKeys accountKeys;
 
-    if (Tools::Base58::decode_addr(keyString.toStdString(), addressPrefix, data) && addressPrefix == Settings::instance().getAddressPrefix() &&
+    if (!keyString.isEmpty() && Tools::Base58::decode_addr(keyString.toStdString(), addressPrefix, data) && addressPrefix == Settings::instance().getAddressPrefix() &&
       data.size() == sizeof(accountKeys)) {
       accountKeys = convertByteArrayToAccountKeys(QByteArray::fromStdString(data));
     } else if (key.size() == sizeof(CryptoNote::AccountKeys)) {
@@ -844,6 +842,7 @@ void MainWindow::importKey() {
     if (walletAdapter->createWithKeys(filePath, accountKeys) == IWalletAdapter::INIT_SUCCESS) {
       walletAdapter->save(CryptoNote::WalletSaveLevel::SAVE_ALL, true);
     } else {
+      QMessageBox::warning(this, tr("Error"), tr("Could not import wallet keys."), QMessageBox::Ok);
       Settings::instance().setWalletFile(oldWalletFile);
     }
   }
