@@ -22,6 +22,9 @@
 
 #include <fstream>
 
+#include "crypto/crypto.h"
+#include "Common/StringTools.h"
+#include "CryptoNoteCore/CryptoNoteBasic.h"
 #include "WalletGreenWorker.h"
 #include "GuardExecutor.h"
 #include "WalletLogger/WalletLogger.h"
@@ -582,7 +585,12 @@ Crypto::SecretKey WalletGreenWorker::getTransactionSecretKey(quintptr _transacti
     SemaphoreUnlocker unlocker(m_walletSemaphore);
     try {
       _transaction = m_wallet->getTransaction(_transactionIndex);
-      txKey = _transaction.secretKey;
+      if (_transaction.secretKey) {
+        txKey = _transaction.secretKey.get();
+      } else {
+        txKey = CryptoNote::NULL_SECRET_KEY;
+      }
+      // txKey = _transaction.secretKey;
     } catch (const std::exception& _error) {
       WalletLogger::critical(tr("[Wallet] Get transaction key error: %1").arg(_error.what()));
       txKey = CryptoNote::NULL_SECRET_KEY;
@@ -693,11 +701,12 @@ IWalletAdapter::SendTransactionStatus WalletGreenWorker::sendTransaction(const C
   SemaphoreLocker locker(m_walletSemaphore);
   int errorCode = 0;
   quintptr newTransactionId = CryptoNote::WALLET_INVALID_TRANSACTION_ID;
+  Crypto::SecretKey newTransactionKey = CryptoNote::NULL_SECRET_KEY;
   WalletLogger::debug(tr("[Wallet] Sending transaction..."));
-  m_dispatcher->remoteSpawn([this, &_transactionParameters, &errorCode, &newTransactionId]() {
+  m_dispatcher->remoteSpawn([this, &_transactionParameters, &errorCode, &newTransactionId, &newTransactionKey]() {
     SemaphoreUnlocker unlocker(m_walletSemaphore);
     try {
-      newTransactionId = m_wallet->transfer(_transactionParameters);
+      newTransactionId = m_wallet->transfer(_transactionParameters, newTransactionKey);
     } catch (const std::system_error& _error) {
       WalletLogger::critical(tr("[Wallet] Send transaction error: %1").arg(_error.code().message().data()));
       errorCode = _error.code().value();
@@ -708,7 +717,7 @@ IWalletAdapter::SendTransactionStatus WalletGreenWorker::sendTransaction(const C
   });
 
   locker.wait();
-  WalletLogger::info(tr("[Wallet] Transaction send result: %1. New tranaction index=%2.").arg(errorCode).arg(newTransactionId));
+  WalletLogger::info(tr("[Wallet] Transaction send result: %1. New tranaction index %2, secret key %3.").arg(errorCode).arg(newTransactionId).arg(QString::fromStdString(Common::podToHex(newTransactionKey))));
 
   return getSendStatus(errorCode);
 }
