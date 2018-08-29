@@ -65,6 +65,7 @@ public:
   virtual void addObserver(ICryptoNoteAdapterObserver* _observer) override;
   virtual void removeObserver(ICryptoNoteAdapterObserver* _observer) override;
 
+  CryptoNote::COMMAND_RPC_GET_INFO::response getNodeInfo(QUrl _node);
   bool isNodeAvailable(QUrl _node);
   void getWorkingRandomNode();
 

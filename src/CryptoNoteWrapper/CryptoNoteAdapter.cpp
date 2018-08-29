@@ -384,12 +384,6 @@ void CryptoNoteAdapter::initAutoConnection() {
   m_nodeAdapter->init();
 }
 
-/*void CryptoNoteAdapter::initInProcessNode() {
-  m_nodeAdapter = new InProcessNodeAdapter(m_currency, m_coreLogger, m_walletLogger, this);
-  m_nodeAdapter->addObserver(this);
-  m_nodeAdapter->init();
-}*/
-
 void CryptoNoteAdapter::initLocalRpcNode() {
   WalletLogger::info(tr("[CryptoNote wrapper] Starting with local daemon: 127.0.0.1:%1").arg(CryptoNote::RPC_DEFAULT_PORT));
   m_nodeAdapter = new ProxyRpcNodeAdapter(m_currency, m_coreLogger, m_walletLogger, "127.0.0.1", m_localDaemodPort, this);
@@ -413,7 +407,6 @@ void CryptoNoteAdapter::onLocalDaemonNotFound() {
   m_nodeAdapter->deinit();
   nodeAdapter->deleteLater();
   m_nodeAdapter = nullptr;
-  //initInProcessNode();
   // check if the node is available first
   if (isNodeAvailable(m_remoteDaemonUrl)) {
       initRemoteRpcNode();
@@ -435,27 +428,39 @@ void CryptoNoteAdapter::configureLogger(Logging::LoggerManager& _logger, const Q
   _logger.configure(loggerConfiguration);
 }
 
+CryptoNote::COMMAND_RPC_GET_INFO::response CryptoNoteAdapter::getNodeInfo(QUrl _node) {
+  CryptoNote::COMMAND_RPC_GET_INFO::request req;
+  CryptoNote::COMMAND_RPC_GET_INFO::response res;
+  try {
+    CryptoNote::HttpClient httpClient(m_dispatcher, _node.host().toStdString(), _node.port());
+    CryptoNote::invokeJsonCommand(httpClient, "/getinfo", req, res);
+    std::string err = interpret_rpc_response(true, res.status);
+    if (err.empty())
+      return res;
+    else {
+      WalletLogger::info(tr("[CryptoNote wrapper] Failed to invoke request: %1").arg(QString::fromStdString(err)));
+      return res;
+    }
+  }
+  catch (const CryptoNote::ConnectException&) {
+    WalletLogger::info(tr("[CryptoNote wrapper] Failed to connect to node."));
+    return res;
+  } catch (const std::exception& e) {
+    WalletLogger::info(tr("[CryptoNote wrapper] Failed to invoke rpc method: %1").arg(e.what()));
+    return res;
+  }
+}
+
 bool CryptoNoteAdapter::isNodeAvailable(QUrl _node) {
-    WalletLogger::info(tr("[CryptoNote wrapper] Checking remote node: %1:%2 ...").arg(_node.host()).arg(_node.port()));
-    try {
-        CryptoNote::COMMAND_RPC_GET_INFO::request req;
-        CryptoNote::COMMAND_RPC_GET_INFO::response res;
-        CryptoNote::HttpClient httpClient(m_dispatcher, _node.host().toStdString(), _node.port());
-        CryptoNote::invokeJsonCommand(httpClient, "/getinfo", req, res);
-        std::string err = interpret_rpc_response(true, res.status);
-      if (err.empty())
-        return true;
-      else {
-        WalletLogger::info(tr("[CryptoNote wrapper] Failed to invoke request: %1").arg(QString::fromStdString(err)));
-        return 0;
-      }}
-        catch (const CryptoNote::ConnectException&) {
-        WalletLogger::info(tr("[CryptoNote wrapper] Failed to connect to node."));
-        return 0;
-      } catch (const std::exception& e) {
-        WalletLogger::info(tr("[CryptoNote wrapper] Failed to invoke rpc method: %1").arg(e.what()));
-        return 0;
-      }
+  WalletLogger::info(tr("[CryptoNote wrapper] Checking remote node: %1:%2 ...").arg(_node.host()).arg(_node.port()));
+  CryptoNote::COMMAND_RPC_GET_INFO::response res = getNodeInfo(_node);
+  std::string err = interpret_rpc_response(true, res.status);
+
+  if (err.empty()) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 void CryptoNoteAdapter::getWorkingRandomNode(){
