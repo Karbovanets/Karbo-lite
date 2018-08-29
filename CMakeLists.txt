@@ -8,6 +8,18 @@ execute_process(COMMAND git log -1 --pretty=format:%h
 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 OUTPUT_VARIABLE GIT_REVISION)
 
+execute_process(COMMAND git log -1 --pretty=format:%h
+WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/cryptonote/"
+OUTPUT_VARIABLE CN_REVISION)
+
+set(VERSION "${CN_REVISION}")
+configure_file("cryptonote/src/version.h.in" "version.h")
+configure_file("src/CryptoNoteWalletConfig.h.in" "CryptoNoteWalletConfig.h")
+
+add_definitions (-DGIT_REVISION="${GIT_REVISION}")
+add_definitions (-DCN_VERSION="${CN_VERSION}")
+add_definitions (-DCN_REVISION="${CN_REVISION}")
+
 set(CRYPTONOTE_LIB cryptonote)
 
 include_directories(${CMAKE_BINARY_DIR}
@@ -38,12 +50,6 @@ endif ()
 
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
-
-set(VERSION "")
-configure_file("cryptonote/src/version.h.in" "version.h")
-configure_file("src/CryptoNoteWalletConfig.h.in" "CryptoNoteWalletConfig.h")
-
-add_definitions(-DGIT_REVISION="${GIT_REVISION}")
 
 set(CMAKE_AUTOMOC ON)
 
