@@ -88,7 +88,6 @@ public:
   bool isCloseToTrayEnabled() const;
 
   void init();
-  void restoreDefaultNodeList();
   void setDefaultRemoteNode();
   void setCommandLineParser(CommandLineParser* _cmdLineParser);
   void setConnectionMethod(ConnectionMethod _connectionMethod);

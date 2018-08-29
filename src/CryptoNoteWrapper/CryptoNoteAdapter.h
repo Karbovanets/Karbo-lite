@@ -65,9 +65,10 @@ public:
   virtual void addObserver(ICryptoNoteAdapterObserver* _observer) override;
   virtual void removeObserver(ICryptoNoteAdapterObserver* _observer) override;
 
-  CryptoNote::COMMAND_RPC_GET_INFO::response getNodeInfo(QUrl _node);
+  bool getNodeInfo(QUrl _node, CryptoNote::COMMAND_RPC_GET_INFO::response& info);
   bool isNodeAvailable(QUrl _node);
-  void getWorkingRandomNode();
+  bool isNodeUpToDate(std::string _our, std::string _node);
+  bool getWorkingRandomNode();
 
   // INodeAdapterObserver
   Q_SLOT virtual void initCompleted(int _status) override;
