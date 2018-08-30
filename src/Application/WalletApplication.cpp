@@ -238,6 +238,8 @@ bool WalletApplication::initCryptoNoteAdapter() {
       }
     }
 
+    connect(static_cast<CryptoNoteAdapter*>(m_cryptoNoteAdapter), &CryptoNoteAdapter::connectingToNode, this, &WalletApplication::connectingSplashMessage);
+
     int initStatus = m_cryptoNoteAdapter->init(Settings::instance().getConnectionMethod(),
       Settings::instance().getLocalRpcPort(), Settings::instance().getRemoteRpcUrl());
     switch (initStatus) {
@@ -431,6 +433,13 @@ void WalletApplication::newLogString(const QString& _string) {
     if (m_splash != nullptr) {
       m_splash->showMessage(message, Qt::AlignLeft | Qt::AlignBottom, Qt::white);
     }
+  }
+}
+
+void WalletApplication::connectingSplashMessage() {
+  QString message = tr("Connecting...");
+  if (m_splash != nullptr) {
+    m_splash->showMessage(message, Qt::AlignLeft | Qt::AlignBottom, Qt::white);
   }
 }
 

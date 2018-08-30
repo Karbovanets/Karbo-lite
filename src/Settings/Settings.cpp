@@ -105,22 +105,10 @@ void Settings::init() {
     cfgFile.close();
   }
 
-  restoreDefaultNodeList();
-  setDefaultRemoteNode();
-}
-
-void Settings::restoreDefaultNodeList() {
   if (!m_settings.contains(OPTION_REMOTE_NODES)) {
     setRemoteNodeList(QStringList() << m_defaultNodeList);
-  } else {
-    QStringList nodeList = getRemoteNodeList();
-    for (const QString& node : m_defaultNodeList) {
-      if (!nodeList.contains(node)) {
-        nodeList << node;
-      }
-    }
-    setRemoteNodeList(nodeList);
   }
+  setDefaultRemoteNode();
 }
 
 void Settings::setDefaultRemoteNode() {

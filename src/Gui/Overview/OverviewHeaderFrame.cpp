@@ -21,6 +21,7 @@
 #include <QMetaMethod>
 #include <QMovie>
 #include <QtMath>
+#include <QUrl>
 #include <QDebug>
 
 #include "OverviewHeaderFrame.h"
@@ -30,6 +31,7 @@
 #include "Gui/Common/PoolTransactionDetailsDialog.h"
 #include "ICryptoNoteAdapter.h"
 #include "CryptoNoteWrapper/CommonNodeAdapter.h"
+#include "CryptoNoteWrapper/CryptoNoteAdapter.h"
 #include "Models/NodeStateModel.h"
 #include "Models/TransactionPoolModel.h"
 #include "Models/WalletStateModel.h"
@@ -101,6 +103,8 @@ OverviewHeaderFrame::OverviewHeaderFrame(QWidget* _parent) : QFrame(_parent), m_
  // m_ui->m_overviewLockedBalanceLabel->installEventFilter(this);
  // m_ui->m_overviewTotalBalanceLabel->installEventFilter(this);
  // changeConnectionStateAppearance();
+  m_ui->m_overviewNodeVersionTextLabel->setText("");
+  m_ui->m_overviewNodeVersionLabel->setText("");
 }
 
 OverviewHeaderFrame::~OverviewHeaderFrame() {
@@ -233,6 +237,13 @@ void OverviewHeaderFrame::m_nodeStateModelDataChanged(const QModelIndex& _topLef
   m_isConnected = m_nodeStateModel->index(0, NodeStateModel::COLUMN_CONNECTION_STATE).data(NodeStateModel::ROLE_CONNECTION_STATE).toBool();
   m_ui->m_overviewConnectionState->setText(m_isConnected ? "connected" : "disconnected");
   changeConnectionStateAppearance();
+
+  CryptoNote::COMMAND_RPC_GET_INFO::response info;
+  if (m_cryptoNoteAdapter->getNodeInfo(QUrl::fromUserInput(host + ":" + port), info)) {
+    m_ui->m_overviewNodeVersionTextLabel->setText("Version");
+    m_ui->m_overviewNodeVersionLabel->setText(QString::fromStdString(info.version));
+  }
+
 }
 
 void OverviewHeaderFrame::changeConnectionStateAppearance() {

@@ -15,6 +15,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Karbovanets.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <iterator>
+
+#include <QMessageBox>
 #include <QEventLoop>
 #include <QThread>
 #include <QTimerEvent>
@@ -31,6 +37,47 @@
 #include "CryptoNoteProtocol/CryptoNoteProtocolHandler.h"
 
 #include "CryptoNoteCore/TransactionExtra.h"
+
+// http://stackoverflow.com/questions/2941491/compare-versions-as-strings/2941895#2941895
+class Version
+{
+    // An internal utility structure just used to make the std::copy in the constructor easy to write.
+    struct VersionDigit
+    {
+        int value;
+        operator int() const {return value;}
+    };
+    friend std::istream& operator>>(std::istream& str, Version::VersionDigit& digit);
+    public:
+        Version(std::string const& versionStr)
+        {
+            // To Make processing easier in VersionDigit prepend a '.'
+            std::stringstream   versionStream(std::string(".") + versionStr);
+
+            // Copy all parts of the version number into the version Info vector.
+            std::copy(  std::istream_iterator<VersionDigit>(versionStream),
+                        std::istream_iterator<VersionDigit>(),
+                        std::back_inserter(versionInfo)
+                     );
+        }
+
+        // Test if two version numbers are the same.
+        bool operator<(Version const& rhs) const
+        {
+            return std::lexicographical_compare(versionInfo.begin(), versionInfo.end(), rhs.versionInfo.begin(), rhs.versionInfo.end());
+        }
+
+    private:
+        std::vector<int>    versionInfo;
+};
+
+// Read a single digit from the version.
+std::istream& operator>>(std::istream& str, Version::VersionDigit& digit)
+{
+    str.get();
+    str >> digit.value;
+    return str;
+}
 
 namespace WalletGui {
 
@@ -384,12 +431,6 @@ void CryptoNoteAdapter::initAutoConnection() {
   m_nodeAdapter->init();
 }
 
-/*void CryptoNoteAdapter::initInProcessNode() {
-  m_nodeAdapter = new InProcessNodeAdapter(m_currency, m_coreLogger, m_walletLogger, this);
-  m_nodeAdapter->addObserver(this);
-  m_nodeAdapter->init();
-}*/
-
 void CryptoNoteAdapter::initLocalRpcNode() {
   WalletLogger::info(tr("[CryptoNote wrapper] Starting with local daemon: 127.0.0.1:%1").arg(CryptoNote::RPC_DEFAULT_PORT));
   m_nodeAdapter = new ProxyRpcNodeAdapter(m_currency, m_coreLogger, m_walletLogger, "127.0.0.1", m_localDaemodPort, this);
@@ -407,19 +448,25 @@ void CryptoNoteAdapter::initRemoteRpcNode() {
 
 void CryptoNoteAdapter::onLocalDaemonNotFound() {
   WalletLogger::info(tr("[CryptoNote wrapper] Daemon on 127.0.0.1:%1 not found").arg(CryptoNote::RPC_DEFAULT_PORT));
+
+  Q_EMIT connectingToNode();
+
   killTimer(m_autoConnectionTimerId);
   m_autoConnectionTimerId = -1;
   QObject* nodeAdapter = dynamic_cast<QObject*>(m_nodeAdapter);
   m_nodeAdapter->deinit();
   nodeAdapter->deleteLater();
   m_nodeAdapter = nullptr;
-  //initInProcessNode();
   // check if the node is available first
   if (isNodeAvailable(m_remoteDaemonUrl)) {
+    initRemoteRpcNode();
+  } else {
+    findNodeAttempts = 0;
+    if(getWorkingRandomNode()) {
       initRemoteRpcNode();
-  } else{
-      getWorkingRandomNode();
-      initRemoteRpcNode();
+    } else {
+      WalletLogger::info(tr("[CryptoNote wrapper] Could not connect to any node!!!"));
+    }
   }
 }
 
@@ -435,42 +482,71 @@ void CryptoNoteAdapter::configureLogger(Logging::LoggerManager& _logger, const Q
   _logger.configure(loggerConfiguration);
 }
 
-bool CryptoNoteAdapter::isNodeAvailable(QUrl _node) {
-    WalletLogger::info(tr("[CryptoNote wrapper] Checking remote node: %1:%2 ...").arg(_node.host()).arg(_node.port()));
-    try {
-        CryptoNote::COMMAND_RPC_GET_INFO::request req;
-        CryptoNote::COMMAND_RPC_GET_INFO::response res;
-        CryptoNote::HttpClient httpClient(m_dispatcher, _node.host().toStdString(), _node.port());
-        CryptoNote::invokeJsonCommand(httpClient, "/getinfo", req, res);
-        std::string err = interpret_rpc_response(true, res.status);
-      if (err.empty())
-        return true;
-      else {
-        WalletLogger::info(tr("[CryptoNote wrapper] Failed to invoke request: %1").arg(QString::fromStdString(err)));
-        return 0;
-      }}
-        catch (const CryptoNote::ConnectException&) {
-        WalletLogger::info(tr("[CryptoNote wrapper] Failed to connect to node."));
-        return 0;
-      } catch (const std::exception& e) {
-        WalletLogger::info(tr("[CryptoNote wrapper] Failed to invoke rpc method: %1").arg(e.what()));
-        return 0;
-      }
+bool CryptoNoteAdapter::getNodeInfo(QUrl _node, CryptoNote::COMMAND_RPC_GET_INFO::response& info) {
+  CryptoNote::COMMAND_RPC_GET_INFO::request req;
+  CryptoNote::COMMAND_RPC_GET_INFO::response res;
+  try {
+    CryptoNote::HttpClient httpClient(m_dispatcher, _node.host().toStdString(), _node.port());
+    CryptoNote::invokeJsonCommand(httpClient, "/getinfo", req, res);
+    std::string err = interpret_rpc_response(true, res.status);
+    if (err.empty()) {
+      info = res;
+      return true;
+    } else {
+      WalletLogger::info(tr("[CryptoNote wrapper] Failed to invoke request: %1").arg(QString::fromStdString(err)));
+      return false;
+    }
+  }
+  catch (const CryptoNote::ConnectException&) {
+    WalletLogger::info(tr("[CryptoNote wrapper] Failed to connect to node."));
+    return false;
+  } catch (const std::exception& e) {
+    WalletLogger::info(tr("[CryptoNote wrapper] Failed to invoke rpc method: %1").arg(e.what()));
+    return false;
+  }
 }
 
-void CryptoNoteAdapter::getWorkingRandomNode(){
-    QUrl random_node = Settings::instance().getRandomNode();
-    if(isNodeAvailable(random_node)) {
-        m_remoteDaemonUrl = random_node;
-        Settings::instance().setRemoteRpcUrl(random_node);
-    } else {
-        if (findNodeAttempts > 10) {
-            WalletLogger::info(tr("[CryptoNote wrapper] Failed to find any working node after 10 attempts."));
-        } else {
-            findNodeAttempts++;
-            getWorkingRandomNode();
+bool CryptoNoteAdapter::isNodeAvailable(QUrl _node) {
+  WalletLogger::info(tr("[CryptoNote wrapper] Checking remote node: %1:%2 ...").arg(_node.host()).arg(_node.port()));
+  CryptoNote::COMMAND_RPC_GET_INFO::response res;
+  if (getNodeInfo(_node, res)) {
+    std::string err = interpret_rpc_response(true, res.status);
+
+    // check if node is up-to-date
+    WalletLogger::info(tr("[CryptoNote wrapper] Checking remote node %1:%2 version").arg(_node.host()).arg(_node.port()));
+    Version neededVersion = Settings::instance().getVersion().toStdString();
+    if (err.empty()) {
+      std::string ver = res.version;
+      if (!ver.empty()) {
+        ver.erase (ver.begin()+5, ver.end());
+        Version nodeVersion = ver;
+        if(neededVersion < nodeVersion) {
+          WalletLogger::info(tr("[CryptoNote wrapper] Remote node %1:%2 version %3 is OK").arg(_node.host()).arg(_node.port()).arg(QString::fromStdString(res.version)));
+          return true;
         }
+      }
+      WalletLogger::info(tr("[CryptoNote wrapper] Remote node %1:%2 version %3 is outdated.").arg(_node.host()).arg(_node.port()).arg(QString::fromStdString(res.version)));
+      return false;
     }
+  }
+  return false;
+}
+
+bool CryptoNoteAdapter::getWorkingRandomNode(){
+  QUrl random_node = Settings::instance().getRandomNode();
+  if(isNodeAvailable(random_node)) {
+    m_remoteDaemonUrl = random_node;
+    Settings::instance().setRemoteRpcUrl(random_node);
+    return true;
+  } else {
+    if (findNodeAttempts > 10) {
+      WalletLogger::info(tr("[CryptoNote wrapper] Failed to find any working node after 10 attempts."));
+      return false;
+    } else {
+      findNodeAttempts++;
+      getWorkingRandomNode();
+    }
+  }
 }
 
 }
