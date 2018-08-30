@@ -34,6 +34,7 @@ namespace WalletGui {
 
 const char CORE_LOG_FILE_NAME[] = "core.log";
 const char WALLET_LOG_FILE_NAME[] = "wallet.log";
+const char GUI_LOG_FILE_NAME[] = "walletgui.log";
 
 class INodeAdapter;
 
@@ -65,7 +66,7 @@ public:
   virtual void addObserver(ICryptoNoteAdapterObserver* _observer) override;
   virtual void removeObserver(ICryptoNoteAdapterObserver* _observer) override;
 
-  bool getNodeInfo(QUrl _node, CryptoNote::COMMAND_RPC_GET_INFO::response& info);
+  virtual bool getNodeInfo(QUrl _node, CryptoNote::COMMAND_RPC_GET_INFO::response& info);
   bool isNodeAvailable(QUrl _node);
   bool isNodeUpToDate(std::string _our, std::string _node);
   bool getWorkingRandomNode();
@@ -110,6 +111,7 @@ private:
 Q_SIGNALS:
   void initCompletedSignal(int _initStatus);
   void deinitCompletedSignal();
+  void connectingToNode();
 };
 
 }

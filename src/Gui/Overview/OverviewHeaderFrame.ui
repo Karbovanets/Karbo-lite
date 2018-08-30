@@ -324,7 +324,7 @@
          </size>
         </property>
         <property name="text">
-         <string>Node</string>
+         <string>URL</string>
         </property>
         <property name="indent">
          <number>0</number>
@@ -338,6 +338,9 @@
         </property>
         <property name="indent">
          <number>0</number>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
         </property>
        </widget>
       </item>
@@ -379,7 +382,7 @@
          <string>TextLabel</string>
         </property>
         <property name="indent">
-         <number>2</number>
+         <number>0</number>
         </property>
        </widget>
       </item>
@@ -400,16 +403,25 @@
        </spacer>
       </item>
       <item row="5" column="2">
-       <widget class="WalletGui::WalletSmallBlackTextLabel" name="label_10">
+       <widget class="WalletGui::WalletSmallBlackTextLabel" name="m_overviewNodeVersionTextLabel">
         <property name="text">
          <string/>
+        </property>
+        <property name="indent">
+         <number>0</number>
         </property>
        </widget>
       </item>
       <item row="5" column="3">
-       <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewBlockTimestamp">
+       <widget class="WalletGui::WalletSmallBlackTextLabel" name="m_overviewNodeVersionLabel">
         <property name="text">
          <string/>
+        </property>
+        <property name="indent">
+         <number>0</number>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
         </property>
        </widget>
       </item>

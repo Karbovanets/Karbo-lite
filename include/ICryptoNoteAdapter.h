@@ -52,6 +52,8 @@ public:
   virtual QString extractPaymentIdFromExtra(const std::string& _extra) const = 0;
   virtual void addObserver(ICryptoNoteAdapterObserver* _observer) = 0;
   virtual void removeObserver(ICryptoNoteAdapterObserver* _observer) = 0;
+
+  virtual bool getNodeInfo(QUrl _node, CryptoNote::COMMAND_RPC_GET_INFO::response& info) = 0;
 };
 
 }

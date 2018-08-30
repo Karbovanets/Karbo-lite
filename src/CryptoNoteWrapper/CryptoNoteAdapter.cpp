@@ -448,6 +448,9 @@ void CryptoNoteAdapter::initRemoteRpcNode() {
 
 void CryptoNoteAdapter::onLocalDaemonNotFound() {
   WalletLogger::info(tr("[CryptoNote wrapper] Daemon on 127.0.0.1:%1 not found").arg(CryptoNote::RPC_DEFAULT_PORT));
+
+  Q_EMIT connectingToNode();
+
   killTimer(m_autoConnectionTimerId);
   m_autoConnectionTimerId = -1;
   QObject* nodeAdapter = dynamic_cast<QObject*>(m_nodeAdapter);
