@@ -66,21 +66,25 @@ void SignMessageDialog::verifyMessage() {
     Crypto::Hash hash;
     Crypto::cn_fast_hash(message.data(), message.size(), hash);
     const size_t header_len = strlen("SigV1");
-    if (!signature.size() < header_len || signature.substr(0, header_len) == "SigV1") {
-      std::string decoded;
-      Crypto::Signature s;
-      if (Tools::Base58::decode(signature.substr(header_len), decoded) || sizeof(s) == decoded.size()) {
-        memcpy(&s, decoded.data(), sizeof(s));
-        bool valid = Crypto::check_signature(hash, acc.spendPublicKey, s);
-        if (valid) {
-          m_ui->m_verificationResult->setText(tr("Signature is valid"));
-          m_ui->m_verificationResult->setStyleSheet("QLabel { color : green; }");
-        } else {
-          m_ui->m_verificationResult->setText(tr("Signature is invalid!"));
-          m_ui->m_verificationResult->setStyleSheet("QLabel { color : red; }");
-        }
+    std::string decoded;
+    Crypto::Signature s;
+    if (!signature.size() < header_len && signature.substr(0, header_len) == "SigV1" &&
+      Tools::Base58::decode(signature.substr(header_len), decoded) && sizeof(s) == decoded.size()) {
+      memcpy(&s, decoded.data(), sizeof(s));
+      if (Crypto::check_signature(hash, acc.spendPublicKey, s)) {
+        m_ui->m_verificationResult->setText(tr("Signature is valid"));
+        m_ui->m_verificationResult->setStyleSheet("QLabel { color : green; }");
+      } else {
+        m_ui->m_verificationResult->setText(tr("Signature is invalid!"));
+        m_ui->m_verificationResult->setStyleSheet("QLabel { color : red; }");
       }
+    } else {
+      m_ui->m_verificationResult->setText(tr("Signature is invalid!"));
+      m_ui->m_verificationResult->setStyleSheet("QLabel { color : red; }");
     }
+  } else {
+    m_ui->m_verificationResult->setText(tr("Address is invalid!"));
+    m_ui->m_verificationResult->setStyleSheet("QLabel { color : red; }");
   }
 }
 
