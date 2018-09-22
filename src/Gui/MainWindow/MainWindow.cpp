@@ -44,6 +44,7 @@
 #include "Gui/Common/QRCodeDialog.h"
 #include "Gui/Common/MnemonicDialog.h"
 #include "Gui/Common/OpenUriDialog.h"
+#include "Gui/Common/SignMessageDialog.h"
 #include "ICryptoNoteAdapter.h"
 #include "INodeAdapter.h"
 #include "IWalletAdapter.h"
@@ -405,6 +406,8 @@ void MainWindow::setOpenedState() {
   m_ui->m_changePasswordAction->setEnabled(walletAdapter->isEncrypted());
   m_ui->m_openPaymentRequestAction->setEnabled(true);
   m_ui->m_createPaymentRequestAction->setEnabled(true);
+  m_ui->m_signMessageAction->setEnabled(true);
+  m_ui->m_verifyMessageAction->setEnabled(true);
 
   m_ui->m_noWalletFrame->hide();
   m_ui->m_overviewFrame->show();
@@ -431,6 +434,8 @@ void MainWindow::setClosedState() {
   m_ui->m_showSeedAction->setEnabled(false);
   m_ui->m_openPaymentRequestAction->setEnabled(false);
   m_ui->m_createPaymentRequestAction->setEnabled(false);
+  m_ui->m_signMessageAction->setEnabled(false);
+  m_ui->m_verifyMessageAction->setEnabled(false);
 
   m_ui->m_overviewFrame->hide();
   m_ui->m_sendFrame->hide();
@@ -771,6 +776,22 @@ void MainWindow::encryptWallet() {
     // create new encrypted backup
     walletAdapter->exportWallet(fileName,false,CryptoNote::WalletSaveLevel::SAVE_KEYS_ONLY,true);
   }
+}
+
+void MainWindow::signMessage() {
+  AccountKeys accountKeys = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAccountKeys(0);
+  QString address = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAddress(0);
+  SignMessageDialog dlg(accountKeys, address, this);
+  dlg.sign();
+  dlg.exec();
+}
+
+void MainWindow::verifyMessage() {
+  AccountKeys accountKeys = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAccountKeys(0);
+  QString address = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAddress(0);
+  SignMessageDialog dlg(accountKeys, address, this);
+  dlg.verify();
+  dlg.exec();
 }
 
 void MainWindow::exportKey() {

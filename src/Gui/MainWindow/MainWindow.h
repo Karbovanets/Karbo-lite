@@ -143,6 +143,8 @@ private:
   Q_SLOT void showMnemonicSeed();
   Q_SLOT void restoreFromMnemonicSeed();
   Q_SLOT void openPaymentRequestClicked();
+  Q_SLOT void signMessage();
+  Q_SLOT void verifyMessage();
 
 Q_SIGNALS:
   void reinitCryptoNoteAdapterSignal();

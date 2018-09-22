@@ -69,6 +69,8 @@ public:
     QAction *m_openPaymentRequestAction;
     QAction *m_createPaymentRequestAction;
     QAction *m_manualFeeAction;
+    QAction *m_signMessageAction;
+    QAction *m_verifyMessageAction;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout_2;
     QFrame *m_headerFrame;
@@ -215,6 +217,10 @@ public:
         m_manualFeeAction = new QAction(MainWindow);
         m_manualFeeAction->setObjectName(QStringLiteral("m_manualFeeAction"));
         m_manualFeeAction->setCheckable(true);
+        m_signMessageAction = new QAction(MainWindow);
+        m_signMessageAction->setObjectName(QStringLiteral("m_signMessageAction"));
+        m_verifyMessageAction = new QAction(MainWindow);
+        m_verifyMessageAction->setObjectName(QStringLiteral("m_verifyMessageAction"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         verticalLayout_2 = new QVBoxLayout(centralwidget);
@@ -602,6 +608,9 @@ public:
         menuFile->addAction(m_closeWalletAction);
         menuFile->addAction(m_recentWalletsAction);
         menuFile->addSeparator();
+        menuFile->addAction(m_signMessageAction);
+        menuFile->addAction(m_verifyMessageAction);
+        menuFile->addSeparator();
         menuFile->addAction(m_exitAction);
         menuSettings->addAction(m_autostartAction);
         menuSettings->addAction(m_minimizeToTrayAction);
@@ -664,6 +673,8 @@ public:
         QObject::connect(m_receiveButton, SIGNAL(toggled(bool)), m_receiveFrame, SLOT(setVisible(bool)));
         QObject::connect(m_createPaymentRequestAction, SIGNAL(triggered()), m_receiveButton, SLOT(toggle()));
         QObject::connect(m_manualFeeAction, SIGNAL(triggered(bool)), m_sendFrame, SLOT(enableManualFee(bool)));
+        QObject::connect(m_signMessageAction, SIGNAL(triggered()), MainWindow, SLOT(signMessage()));
+        QObject::connect(m_verifyMessageAction, SIGNAL(triggered()), MainWindow, SLOT(verifyMessage()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -713,6 +724,8 @@ public:
         m_openPaymentRequestAction->setText(QApplication::translate("MainWindow", "Open payment request", nullptr));
         m_createPaymentRequestAction->setText(QApplication::translate("MainWindow", "Create payment request", nullptr));
         m_manualFeeAction->setText(QApplication::translate("MainWindow", "Enable manual fee override", nullptr));
+        m_signMessageAction->setText(QApplication::translate("MainWindow", "Sign message", nullptr));
+        m_verifyMessageAction->setText(QApplication::translate("MainWindow", "Verify message", nullptr));
         m_noWalletLabel->setText(QApplication::translate("MainWindow", "No active wallet", nullptr));
         m_walletLabel->setText(QApplication::translate("MainWindow", "Your wallet:", nullptr));
 #ifndef QT_NO_TOOLTIP

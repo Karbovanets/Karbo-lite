@@ -910,6 +910,9 @@
     <addaction name="m_closeWalletAction"/>
     <addaction name="m_recentWalletsAction"/>
     <addaction name="separator"/>
+    <addaction name="m_signMessageAction"/>
+    <addaction name="m_verifyMessageAction"/>
+    <addaction name="separator"/>
     <addaction name="m_exitAction"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
@@ -1157,6 +1160,16 @@
    </property>
    <property name="text">
     <string>Enable manual fee override</string>
+   </property>
+  </action>
+  <action name="m_signMessageAction">
+   <property name="text">
+    <string>Sign message</string>
+   </property>
+  </action>
+  <action name="m_verifyMessageAction">
+   <property name="text">
+    <string>Verify message</string>
    </property>
   </action>
  </widget>
@@ -1752,6 +1765,38 @@
     <hint type="destinationlabel">
      <x>636</x>
      <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_signMessageAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>signMessage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>549</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_verifyMessageAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>verifyMessage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>549</x>
+     <y>349</y>
     </hint>
    </hints>
   </connection>

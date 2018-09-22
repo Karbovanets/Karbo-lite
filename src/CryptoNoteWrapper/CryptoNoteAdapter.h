@@ -65,11 +65,11 @@ public:
   virtual QString extractPaymentIdFromExtra(const std::string& _extra) const override;
   virtual void addObserver(ICryptoNoteAdapterObserver* _observer) override;
   virtual void removeObserver(ICryptoNoteAdapterObserver* _observer) override;
-
   virtual bool getNodeInfo(QUrl _node, CryptoNote::COMMAND_RPC_GET_INFO::response& info);
   bool isNodeAvailable(QUrl _node);
   bool isNodeUpToDate(std::string _our, std::string _node);
   bool getWorkingRandomNode();
+  bool parseAccountAddressString(QString _address, CryptoNote::AccountPublicAddress _internalAddress);
 
   // INodeAdapterObserver
   Q_SLOT virtual void initCompleted(int _status) override;

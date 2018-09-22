@@ -323,6 +323,10 @@ QString CryptoNoteAdapter::extractPaymentIdFromExtra(const std::string& _extra) 
   return QByteArray();
 }
 
+bool CryptoNoteAdapter::parseAccountAddressString(QString _address, CryptoNote::AccountPublicAddress _internalAddress) {
+  return m_currency.parseAccountAddressString(_address.toStdString(), _internalAddress);
+}
+
 void CryptoNoteAdapter::addObserver(ICryptoNoteAdapterObserver* _observer) {
   QObject* observer = dynamic_cast<QObject*>(_observer);
   connect(this, SIGNAL(initCompletedSignal(int)), observer, SLOT(cryptoNoteAdapterInitCompleted(int)));
