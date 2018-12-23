@@ -179,8 +179,13 @@ QByteArray WalletGreenAdapter::getUserData() const {
 }
 
 Crypto::SecretKey WalletGreenAdapter::getTransactionSecretKey(quintptr _transactionIndex) const {
-    Q_ASSERT(m_worker != nullptr);
-    return m_worker->getTransactionSecretKey(_transactionIndex);
+  Q_ASSERT(m_worker != nullptr);
+  return m_worker->getTransactionSecretKey(_transactionIndex);
+}
+
+QString WalletGreenAdapter::getBalanceProof(quint64& _amount, QString& _message) const {
+  Q_ASSERT(m_worker != nullptr);
+  return m_worker->getBalanceProof(_amount, _message);
 }
 
 IWalletAdapter::SendTransactionStatus WalletGreenAdapter::sendTransaction(const CryptoNote::TransactionParameters& _transactionParameters) {

@@ -324,7 +324,7 @@ QString CryptoNoteAdapter::extractPaymentIdFromExtra(const std::string& _extra) 
   return QByteArray();
 }
 
-bool CryptoNoteAdapter::parseAccountAddressString(QString _address, CryptoNote::AccountPublicAddress _internalAddress) {
+bool CryptoNoteAdapter::parseAccountAddressString(QString& _address, CryptoNote::AccountPublicAddress& _internalAddress) {
   return m_currency.parseAccountAddressString(_address.toStdString(), _internalAddress);
 }
 

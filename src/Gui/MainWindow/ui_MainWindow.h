@@ -71,6 +71,7 @@ public:
     QAction *m_manualFeeAction;
     QAction *m_signMessageAction;
     QAction *m_verifyMessageAction;
+    QAction *m_getBalanceProofAction;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout_2;
     QFrame *m_headerFrame;
@@ -221,6 +222,8 @@ public:
         m_signMessageAction->setObjectName(QStringLiteral("m_signMessageAction"));
         m_verifyMessageAction = new QAction(MainWindow);
         m_verifyMessageAction->setObjectName(QStringLiteral("m_verifyMessageAction"));
+        m_getBalanceProofAction = new QAction(MainWindow);
+        m_getBalanceProofAction->setObjectName(QStringLiteral("m_getBalanceProofAction"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         verticalLayout_2 = new QVBoxLayout(centralwidget);
@@ -637,6 +640,8 @@ public:
         menuWallet->addAction(m_showSeedAction);
         menuWallet->addAction(m_importSeedAction);
         menuWallet->addSeparator();
+        menuWallet->addAction(m_getBalanceProofAction);
+        menuWallet->addSeparator();
         menuWallet->addAction(m_resetAction);
 
         retranslateUi(MainWindow);
@@ -675,6 +680,7 @@ public:
         QObject::connect(m_manualFeeAction, SIGNAL(triggered(bool)), m_sendFrame, SLOT(enableManualFee(bool)));
         QObject::connect(m_signMessageAction, SIGNAL(triggered()), MainWindow, SLOT(signMessage()));
         QObject::connect(m_verifyMessageAction, SIGNAL(triggered()), MainWindow, SLOT(verifyMessage()));
+        QObject::connect(m_getBalanceProofAction, SIGNAL(triggered()), MainWindow, SLOT(getBalanceProof()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -726,6 +732,7 @@ public:
         m_manualFeeAction->setText(QApplication::translate("MainWindow", "Enable manual fee override", nullptr));
         m_signMessageAction->setText(QApplication::translate("MainWindow", "Sign message", nullptr));
         m_verifyMessageAction->setText(QApplication::translate("MainWindow", "Verify message", nullptr));
+        m_getBalanceProofAction->setText(QApplication::translate("MainWindow", "Proof of balance", nullptr));
         m_noWalletLabel->setText(QApplication::translate("MainWindow", "No active wallet", nullptr));
         m_walletLabel->setText(QApplication::translate("MainWindow", "Your wallet:", nullptr));
 #ifndef QT_NO_TOOLTIP

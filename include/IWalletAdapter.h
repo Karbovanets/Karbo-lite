@@ -102,6 +102,7 @@ public:
   virtual bool getTransactionTransfer(quintptr _transactionIndex, quintptr _transferIndex, CryptoNote::WalletTransfer& _transfer) const = 0;
   virtual bool isFusionTransaction(quintptr _transactionIndex) const = 0;
   virtual QByteArray getUserData() const = 0;
+  virtual QString getBalanceProof(quint64& _amount, QString& _message) const = 0;
 
   virtual SendTransactionStatus sendTransaction(const CryptoNote::TransactionParameters& _transactionParameters) = 0;
   virtual bool createFusionTransaction(quint64 _threshold, quint64 _mixin, const QString& _destinationAddress) = 0;

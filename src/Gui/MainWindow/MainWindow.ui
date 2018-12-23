@@ -964,6 +964,8 @@
     <addaction name="m_showSeedAction"/>
     <addaction name="m_importSeedAction"/>
     <addaction name="separator"/>
+    <addaction name="m_getBalanceProofAction"/>
+    <addaction name="separator"/>
     <addaction name="m_resetAction"/>
    </widget>
    <addaction name="menuFile"/>
@@ -1170,6 +1172,11 @@
   <action name="m_verifyMessageAction">
    <property name="text">
     <string>Verify message</string>
+   </property>
+  </action>
+  <action name="m_getBalanceProofAction">
+   <property name="text">
+    <string>Proof of balance</string>
    </property>
   </action>
  </widget>
@@ -1800,6 +1807,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>m_getBalanceProofAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>getBalanceProof()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>549</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>createWallet()</slot>
@@ -1826,6 +1849,9 @@
   <slot>restoreFromMnemonicSeed()</slot>
   <slot>createNonDeterministicWallet()</slot>
   <slot>showQrCode()</slot>
+  <slot>signMessage()</slot>
+  <slot>verifyMessage()</slot>
+  <slot>getBalanceProof()</slot>
  </slots>
  <buttongroups>
   <buttongroup name="m_toolButtonGroup">

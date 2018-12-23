@@ -146,6 +146,7 @@ private:
   Q_SLOT void openPaymentRequestClicked();
   Q_SLOT void signMessage();
   Q_SLOT void verifyMessage();
+  Q_SLOT void getBalanceProof();
 
 Q_SIGNALS:
   void reinitCryptoNoteAdapterSignal();
