@@ -53,8 +53,9 @@ public:
   virtual QString extractPaymentIdFromExtra(const std::string& _extra) const = 0;
   virtual void addObserver(ICryptoNoteAdapterObserver* _observer) = 0;
   virtual void removeObserver(ICryptoNoteAdapterObserver* _observer) = 0;
-
+  virtual bool parseAccountAddressString(QString &_address, CryptoNote::AccountPublicAddress &_internalAddress) = 0;
   virtual bool getNodeInfo(QUrl _node, CryptoNote::COMMAND_RPC_GET_INFO::response& info) = 0;
+  virtual QString getTxProof(Crypto::Hash& txid, CryptoNote::AccountPublicAddress& address, Crypto::SecretKey& tx_key) = 0;
 };
 
 }

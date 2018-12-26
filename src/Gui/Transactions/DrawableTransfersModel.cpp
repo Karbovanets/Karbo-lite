@@ -145,6 +145,10 @@ QVariant DrawableTransfersModel::getDisplayRole(const QModelIndex& _index) const
     return address;
   }
 
+  if (_index.column() == TransfersModel::COLUMN_PROOF) {
+    return "";
+  }
+
   return mapToSource(_index).data();
 }
 

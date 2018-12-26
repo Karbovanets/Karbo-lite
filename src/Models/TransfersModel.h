@@ -31,11 +31,11 @@ class TransfersModel : public QAbstractItemModel {
 
 public:
   enum Columns {
-    COLUMN_ADDRESS = 0, COLUMN_AMOUNT
+    COLUMN_ADDRESS = 0, COLUMN_AMOUNT, COLUMN_PROOF
   };
 
   enum Roles {
-    ROLE_ADDRESS = Qt::UserRole, ROLE_AMOUNT, ROLE_TYPE, ROLE_ICON, ROLE_IS_DONATION_TRANSFER
+    ROLE_ADDRESS = Qt::UserRole, ROLE_AMOUNT, ROLE_PROOF, ROLE_TYPE, ROLE_ICON, ROLE_IS_DONATION_TRANSFER
   };
 
   TransfersModel(ICryptoNoteAdapter* _cryptoNoteAdapter, const QModelIndex& _transactionIndex, QObject* _parent);

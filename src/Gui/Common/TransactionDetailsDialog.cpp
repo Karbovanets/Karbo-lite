@@ -34,6 +34,8 @@
 #include "Style/Style.h"
 #include "ui_TransactionDetailsDialog.h"
 
+Q_DECLARE_METATYPE(QList<CryptoNote::WalletTransfer>)
+
 namespace WalletGui {
 
 namespace {
@@ -117,8 +119,11 @@ const char TRANSACTION_DETAILS_DIALOG_STYLE_SHEET_TEMPLATE[] =
   "WalletGui--TransactionDetailsDialog #m_transfersTab {"
     "background-color: #ffffff;"
     "border: none;"
-  "}";
+  "}"
 
+  "WalletGui--TransactionDetailsDialog #m_transfersView::item {"
+    "padding-right: 0px;"
+  "}";
 }
 
 TransactionDetailsDialog::TransactionDetailsDialog(ICryptoNoteAdapter* _cryptoNoteAdapter, QAbstractItemModel* _transactionsModel,
@@ -142,10 +147,13 @@ TransactionDetailsDialog::TransactionDetailsDialog(ICryptoNoteAdapter* _cryptoNo
   m_ui->m_transfersView->setModel(transfersModel);
   m_ui->m_transfersView->setHeader(new TransfersHeaderView(this));
   m_ui->m_transfersView->setItemDelegateForColumn(TransfersModel::COLUMN_ADDRESS, new CopyColumnDelegate(this));
+  //m_ui->m_transfersView->setItemDelegateForColumn(TransfersModel::COLUMN_PROOF, new CopyColumnDelegate(this));
   m_ui->m_transfersView->setItemDelegateForColumn(TransfersModel::COLUMN_AMOUNT, new TransactionsAmountDelegate(false, this));
   m_ui->m_transfersView->header()->setSectionResizeMode(TransfersModel::COLUMN_ADDRESS, QHeaderView::Stretch);
   m_ui->m_transfersView->header()->setSectionResizeMode(TransfersModel::COLUMN_AMOUNT, QHeaderView::ResizeToContents);
-  m_ui->m_transfersView->setCopyableColumnSet(QSet<int>() << TransfersModel::COLUMN_ADDRESS);
+  m_ui->m_transfersView->header()->setSectionResizeMode(TransfersModel::COLUMN_PROOF, QHeaderView::Fixed);
+  m_ui->m_transfersView->header()->resizeSection(TransfersModel::COLUMN_PROOF, 80);
+  m_ui->m_transfersView->setCopyableColumnSet(QSet<int>() << TransfersModel::COLUMN_ADDRESS << TransfersModel::COLUMN_PROOF);
   QString viewStyleSheet = m_ui->m_transfersView->styleSheet();
   for (int i = 0; i < transfersModel->rowCount(); ++i) {
     QModelIndex index = transfersModel->index(i, TransfersModel::COLUMN_ADDRESS);
@@ -185,7 +193,25 @@ void TransactionDetailsDialog::showEvent(QShowEvent* _event) {
 }
 
 void TransactionDetailsDialog::copyableItemClicked(const QModelIndex& _index) {
-  QApplication::clipboard()->setText(_index.data().toString());
+  if (_index.column() == TransfersModel::COLUMN_PROOF) {
+    QApplication::clipboard()->setText(getTxProof(_index));
+  } else {
+    QApplication::clipboard()->setText(_index.data().toString());
+  }
+}
+
+QString TransactionDetailsDialog::getTxProof(const QModelIndex& _index) const {
+  CryptoNote::WalletTransfer transfer = m_index.data(TransactionsModel::ROLE_TRANSFERS).
+          value<QList<CryptoNote::WalletTransfer>>()[_index.row()];
+  QString proof = "";
+  Crypto::Hash txHash;
+  Common::podFromHex(m_index.data(TransactionsModel::ROLE_HASH).toByteArray().toHex().toStdString(), txHash);
+  Crypto::SecretKey txKey = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getTransactionSecretKey(static_cast<size_t>(m_index.row()));
+  CryptoNote::AccountPublicAddress addr;
+  if (m_cryptoNoteAdapter->parseAccountAddressString(QString::fromStdString(transfer.address), addr) && transfer.amount > 0 && txKey != CryptoNote::NULL_SECRET_KEY) {
+    proof = m_cryptoNoteAdapter->getTxProof(txHash, addr, txKey);
+  }
+  return proof;
 }
 
 }

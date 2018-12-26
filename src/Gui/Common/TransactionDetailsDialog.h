@@ -48,6 +48,7 @@ private:
   QPersistentModelIndex m_index;
 
   void copyableItemClicked(const QModelIndex& _index);
+  QString getTxProof(const QModelIndex& _index) const;
 };
 
 }
