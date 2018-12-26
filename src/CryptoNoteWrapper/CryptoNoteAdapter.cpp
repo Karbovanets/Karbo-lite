@@ -209,7 +209,7 @@ QString CryptoNoteAdapter::formatAmount(qint64 _amount) const {
   result.insert(dotPos, ".");
   for (qint32 pos = dotPos - 3; pos > 0; pos -= 3) {
     if (result[pos - 1].isDigit()) {
-      result.insert(pos, ',');
+      //result.insert(pos, ',');
     }
   }
 
@@ -235,7 +235,7 @@ QString CryptoNoteAdapter::formatUnsignedAmount(quint64 _amount) const {
   result.insert(dotPos, ".");
   for (qint32 pos = dotPos - 3; pos > 0; pos -= 3) {
     if (result[pos - 1].isDigit()) {
-      result.insert(pos, ',');
+      //result.insert(pos, ',');
     }
   }
 
