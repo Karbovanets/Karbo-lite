@@ -15,6 +15,7 @@
 #include "Common/StringTools.h"
 #include "Settings/Settings.h"
 #include "Style/Style.h"
+#include "Models/WalletStateModel.h"
 
 #include "ui_BalanceProofDialog.h"
 
@@ -25,8 +26,8 @@ BalanceProofDialog::BalanceProofDialog(ICryptoNoteAdapter* _cryptoNoteAdapter, Q
     m_ui(new Ui::BalanceProofDialog), m_cryptoNoteAdapter(_cryptoNoteAdapter) {
   m_ui->setupUi(this);
 
-  //connect(m_cryptoNoteAdapter, SIGNAL(balanceUpdatedSignal(quint64, quint64)), this, SLOT(walletBalanceUpdated(quint64, quint64)));
-  //connect(&m_cryptoNoteAdapter, &WalletGreenAdapter::balanceUpdatedSignal, this, &BalanceProofDialog::walletBalanceUpdated, Qt::QueuedConnection);
+  m_walletStateModel = new WalletStateModel(m_cryptoNoteAdapter, this);
+  connect(m_walletStateModel, SIGNAL(balanceUpdatedSignal(quint64, quint64)), this, SLOT(balanceUpdated(quint64, quint64)));
   m_amount = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getActualBalance();
   m_ui->m_amountSpin->setSuffix(" " + m_cryptoNoteAdapter->getCurrencyTicker().toUpper());
   m_ui->m_amountSpin->setValue(m_cryptoNoteAdapter->formatAmount(m_amount).toDouble());
@@ -44,15 +45,20 @@ void BalanceProofDialog::walletBalanceUpdated(quint64 _actualBalance, quint64 _p
 }
 
 void BalanceProofDialog::genProof() {
+  m_message = m_ui->m_messageEdit->toPlainText().toUtf8().constData();
   m_amount = static_cast<quint64>(m_cryptoNoteAdapter->parseAmount(m_ui->m_amountSpin->cleanText()));
   quint64 balance = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getActualBalance();
-  if (m_amount > balance) {
+  if (balance != 0 && (m_amount > balance || m_amount == 0)) {
       m_amount = balance;
-      m_ui->m_amountSpin->setValue(m_cryptoNoteAdapter->formatAmount(m_amount).toDouble());
   }
-  m_message = m_ui->m_messageEdit->toPlainText().toUtf8().constData();
-  m_proof = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getBalanceProof(m_amount, m_message);
-  m_ui->m_signatureEdit->setText(m_proof);
+  if (m_amount > 0) {
+    m_ui->m_amountSpin->setValue(m_cryptoNoteAdapter->formatAmount(m_amount).toDouble());
+    m_proof = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getBalanceProof(m_amount, m_message);
+    m_ui->m_signatureEdit->setText(m_proof);
+  } else {
+    m_ui->m_amountSpin->setValue(0);
+    m_ui->m_signatureEdit->setText("");
+  }
 }
 
 void BalanceProofDialog::copyProof() {
@@ -69,6 +75,13 @@ void BalanceProofDialog::saveProof() {
       f.close();
     }
   }
+}
+
+void BalanceProofDialog::balanceUpdated(quint64 _actualBalance, quint64 _pendingBalance) {
+  if (_actualBalance == 0) {
+     m_amount = 0;
+  }
+  genProof();
 }
 
 }

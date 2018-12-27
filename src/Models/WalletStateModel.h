@@ -84,6 +84,11 @@ private:
 
   QVariant getDisplayRole(const QModelIndex& _index) const;
   QVariant getUserRoleRole(const QModelIndex& _index, int _role) const;
+
+Q_SIGNALS:
+  void synchronizationCompletedSignal();
+  void balanceUpdatedSignal(quint64 _actualBalance, quint64 _pendingBalance);
+
 };
 
 }

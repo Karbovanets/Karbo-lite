@@ -7,6 +7,8 @@
 #include "IWalletAdapter.h"
 #include "ICryptoNoteAdapter.h"
 
+class QAbstractItemModel;
+
 namespace Ui {
 class BalanceProofDialog;
 }
@@ -46,9 +48,11 @@ private:
     Q_SLOT void genProof();
     Q_SLOT void copyProof();
     Q_SLOT void saveProof();
+    Q_SLOT void balanceUpdated(quint64 _actualBalance, quint64 _pendingBalance);
 
     QScopedPointer<Ui::BalanceProofDialog> m_ui;
     ICryptoNoteAdapter* m_cryptoNoteAdapter;
+    QAbstractItemModel* m_walletStateModel;
 };
 
 }

@@ -169,6 +169,7 @@ void WalletStateModel::synchronizationCompleted() {
   m_isSynchronized = (m_currentHeight == m_totalHeight);
   Q_EMIT dataChanged(index(0, COLUMN_ABOUT_TO_BE_SYNCHRONIZED), index(0, COLUMN_ABOUT_TO_BE_SYNCHRONIZED));
   Q_EMIT dataChanged(index(0, COLUMN_IS_SYNCHRONIZED), index(0, COLUMN_IS_SYNCHRONIZED));
+  Q_EMIT synchronizationCompletedSignal();
 }
 
 void WalletStateModel::balanceUpdated(quint64 _actualBalance, quint64 _pendingBalance) {
@@ -177,6 +178,7 @@ void WalletStateModel::balanceUpdated(quint64 _actualBalance, quint64 _pendingBa
   m_totalBalance = m_actualBalance + m_pendingBalance;
   m_totalShortBalance = m_cryptoNoteAdapter->parseAmount(m_cryptoNoteAdapter->formatAmountToShort(m_totalBalance));
   Q_EMIT dataChanged(index(0, 0), index(0, columnCount() - 1));
+  Q_EMIT balanceUpdatedSignal(_actualBalance, _pendingBalance);
 }
 
 void WalletStateModel::externalTransactionCreated(quintptr _transactionId, const FullTransactionInfo& _transaction) {

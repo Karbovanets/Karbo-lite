@@ -224,6 +224,8 @@ MainWindow::MainWindow(ICryptoNoteAdapter* _cryptoNoteAdapter, IAddressBookManag
   connect(m_addRecipientAction, &QAction::triggered, this, &MainWindow::addRecipientTriggered);
   connect(m_ui->m_exitAction, &QAction::triggered, qApp, &QApplication::quit);
   connect(qApp, &QGuiApplication::commitDataRequest, this, &MainWindow::commitData);
+  connect(m_walletStateModel, SIGNAL(synchronizationCompletedSignal()), this, SLOT(synchronizationCompleted()));
+  connect(m_walletStateModel, SIGNAL(balanceUpdatedSignal(quint64, quint64)), this, SLOT(balanceUpdated(quint64, quint64)));
 }
 
 MainWindow::~MainWindow() {
@@ -304,11 +306,15 @@ void MainWindow::synchronizationProgressUpdated(quint32 _current, quint32 _total
 
 void MainWindow::synchronizationCompleted() {
   m_ui->m_syncProgress->setValue(m_ui->m_syncProgress->maximum());
-  m_ui->m_getBalanceProofAction->setEnabled(true);
+  if (m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getActualBalance() > 0) {
+    m_ui->m_getBalanceProofAction->setEnabled(true);
+  }
 }
 
 void MainWindow::balanceUpdated(quint64 _actualBalance, quint64 _pendingBalance) {
-  // Do nothing
+  if (_actualBalance == 0) {
+    m_ui->m_getBalanceProofAction->setEnabled(false);
+  }
 }
 
 void MainWindow::externalTransactionCreated(quintptr _transactionId, const FullTransactionInfo& _transaction) {
@@ -478,6 +484,7 @@ void MainWindow::walletStateModelDataChanged(const QModelIndex& _topLeft, const 
       //m_ui->m_balanceLabel->setCursor(Qt::ArrowCursor);
       //m_ui->m_balanceLabel->removeEventFilter(this);
       //m_ui->m_balanceLabel->setToolTip(QString());
+      //m_ui->m_getBalanceProofAction->setEnabled(true);
   } else {
       //m_syncMovie->stop();
       //m_ui->m_balanceLabel->setMovie(nullptr);
