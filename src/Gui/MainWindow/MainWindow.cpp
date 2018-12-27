@@ -300,6 +300,8 @@ void MainWindow::synchronizationProgressUpdated(quint32 _current, quint32 _total
     return;
   }
 
+  m_ui->m_getBalanceProofAction->setEnabled(false);
+
   qreal value = static_cast<qreal>(_current) / _total;
   m_ui->m_syncProgress->setValue(value * m_ui->m_syncProgress->maximum());
 }
@@ -484,7 +486,7 @@ void MainWindow::walletStateModelDataChanged(const QModelIndex& _topLeft, const 
       //m_ui->m_balanceLabel->setCursor(Qt::ArrowCursor);
       //m_ui->m_balanceLabel->removeEventFilter(this);
       //m_ui->m_balanceLabel->setToolTip(QString());
-      //m_ui->m_getBalanceProofAction->setEnabled(true);
+      m_ui->m_getBalanceProofAction->setEnabled(true);
   } else {
       //m_syncMovie->stop();
       //m_ui->m_balanceLabel->setMovie(nullptr);
