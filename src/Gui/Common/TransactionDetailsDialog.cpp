@@ -207,8 +207,9 @@ QString TransactionDetailsDialog::getTxProof(const QModelIndex& _index) const {
   Crypto::Hash txHash;
   Common::podFromHex(m_index.data(TransactionsModel::ROLE_HASH).toByteArray().toHex().toStdString(), txHash);
   Crypto::SecretKey txKey = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getTransactionSecretKey(static_cast<size_t>(m_index.row()));
+  QString address_str = QString::fromStdString(transfer.address);
   CryptoNote::AccountPublicAddress addr;
-  if (m_cryptoNoteAdapter->parseAccountAddressString(QString::fromStdString(transfer.address), addr) && transfer.amount > 0 && txKey != CryptoNote::NULL_SECRET_KEY) {
+  if (m_cryptoNoteAdapter->parseAccountAddressString(address_str, addr) && transfer.amount > 0 && txKey != CryptoNote::NULL_SECRET_KEY) {
     proof = m_cryptoNoteAdapter->getTxProof(txHash, addr, txKey);
   }
   return proof;
