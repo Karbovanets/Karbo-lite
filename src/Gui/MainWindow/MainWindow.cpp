@@ -304,6 +304,7 @@ void MainWindow::synchronizationProgressUpdated(quint32 _current, quint32 _total
 
 void MainWindow::synchronizationCompleted() {
   m_ui->m_syncProgress->setValue(m_ui->m_syncProgress->maximum());
+  m_ui->m_getBalanceProofAction->setEnabled(true);
 }
 
 void MainWindow::balanceUpdated(quint64 _actualBalance, quint64 _pendingBalance) {
@@ -410,7 +411,6 @@ void MainWindow::setOpenedState() {
   m_ui->m_createPaymentRequestAction->setEnabled(true);
   m_ui->m_signMessageAction->setEnabled(true);
   m_ui->m_verifyMessageAction->setEnabled(true);
-  m_ui->m_getBalanceProofAction->setEnabled(true);
 
   m_ui->m_noWalletFrame->hide();
   m_ui->m_overviewFrame->show();
@@ -486,6 +486,7 @@ void MainWindow::walletStateModelDataChanged(const QModelIndex& _topLeft, const 
       //m_ui->m_balanceLabel->setCursor(Qt::PointingHandCursor);
       //m_ui->m_balanceLabel->installEventFilter(this);
       //m_ui->m_balanceLabel->setToolTip(tr("Click to copy"));
+      m_ui->m_getBalanceProofAction->setEnabled(false);
     }
   }
 }
