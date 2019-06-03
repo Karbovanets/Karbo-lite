@@ -66,6 +66,8 @@ file(GLOB_RECURSE CRYPTONOTE_SOURCES
   cryptonote/external/miniupnpc/upnpreplyparse.c
   cryptonote/src/BlockchainExplorer/BlockchainExplorer.cpp
   cryptonote/src/BlockchainExplorer/BlockchainExplorerErrors.cpp
+  cryptonote/src/BlockchainExplorer/BlockchainExplorerDataBuilder.cpp
+  cryptonote/src/Serialization/BlockchainExplorerDataSerialization.cpp
   cryptonote/src/Common/Base58.cpp
   cryptonote/src/Common/CommandLine.cpp
   cryptonote/src/Common/Util.cpp
@@ -139,7 +141,7 @@ file(GLOB_RECURSE CRYPTONOTE_SOURCES
   cryptonote/src/PaymentGateService/*.cpp
 )
 
-file(GLOB_RECURSE Mnemonics cryptonote/src/mnemonics/*)
+file(GLOB_RECURSE Mnemonics cryptonote/src/Mnemonics/*)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
 file(GLOB_RECURSE HEADERS src/*.h)

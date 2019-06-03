@@ -16,7 +16,7 @@
 // along with Karbovanets.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "MnemonicDialog.h"
-#include "mnemonics/electrum-words.h"
+#include "Mnemonics/electrum-words.h"
 
 #include "ui_MnemonicDialog.h"
 
