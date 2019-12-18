@@ -1,4 +1,4 @@
-// Copyright (c) 2016 The Karbowanec developers
+// Copyright (c) 2016-2019 The Karbowanec developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -68,7 +68,7 @@ void SignMessageDialog::verifyMessage() {
     const size_t header_len = strlen("SigV1");
     std::string decoded;
     Crypto::Signature s;
-    if (!signature.size() < header_len && signature.substr(0, header_len) == "SigV1" &&
+    if (!(signature.size() < header_len) && signature.substr(0, header_len) == "SigV1" &&
       Tools::Base58::decode(signature.substr(header_len), decoded) && sizeof(s) == decoded.size()) {
       memcpy(&s, decoded.data(), sizeof(s));
       if (Crypto::check_signature(hash, acc.spendPublicKey, s)) {

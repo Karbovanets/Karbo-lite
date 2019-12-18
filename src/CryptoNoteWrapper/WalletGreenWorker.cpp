@@ -1,5 +1,6 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2018, The Karbo developers
+// Copyright (c) 2014-2017, The Monero project
+// Copyright (c) 2017-2020, The Karbo developers
 //
 // This file is part of Karbo.
 //
@@ -292,11 +293,11 @@ IWalletAdapter::WalletInitStatus WalletGreenWorker::createWithKeysAndTimestamp(c
     SemaphoreUnlocker unlocker(m_walletSemaphore);
     int errorCode = 0;
     try {
-      m_wallet->initializeWithViewKeyAndTimestamp(std::string(_walletPath.toLocal8Bit().data()), "", _accountKeys.viewKeys.secretKey, _creationTimestamp);
+      m_wallet->initializeWithViewKey(std::string(_walletPath.toLocal8Bit().data()), "", _accountKeys.viewKeys.secretKey, _creationTimestamp);
       if (std::memcmp(&_accountKeys.spendKeys.secretKey, &CryptoNote::NULL_SECRET_KEY, sizeof(Crypto::SecretKey)) == 0) {
         m_wallet->createAddress(_accountKeys.spendKeys.publicKey);
       } else {
-        m_wallet->createAddressWithTimestamp(_accountKeys.spendKeys.secretKey, _creationTimestamp);
+        m_wallet->createAddress(_accountKeys.spendKeys.secretKey, _creationTimestamp);
       }
     } catch (const std::system_error& _error) {
       WalletLogger::critical(tr("[Wallet] Import keys error: %1").arg(_error.code().message().data()));
@@ -848,8 +849,8 @@ QString WalletGreenWorker::getBalanceProof(quint64& _amount, QString& _message) 
     const CryptoNote::TransactionOutputInformation &td = selected_transfers[i];
     CryptoNote::reserve_proof_entry& proof = proofs[i];
     proof.key_image = kimages[i];
-    proof.txid = td.transactionHash;
-    proof.index_in_tx = td.outputInTransaction;
+    proof.transaction_id = td.transactionHash;
+    proof.index_in_transaction = td.outputInTransaction;
 
     auto txPubKey = td.transactionPublicKey;
 

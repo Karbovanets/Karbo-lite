@@ -69,6 +69,7 @@ file(GLOB_RECURSE CRYPTONOTE_SOURCES
   cryptonote/src/BlockchainExplorer/BlockchainExplorerDataBuilder.cpp
   cryptonote/src/Serialization/BlockchainExplorerDataSerialization.cpp
   cryptonote/src/Common/Base58.cpp
+  cryptonote/src/Common/Base64.cpp
   cryptonote/src/Common/CommandLine.cpp
   cryptonote/src/Common/Util.cpp
   cryptonote/src/Common/StringTools.cpp
