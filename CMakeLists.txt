@@ -43,7 +43,7 @@ else(WIN32)
   set(Boost_USE_STATIC_RUNTIME ON)
 endif(WIN32)
 
-find_package(Boost 1.57 REQUIRED COMPONENTS date_time filesystem program_options regex serialization system thread chrono)
+find_package(Boost REQUIRED COMPONENTS date_time filesystem program_options regex serialization system thread chrono)
 if ((${Boost_MAJOR_VERSION} EQUAL 1) AND (${Boost_MINOR_VERSION} EQUAL 54))
   message(SEND_ERROR "Boost version 1.57 is unsupported, more details are available here http://goo.gl/RrCFmA")
 endif ()
@@ -57,12 +57,15 @@ file(GLOB_RECURSE CRYPTONOTE_SOURCES
   cryptonote/external/miniupnpc/connecthostport.c
   cryptonote/external/miniupnpc/igd_desc_parse.c
   cryptonote/external/miniupnpc/minisoap.c
+  cryptonote/external/miniupnpc/minissdpc.c
   cryptonote/external/miniupnpc/miniupnpc.c
   cryptonote/external/miniupnpc/miniwget.c
   cryptonote/external/miniupnpc/minixml.c
   cryptonote/external/miniupnpc/portlistingparse.c
   cryptonote/external/miniupnpc/receivedata.c
   cryptonote/external/miniupnpc/upnpcommands.c
+  cryptonote/external/miniupnpc/upnpdev.c
+  cryptonote/external/miniupnpc/upnperrors.c
   cryptonote/external/miniupnpc/upnpreplyparse.c
   cryptonote/src/BlockchainExplorer/BlockchainExplorer.cpp
   cryptonote/src/BlockchainExplorer/BlockchainExplorerErrors.cpp
@@ -72,6 +75,7 @@ file(GLOB_RECURSE CRYPTONOTE_SOURCES
   cryptonote/src/Common/Base64.cpp
   cryptonote/src/Common/CommandLine.cpp
   cryptonote/src/Common/Util.cpp
+  cryptonote/src/Common/FormatTools.cpp
   cryptonote/src/Common/StringTools.cpp
   cryptonote/src/Common/JsonValue.cpp
   cryptonote/src/Common/ConsoleTools.cpp
@@ -86,7 +90,7 @@ file(GLOB_RECURSE CRYPTONOTE_SOURCES
   cryptonote/src/Common/ScopeExit.cpp
   cryptonote/src/ConnectivityTool/ConnectivityTool.cpp
   cryptonote/src/crypto/blake256.c
-  cryptonote/src/crypto/chacha8.c
+  cryptonote/src/crypto/chacha8.cpp
   cryptonote/src/crypto/crypto-ops-data.c
   cryptonote/src/crypto/crypto-ops.c
   cryptonote/src/crypto/crypto.cpp
@@ -235,6 +239,8 @@ endif ()
 include_directories(cryptonote/src/Platform/${PLATFORM_DIR})
 file(GLOB PLATFORM_SOURCES cryptonote/src/Platform/${PLATFORM_DIR}/System/*)
 set(CRYPTONOTE_SOURCES ${CRYPTONOTE_SOURCES} ${PLATFORM_SOURCES} ${CRYPTONOTE_PLATFORM})
+
+add_definitions(-DUPNP_STATIC -DMINIUPNP_STATICLIB -DUPNPC_BUILD_STATIC)
 
 if(MSVC)
 #else(MSVC)

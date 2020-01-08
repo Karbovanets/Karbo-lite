@@ -22,10 +22,13 @@
 #include <QClipboard>
 #include <QBuffer>
 #include <QUrl>
+#include <crypto/crypto.h>
 #include <Common/StringTools.h>
 #include "Gui/Common/QRLabel.h"
 #include "Settings/Settings.h"
+
 #include "ReceiveFrame.h"
+
 #include "ui_ReceiveFrame.h"
 
 namespace WalletGui {
@@ -123,7 +126,7 @@ void ReceiveFrame::saveQrCode() {
 
 void ReceiveFrame::generatePaymentIdClicked() {
   Crypto::Hash payment_id;
-  payment_id = Crypto::rand<Crypto::Hash>();
+  Random::randomBytes(32, payment_id.data);
   m_ui->m_paymentIdRequestEdit->setText(QString::fromStdString(Common::podToHex(payment_id)));
 }
 

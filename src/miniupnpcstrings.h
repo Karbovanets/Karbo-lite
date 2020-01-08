@@ -1,25 +1,19 @@
-// Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2018, The Karbo developers
-//
-// This file is part of Karbo.
-//
-// Karbovanets is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Karbovanets is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with Karbovanets.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (c) 2011-2015 The Cryptonote developers
+// Distributed under the MIT/X11 software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef MINIUPNPCSTRINGS_H_INCLUDED
 #define MINIUPNPCSTRINGS_H_INCLUDED
 
 #define OS_STRING "Windows"
-#define MINIUPNPC_VERSION_STRING "1.9"
+#define MINIUPNPC_VERSION_STRING "2.1"
+
+#if 0
+/* according to "UPnP Device Architecture 1.0" */
+#define UPNP_VERSION_STRING "UPnP/1.0"
+#else
+/* according to "UPnP Device Architecture 1.1" */
+#define UPNP_VERSION_STRING "UPnP/1.1"
+#endif
 
 #endif

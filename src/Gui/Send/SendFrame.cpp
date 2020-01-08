@@ -23,6 +23,7 @@
 #include <QMetaMethod>
 
 #include <Wallet/WalletErrors.h>
+#include <crypto/crypto.h>
 #include <Common/StringTools.h>
 #include "SendFrame.h"
 #include "Settings/Settings.h"
@@ -628,7 +629,7 @@ bool SendFrame::readyToSend() const {
 
 void SendFrame::generatePaymentIdClicked() {
   Crypto::Hash payment_id;
-  payment_id = Crypto::rand<Crypto::Hash>();
+  Random::randomBytes(32, payment_id.data);
   m_ui->m_paymentIdEdit->setText(QString::fromStdString(Common::podToHex(payment_id)));
 }
 
