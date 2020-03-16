@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2018, The Karbo developers
+// Copyright (c) 2017-2020, The Karbo developers
 //
 // This file is part of Karbo.
 //
@@ -133,6 +133,19 @@ void OverviewHeaderFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAd
   m_cryptoNoteAdapter->addObserver(this);
 
   m_ui->m_overviewMasternode->setText(QString("%1:%2").arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodeHost()).arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodePort()));
+
+  CryptoNote::COMMAND_RPC_GET_INFO::response info;
+  if (m_cryptoNoteAdapter->getNodeInfo(QUrl::fromUserInput(m_cryptoNoteAdapter->getNodeAdapter()->getNodeHost() + ":" + m_cryptoNoteAdapter->getNodeAdapter()->getNodePort()), info)) {
+    m_ui->m_overviewNodeVersionTextLabel->setText("Version");
+    m_ui->m_overviewNodeVersionLabel->setText(QString::fromStdString(info.version));
+  }
+
+  quint64 nodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
+  if (nodeFee != 0) {
+    m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 KRB")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))));
+  } else {
+    m_ui->m_overviewNodeFeeLabel->setText("0.25%");
+  }
 }
 
 void OverviewHeaderFrame::setMainWindow(QWidget* _mainWindow) {

@@ -51,7 +51,7 @@
        <number>30</number>
       </property>
       <property name="topMargin">
-       <number>25</number>
+       <number>15</number>
       </property>
       <property name="bottomMargin">
        <number>15</number>
@@ -300,6 +300,18 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
+      <property name="leftMargin">
+       <number>30</number>
+      </property>
+      <property name="topMargin">
+       <number>15</number>
+      </property>
+      <property name="rightMargin">
+       <number>30</number>
+      </property>
+      <property name="bottomMargin">
+       <number>15</number>
+      </property>
       <item row="0" column="0" colspan="5">
        <spacer name="verticalSpacer_5">
         <property name="orientation">
@@ -324,7 +336,7 @@
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="WalletGui::WalletSmallBlackTextLabel" name="m_overviewNodeTextLabel">
+       <widget class="WalletGui::WalletSmallGrayTextLabel" name="m_overviewNodeTextLabel">
         <property name="minimumSize">
          <size>
           <width>40</width>
@@ -346,7 +358,7 @@
        </widget>
       </item>
       <item row="2" column="3" rowspan="2">
-       <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewMasternode">
+       <widget class="WalletGui::WalletSmallBlackTextLabel" name="m_overviewMasternode">
         <property name="text">
          <string>TextLabel</string>
         </property>
@@ -388,7 +400,7 @@
        </spacer>
       </item>
       <item row="4" column="2">
-       <widget class="WalletGui::WalletSmallBlackTextLabel" name="m_overviewNodeStateTextLabel">
+       <widget class="WalletGui::WalletSmallGrayTextLabel" name="m_overviewNodeStateTextLabel">
         <property name="minimumSize">
          <size>
           <width>40</width>
@@ -404,7 +416,7 @@
        </widget>
       </item>
       <item row="4" column="3">
-       <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewConnectionState">
+       <widget class="WalletGui::WalletSmallBlackTextLabel" name="m_overviewConnectionState">
         <property name="text">
          <string>TextLabel</string>
         </property>
@@ -414,21 +426,24 @@
        </widget>
       </item>
       <item row="5" column="2">
-       <widget class="WalletGui::WalletSmallBlackTextLabel" name="m_overviewNodeFeeTextLabel">
+       <widget class="WalletGui::WalletSmallGrayTextLabel" name="m_overviewNodeFeeTextLabel">
         <property name="text">
          <string>Fee</string>
+        </property>
+        <property name="indent">
+         <number>0</number>
         </property>
        </widget>
       </item>
       <item row="5" column="3">
-       <widget class="WalletGui::WalletNormalBlackTextLabel" name="m_overviewNodeFeeLabel">
+       <widget class="WalletGui::WalletSmallBlackTextLabel" name="m_overviewNodeFeeLabel">
         <property name="text">
-         <string>0.25%</string>
+         <string/>
         </property>
        </widget>
       </item>
       <item row="6" column="2">
-       <widget class="WalletGui::WalletSmallBlackTextLabel" name="m_overviewNodeVersionTextLabel">
+       <widget class="WalletGui::WalletSmallGrayTextLabel" name="m_overviewNodeVersionTextLabel">
         <property name="text">
          <string/>
         </property>
@@ -512,11 +527,6 @@
   </customwidget>
   <customwidget>
    <class>WalletGui::WalletNormalGrayTextLabel</class>
-   <extends>QLabel</extends>
-   <header>Gui/Common/WalletTextLabel.h</header>
-  </customwidget>
-  <customwidget>
-   <class>WalletGui::WalletNormalBlackTextLabel</class>
    <extends>QLabel</extends>
    <header>Gui/Common/WalletTextLabel.h</header>
   </customwidget>
