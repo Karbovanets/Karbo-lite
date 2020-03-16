@@ -61,7 +61,8 @@ public:
   virtual IBlockChainExplorerAdapter* getBlockChainExplorerAdapter() override;
   virtual IWalletAdapter* getWalletAdapter() override;
   virtual quint64 getMinimalFee() const override;
-
+  virtual quint64 getNodeFee() const override;
+  virtual QString getNodeFeeAddress() const override;
   QString getNodeHost() const;
   quint16 getNodePort() const;
 

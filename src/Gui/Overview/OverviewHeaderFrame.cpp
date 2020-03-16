@@ -245,6 +245,12 @@ void OverviewHeaderFrame::m_nodeStateModelDataChanged(const QModelIndex& _topLef
     m_ui->m_overviewNodeVersionLabel->setText(QString::fromStdString(info.version));
   }
 
+  quint64 nodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
+  if (nodeFee != 0) {
+    m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 KRB")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))));
+  } else {
+    m_ui->m_overviewNodeFeeLabel->setText("0.25%");
+  }
 }
 
 void OverviewHeaderFrame::changeConnectionStateAppearance() {

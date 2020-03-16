@@ -108,6 +108,16 @@ quint64 CommonNodeAdapter::getMinimalFee() const {
   return m_worker->getMinimalFee();
 }
 
+quint64 CommonNodeAdapter::getNodeFee() const {
+  Q_ASSERT(m_worker != nullptr);
+  return m_worker->getNodeFee();
+}
+
+QString CommonNodeAdapter::getNodeFeeAddress() const {
+  Q_ASSERT(m_worker != nullptr);
+  return m_worker->getNodeFeeAddress();
+}
+
 void CommonNodeAdapter::addObserver(INodeAdapterObserver* _observer) {
   QObject* observer = dynamic_cast<QObject*>(_observer);
   Q_ASSERT(observer != nullptr);
