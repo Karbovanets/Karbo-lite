@@ -113,7 +113,7 @@ private:
 Q_SIGNALS:
   void initCompletedSignal(int _initStatus);
   void deinitCompletedSignal();
-  void connectingToNode();
+  void connectingToNodeStatus(QString& _message);
 };
 
 }

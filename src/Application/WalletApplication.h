@@ -79,7 +79,7 @@ private:
   void trayActivated(QSystemTrayIcon::ActivationReason _reason);
   void prepareToQuit();
   void newLogString(const QString& _string);
-  void connectingSplashMessage();
+  void connectingSplashMessage(const QString &_message);
 
 #ifdef Q_OS_MAC
 private:

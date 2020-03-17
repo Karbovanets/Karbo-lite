@@ -414,6 +414,8 @@ void CryptoNoteAdapter::initWalletLogger(bool _debug) {
 
 void CryptoNoteAdapter::initNode() {
   Q_ASSERT(m_nodeAdapter == nullptr);
+  QString message = tr("Connecting...");
+  Q_EMIT connectingToNodeStatus(message);
   switch(m_connectionMethod) {
   case ConnectionMethod::AUTO:
     initAutoConnection();
@@ -448,6 +450,16 @@ void CryptoNoteAdapter::initLocalRpcNode() {
 
 void CryptoNoteAdapter::initRemoteRpcNode() {
   WalletLogger::info(tr("[CryptoNote wrapper] Starting with remote node: %1:%2").arg(m_remoteDaemonUrl.host()).arg(m_remoteDaemonUrl.port()));
+
+  // check if the node is available first
+  if (!isNodeAvailable(m_remoteDaemonUrl)) {
+    QString message = tr("Node is not responding...");
+    WalletLogger::info(tr("[CryptoNote wrapper] Node %1:%2 is not responding").arg(m_remoteDaemonUrl.host()).arg(m_remoteDaemonUrl.port()));
+    Q_EMIT connectingToNodeStatus(message);
+    // fallback to auto?
+    // initAutoConnection();
+  }
+
   m_nodeAdapter = new ProxyRpcNodeAdapter(m_currency, m_coreLogger, m_walletLogger, m_remoteDaemonUrl.host(), m_remoteDaemonUrl.port(), this);
   m_nodeAdapter->addObserver(this);
   m_nodeAdapter->init();
@@ -456,8 +468,6 @@ void CryptoNoteAdapter::initRemoteRpcNode() {
 
 void CryptoNoteAdapter::onLocalDaemonNotFound() {
   WalletLogger::info(tr("[CryptoNote wrapper] Daemon on 127.0.0.1:%1 not found").arg(CryptoNote::RPC_DEFAULT_PORT));
-
-  Q_EMIT connectingToNode();
 
   killTimer(m_autoConnectionTimerId);
   m_autoConnectionTimerId = -1;
@@ -474,6 +484,7 @@ void CryptoNoteAdapter::onLocalDaemonNotFound() {
       initRemoteRpcNode();
     } else {
       WalletLogger::info(tr("[CryptoNote wrapper] Could not connect to any node!!!"));
+      initLocalRpcNode();
     }
   }
 }
