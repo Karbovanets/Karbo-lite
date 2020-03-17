@@ -244,7 +244,6 @@ void OverviewHeaderFrame::walletStateModelDataChanged(const QModelIndex& _topLef
 
 void OverviewHeaderFrame::m_nodeStateModelDataChanged(const QModelIndex& _topLeft, const QModelIndex& _bottomRight,
   const QVector<int>& _roles) {
-
   QString host = m_nodeStateModel->index(0, NodeStateModel::COLUMN_NODE_HOST).data(NodeStateModel::ROLE_NODE_HOST).toString();
   QString port = m_nodeStateModel->index(0, NodeStateModel::COLUMN_NODE_PORT).data(NodeStateModel::ROLE_NODE_PORT).toString();
   m_ui->m_overviewMasternode->setText(QString("%1:%2").arg(host).arg(port));
@@ -253,18 +252,23 @@ void OverviewHeaderFrame::m_nodeStateModelDataChanged(const QModelIndex& _topLef
   m_ui->m_overviewConnectionState->setText(m_isConnected ? "connected" : "disconnected");
   changeConnectionStateAppearance();
 
-  quint64 nodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
-  if (nodeFee != 0) {
-    m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 KRB")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))));
-  } else {
-    m_ui->m_overviewNodeFeeLabel->setText("0.25%");
-  }
+  if (m_isConnected) {
+    quint64 nodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
+    if (nodeFee != 0) {
+      m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 KRB")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))));
+    } else {
+      m_ui->m_overviewNodeFeeLabel->setText("0.25%");
+    }
 
-  QString nodeVersionStr =  m_cryptoNoteAdapter->getNodeAdapter()->getNodeVersion();
-  if (!nodeVersionStr.isEmpty()) {
-    m_ui->m_overviewNodeVersionLabel->setText(nodeVersionStr);
+    QString nodeVersionStr =  m_cryptoNoteAdapter->getNodeAdapter()->getNodeVersion();
+    if (!nodeVersionStr.isEmpty()) {
+      m_ui->m_overviewNodeVersionLabel->setText(nodeVersionStr);
+    } else {
+      m_ui->m_overviewNodeVersionLabel->setText("n/a");
+    }
   } else {
-   m_ui->m_overviewNodeVersionLabel->setText("n/a");
+    m_ui->m_overviewNodeFeeLabel->setText("n/a");
+    m_ui->m_overviewNodeVersionLabel->setText("n/a");
   }
 }
 
