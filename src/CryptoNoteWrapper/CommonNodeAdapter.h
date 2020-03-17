@@ -38,6 +38,7 @@ public:
   virtual void init() override;
   virtual void deinit() override;
   virtual NodeType getNodeType() const override;
+  virtual QString getNodeVersion() const override;
   virtual quintptr getPeerCount() const override;
   virtual quint32 getKnownBlockCount() const override;
   virtual quint32 getLocalBlockCount() const override;
@@ -47,7 +48,8 @@ public:
   virtual IBlockChainExplorerAdapter* getBlockChainExplorerAdapter() override;
   virtual IWalletAdapter* getWalletAdapter() override;
   virtual quint64 getMinimalFee() const override;
-
+  virtual quint64 getNodeFee() const override;
+  virtual QString getNodeFeeAddress() const override;
   virtual QString getNodeHost() const override;
   virtual quint16 getNodePort() const override;
 

@@ -57,11 +57,14 @@ public:
   virtual void init() = 0;
   virtual void deinit() = 0;
   virtual NodeType getNodeType() const = 0;
+  virtual QString getNodeVersion() const = 0;
   virtual quintptr getPeerCount() const = 0;
   virtual quint32 getKnownBlockCount() const = 0;
   virtual quint32 getLocalBlockCount() const = 0;
   virtual QString getNodeHost() const = 0;
   virtual quint16 getNodePort() const = 0;
+  virtual QString getNodeFeeAddress() const = 0;
+  virtual quint64 getNodeFee() const = 0;
   virtual quint64 getMinimalFee() const = 0;
   virtual CryptoNote::BlockHeaderInfo getLastLocalBlockInfo() const = 0;
   virtual void addObserver(INodeAdapterObserver* _observer) = 0;

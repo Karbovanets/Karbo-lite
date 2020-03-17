@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'ConnectionOptionsFrame.ui'
+** Form generated from reading UI file 'ConnectionOptionsFrameAiqCVZ.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.10.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef UI_CONNECTIONOPTIONSFRAME_H
-#define UI_CONNECTIONOPTIONSFRAME_H
+#ifndef CONNECTIONOPTIONSFRAMEAIQCVZ_H
+#define CONNECTIONOPTIONSFRAMEAIQCVZ_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
@@ -57,7 +57,7 @@ public:
     WalletGui::WalletNormalBlueButton *removeNodeButton;
     QSpacerItem *horizontalSpacer_4;
     WalletGui::WalletSmallGrayTextLabel *m_remoteHelperLabel;
-    WalletGui::WalletExtraNormalGrayTextLabel *label_4;
+    WalletGui::WalletSmallGrayTextLabel *label_4;
     QSpacerItem *verticalSpacer;
     QButtonGroup *m_connectionButtonGroup;
 
@@ -238,7 +238,7 @@ public:
 
         verticalLayout_5->addWidget(widget_4);
 
-        label_4 = new WalletGui::WalletExtraNormalGrayTextLabel(ConnectionOptionsFrame);
+        label_4 = new WalletGui::WalletSmallGrayTextLabel(ConnectionOptionsFrame);
         label_4->setObjectName(QStringLiteral("label_4"));
         label_4->setWordWrap(true);
 
@@ -272,7 +272,7 @@ public:
         addNodeButton->setText(QApplication::translate("ConnectionOptionsFrame", "Add", nullptr));
         removeNodeButton->setText(QApplication::translate("ConnectionOptionsFrame", "Remove", nullptr));
         m_remoteHelperLabel->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet will connect to Karbo node running on another PC in the local or global network. Please specify IP address or domain name and the port.", nullptr));
-        label_4->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet sends 0.25% fee from each transaction to the remote node it is connected to, but no more than 1 KRB.", nullptr));
+        label_4->setText(QApplication::translate("ConnectionOptionsFrame", "Wallet may send small fee from each transaction to the remote node it is connected to, but no more than 1 KRB.", nullptr));
     } // retranslateUi
 
 };
@@ -283,4 +283,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // UI_CONNECTIONOPTIONSFRAME_H
+#endif // CONNECTIONOPTIONSFRAMEAIQCVZ_H
