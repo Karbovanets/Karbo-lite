@@ -412,9 +412,9 @@
     </widget>
    </item>
    <item>
-    <widget class="WalletGui::WalletExtraNormalGrayTextLabel" name="label_4">
+    <widget class="WalletGui::WalletSmallGrayTextLabel" name="label_4">
      <property name="text">
-      <string>Wallet sends 0.25% fee from each transaction to the remote node it is connected to, but no more than 1 KRB.</string>
+      <string>Wallet may send small fee from each transaction to the remote node it is connected to, but no more than 1 KRB.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -439,11 +439,6 @@
  <customwidgets>
   <customwidget>
    <class>WalletGui::WalletSmallGrayTextLabel</class>
-   <extends>QLabel</extends>
-   <header>Gui/Common/WalletTextLabel.h</header>
-  </customwidget>
-  <customwidget>
-   <class>WalletGui::WalletExtraNormalGrayTextLabel</class>
    <extends>QLabel</extends>
    <header>Gui/Common/WalletTextLabel.h</header>
   </customwidget>

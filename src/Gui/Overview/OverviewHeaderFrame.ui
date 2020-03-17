@@ -328,7 +328,7 @@
       <item row="1" column="2" colspan="2">
        <widget class="WalletGui::WalletHeaderLabel" name="label_9">
         <property name="text">
-         <string>Node status</string>
+         <string>Node</string>
         </property>
         <property name="indent">
          <number>0</number>

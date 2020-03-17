@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'OverviewHeaderFrameBHjaoP.ui'
+** Form generated from reading UI file 'OverviewHeaderFrameqtCeYS.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.10.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef OVERVIEWHEADERFRAMEBHJAOP_H
-#define OVERVIEWHEADERFRAMEBHJAOP_H
+#ifndef OVERVIEWHEADERFRAMEQTCEYS_H
+#define OVERVIEWHEADERFRAMEQTCEYS_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
@@ -325,7 +325,7 @@ public:
         m_availableBalanceCopyLabel->setText(QApplication::translate("OverviewHeaderFrame", "Copied!", nullptr));
         m_lockedBalanceCopyLabel->setText(QApplication::translate("OverviewHeaderFrame", "Copied!", nullptr));
         m_totalBalanceCopyLabel->setText(QApplication::translate("OverviewHeaderFrame", "Copied!", nullptr));
-        label_9->setText(QApplication::translate("OverviewHeaderFrame", "Node status", nullptr));
+        label_9->setText(QApplication::translate("OverviewHeaderFrame", "Node", nullptr));
         m_overviewNodeTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "URL", nullptr));
         m_overviewMasternode->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", nullptr));
         m_overviewNodeStateTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "State", nullptr));
@@ -345,4 +345,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // OVERVIEWHEADERFRAMEBHJAOP_H
+#endif // OVERVIEWHEADERFRAMEQTCEYS_H
