@@ -136,7 +136,7 @@ void OverviewHeaderFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAd
 
   quint64 nodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
   if (nodeFee != 0) {
-    m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 KRB")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))));
+    m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 %2")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))).arg(m_cryptoNoteAdapter->getCurrencyTicker()));
   } else {
     m_ui->m_overviewNodeFeeLabel->setText("0.25%");
   }
