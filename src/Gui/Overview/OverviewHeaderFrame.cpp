@@ -134,11 +134,18 @@ void OverviewHeaderFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAd
 
   m_ui->m_overviewMasternode->setText(QString("%1:%2").arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodeHost()).arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodePort()));
 
-  quint64 nodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
-  if (nodeFee != 0) {
-    m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 %2")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))).arg(m_cryptoNoteAdapter->getCurrencyTicker()));
+  QString nodeFeeAddr = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFeeAddress();
+  if(!nodeFeeAddr.isEmpty()) {
+    quint64 nodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
+    if (nodeFee != 0) {
+      m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 %2")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))).arg(m_cryptoNoteAdapter->getCurrencyTicker()));
+    } else {
+      if (!nodeFeeAddr.isEmpty()) {
+        m_ui->m_overviewNodeFeeLabel->setText("0.25%");
+      }
+    }
   } else {
-    m_ui->m_overviewNodeFeeLabel->setText("0.25%");
+    m_ui->m_overviewNodeFeeLabel->setText("free");
   }
 
   QString nodeVersionStr =  m_cryptoNoteAdapter->getNodeAdapter()->getNodeVersion();
@@ -253,11 +260,18 @@ void OverviewHeaderFrame::m_nodeStateModelDataChanged(const QModelIndex& _topLef
   changeConnectionStateAppearance();
 
   if (m_isConnected) {
-    quint64 nodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
-    if (nodeFee != 0) {
-      m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 KRB")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))));
+    QString nodeFeeAddr = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFeeAddress();
+    if(!nodeFeeAddr.isEmpty()) {
+      quint64 nodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
+      if (nodeFee != 0) {
+        m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 %2")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))).arg(m_cryptoNoteAdapter->getCurrencyTicker()));
+      } else {
+        if (!nodeFeeAddr.isEmpty()) {
+          m_ui->m_overviewNodeFeeLabel->setText("0.25%");
+        }
+      }
     } else {
-      m_ui->m_overviewNodeFeeLabel->setText("0.25%");
+      m_ui->m_overviewNodeFeeLabel->setText("free");
     }
 
     QString nodeVersionStr =  m_cryptoNoteAdapter->getNodeAdapter()->getNodeVersion();
