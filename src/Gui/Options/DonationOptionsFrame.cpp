@@ -85,6 +85,9 @@ void DonationOptionsFrame::load() {
 }
 
 void DonationOptionsFrame::save() {
+  if (!m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->isOpen())
+    return;
+
   m_donationManager->setDonationChangeAmount(m_ui->m_donationChangeAmountSlider->value());
   int changeAddressIndex = m_ui->m_donationChangeAddressCombo->currentIndex();
   if (changeAddressIndex != -1) {
