@@ -38,6 +38,7 @@ public:
   virtual void init() override;
   virtual void deinit() override;
   virtual NodeType getNodeType() const override;
+  virtual QString getNodeVersion() const override;
   virtual quintptr getPeerCount() const override;
   virtual quint32 getKnownBlockCount() const override;
   virtual quint32 getLocalBlockCount() const override;

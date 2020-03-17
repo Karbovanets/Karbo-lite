@@ -59,6 +59,11 @@ NodeType ProxyRpcNodeWorker::getNodeType() const {
   return NodeType::RPC;
 }
 
+QString ProxyRpcNodeWorker::getNodeVersion() const {
+  Q_ASSERT(!m_node.isNull());
+  return QString::fromStdString(m_node->getNodeVersion());
+}
+
 quintptr ProxyRpcNodeWorker::getPeerCount() const {
   Q_ASSERT(!m_node.isNull());
   return m_node->getPeerCount();

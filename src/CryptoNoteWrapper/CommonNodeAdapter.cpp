@@ -73,6 +73,11 @@ NodeType CommonNodeAdapter::getNodeType() const {
   return m_worker->getNodeType();
 }
 
+QString CommonNodeAdapter::getNodeVersion() const {
+  Q_ASSERT(m_worker != nullptr);
+  return m_worker->getNodeVersion();
+}
+
 quintptr CommonNodeAdapter::getPeerCount() const {
   Q_ASSERT(m_worker != nullptr);
   return m_worker->getPeerCount();

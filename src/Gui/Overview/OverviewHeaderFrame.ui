@@ -438,14 +438,20 @@
       <item row="5" column="3">
        <widget class="WalletGui::WalletSmallBlackTextLabel" name="m_overviewNodeFeeLabel">
         <property name="text">
-         <string/>
+         <string>0,25%</string>
+        </property>
+        <property name="indent">
+         <number>0</number>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
         </property>
        </widget>
       </item>
       <item row="6" column="2">
        <widget class="WalletGui::WalletSmallGrayTextLabel" name="m_overviewNodeVersionTextLabel">
         <property name="text">
-         <string/>
+         <string>Version</string>
         </property>
         <property name="indent">
          <number>0</number>
@@ -455,7 +461,7 @@
       <item row="6" column="3">
        <widget class="WalletGui::WalletSmallBlackTextLabel" name="m_overviewNodeVersionLabel">
         <property name="text">
-         <string/>
+         <string>n/a</string>
         </property>
         <property name="indent">
          <number>0</number>

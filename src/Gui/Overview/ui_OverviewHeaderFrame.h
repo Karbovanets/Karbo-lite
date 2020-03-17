@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'OverviewHeaderFrameYvxRyt.ui'
+** Form generated from reading UI file 'OverviewHeaderFrameBHjaoP.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.10.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef OVERVIEWHEADERFRAMEYVXRYT_H
-#define OVERVIEWHEADERFRAMEYVXRYT_H
+#ifndef OVERVIEWHEADERFRAMEBHJAOP_H
+#define OVERVIEWHEADERFRAMEBHJAOP_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
@@ -258,6 +258,8 @@ public:
 
         m_overviewNodeFeeLabel = new WalletGui::WalletSmallBlackTextLabel(m_overviewNodeFrame);
         m_overviewNodeFeeLabel->setObjectName(QStringLiteral("m_overviewNodeFeeLabel"));
+        m_overviewNodeFeeLabel->setIndent(0);
+        m_overviewNodeFeeLabel->setTextInteractionFlags(Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse);
 
         gridLayout_2->addWidget(m_overviewNodeFeeLabel, 5, 3, 1, 1);
 
@@ -329,9 +331,9 @@ public:
         m_overviewNodeStateTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "State", nullptr));
         m_overviewConnectionState->setText(QApplication::translate("OverviewHeaderFrame", "TextLabel", nullptr));
         m_overviewNodeFeeTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "Fee", nullptr));
-        m_overviewNodeFeeLabel->setText(QString());
-        m_overviewNodeVersionTextLabel->setText(QString());
-        m_overviewNodeVersionLabel->setText(QString());
+        m_overviewNodeFeeLabel->setText(QApplication::translate("OverviewHeaderFrame", "0,25%", nullptr));
+        m_overviewNodeVersionTextLabel->setText(QApplication::translate("OverviewHeaderFrame", "Version", nullptr));
+        m_overviewNodeVersionLabel->setText(QApplication::translate("OverviewHeaderFrame", "n/a", nullptr));
         m_overviewNodeIconLabel->setText(QString());
     } // retranslateUi
 
@@ -343,4 +345,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // OVERVIEWHEADERFRAMEYVXRYT_H
+#endif // OVERVIEWHEADERFRAMEBHJAOP_H

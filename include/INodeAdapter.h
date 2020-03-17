@@ -57,6 +57,7 @@ public:
   virtual void init() = 0;
   virtual void deinit() = 0;
   virtual NodeType getNodeType() const = 0;
+  virtual QString getNodeVersion() const = 0;
   virtual quintptr getPeerCount() const = 0;
   virtual quint32 getKnownBlockCount() const = 0;
   virtual quint32 getLocalBlockCount() const = 0;

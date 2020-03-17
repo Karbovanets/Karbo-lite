@@ -104,8 +104,8 @@ OverviewHeaderFrame::OverviewHeaderFrame(QWidget* _parent) : QFrame(_parent), m_
  // m_ui->m_overviewLockedBalanceLabel->installEventFilter(this);
  // m_ui->m_overviewTotalBalanceLabel->installEventFilter(this);
  // changeConnectionStateAppearance();
-  m_ui->m_overviewNodeVersionTextLabel->setText("");
-  m_ui->m_overviewNodeVersionLabel->setText("");
+ // m_ui->m_overviewNodeVersionTextLabel->setText("");
+ // m_ui->m_overviewNodeVersionLabel->setText("");
 }
 
 OverviewHeaderFrame::~OverviewHeaderFrame() {
@@ -134,17 +134,18 @@ void OverviewHeaderFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAd
 
   m_ui->m_overviewMasternode->setText(QString("%1:%2").arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodeHost()).arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodePort()));
 
-  CryptoNote::COMMAND_RPC_GET_INFO::response info;
-  if (m_cryptoNoteAdapter->getNodeInfo(QUrl::fromUserInput(m_cryptoNoteAdapter->getNodeAdapter()->getNodeHost() + ":" + m_cryptoNoteAdapter->getNodeAdapter()->getNodePort()), info)) {
-    m_ui->m_overviewNodeVersionTextLabel->setText("Version");
-    m_ui->m_overviewNodeVersionLabel->setText(QString::fromStdString(info.version));
-  }
-
   quint64 nodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
   if (nodeFee != 0) {
     m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 KRB")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))));
   } else {
     m_ui->m_overviewNodeFeeLabel->setText("0.25%");
+  }
+
+  QString nodeVersionStr =  m_cryptoNoteAdapter->getNodeAdapter()->getNodeVersion();
+  if (!nodeVersionStr.isEmpty()) {
+    m_ui->m_overviewNodeVersionLabel->setText(nodeVersionStr);
+  } else {
+   m_ui->m_overviewNodeVersionLabel->setText("n/a");
   }
 }
 
@@ -252,17 +253,18 @@ void OverviewHeaderFrame::m_nodeStateModelDataChanged(const QModelIndex& _topLef
   m_ui->m_overviewConnectionState->setText(m_isConnected ? "connected" : "disconnected");
   changeConnectionStateAppearance();
 
-  CryptoNote::COMMAND_RPC_GET_INFO::response info;
-  if (m_cryptoNoteAdapter->getNodeInfo(QUrl::fromUserInput(host + ":" + port), info)) {
-    m_ui->m_overviewNodeVersionTextLabel->setText("Version");
-    m_ui->m_overviewNodeVersionLabel->setText(QString::fromStdString(info.version));
-  }
-
   quint64 nodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
   if (nodeFee != 0) {
     m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 KRB")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))));
   } else {
     m_ui->m_overviewNodeFeeLabel->setText("0.25%");
+  }
+
+  QString nodeVersionStr =  m_cryptoNoteAdapter->getNodeAdapter()->getNodeVersion();
+  if (!nodeVersionStr.isEmpty()) {
+    m_ui->m_overviewNodeVersionLabel->setText(nodeVersionStr);
+  } else {
+   m_ui->m_overviewNodeVersionLabel->setText("n/a");
   }
 }
 
