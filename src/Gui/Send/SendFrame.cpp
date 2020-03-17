@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2018, The Karbo developers
+// Copyright (c) 2017-2020, The Karbo developers
 //
 // This file is part of Karbo.
 //
@@ -39,7 +39,6 @@
 #include "SendGlassFrame.h"
 #include "Style/Style.h"
 #include "TransferFrame.h"
-#include "AddressProvider.h"
 #include "CryptoNoteWrapper/CryptoNoteAdapter.h"
 
 #include "ui_SendFrame.h"
@@ -115,19 +114,14 @@ bool isValidPaymentId(const QString& _paymentIdString) {
 
 SendFrame::SendFrame(QWidget* _parent) : QFrame(_parent), m_ui(new Ui::SendFrame),
   m_cryptoNoteAdapter(nullptr), m_donationManager(nullptr), m_applicationEventHandler(nullptr), m_mainWindow(nullptr),
-  m_glassFrame(new SendGlassFrame(nullptr)), m_walletStateModel(nullptr), m_addressProvider(new AddressProvider(this)) {
+  m_glassFrame(new SendGlassFrame(nullptr)), m_walletStateModel(nullptr), m_nodeFee(0), m_flatRateNodeFee(0) {
   m_ui->setupUi(this);
   m_glassFrame->setObjectName("m_sendGlassFrame");
   m_ui->m_mixinSpin->setMaximum(MAX_MIXIN_VALUE);
   mixinValueChanged(m_ui->m_mixinSlider->value());
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(SEND_FRAME_STYLE_SHEET));
-  remote_node_fee = 0;
   on_remote = Settings::instance().isOnRemote();
-  if (on_remote) {
-      QUrl currentRemoteRpcUrl = Settings::instance().getRemoteRpcUrl();
-      m_addressProvider->getAddress(currentRemoteRpcUrl);
-      connect(m_addressProvider, &AddressProvider::addressFoundSignal, this, &SendFrame::onAddressFound, Qt::QueuedConnection);
-  }
+
   QLabel *label1 = new WalletGui::WalletTinyGrayTextLabel(this);
   label1->setText(tr("Low"));
   QLabel *label2 = new WalletGui::WalletTinyGrayTextLabel(this);
@@ -169,6 +163,22 @@ void SendFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAdapter) {
   priorityValueChanged(m_ui->m_prioritySlider->value());
   for (auto& transfer : m_transfers) {
     transfer->setCryptoNoteAdapter(_cryptoNoteAdapter);
+  }
+
+  if (on_remote) {
+    QUrl currentRemoteRpcUrl = Settings::instance().getRemoteRpcUrl();
+    m_nodeFeeAddress  = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFeeAddress();
+    m_flatRateNodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
+
+    if (!m_nodeFeeAddress.isEmpty() && m_flatRateNodeFee != 0) {
+          m_nodeFee = m_flatRateNodeFee;
+      if (m_nodeFee < m_cryptoNoteAdapter->getMinimalFee()) {
+          m_nodeFee = m_cryptoNoteAdapter->getMinimalFee();
+      }
+      if (m_nodeFee > 1000000000000ULL) {
+          m_nodeFee = 1000000000000ULL;
+      }
+    }
   }
 
   amountStringChanged(QString());
@@ -229,7 +239,7 @@ void SendFrame::walletOpenError(int _initStatus) {
 }
 
 void SendFrame::walletClosed() {
-  remote_node_fee = 0;
+  m_nodeFee = 0;
   clearAll();
 }
 
@@ -382,7 +392,7 @@ void SendFrame::sendClicked() {
 
   const quint64 actualBalance = m_walletStateModel->index(0, 0).data(WalletStateModel::ROLE_ACTUAL_BALANCE).value<quint64>();
   quint64 transferSum = 0;
-  const qint64 fee = m_cryptoNoteAdapter->parseAmount(m_ui->m_feeSpin->cleanText()) - remote_node_fee;
+  const qint64 fee = m_cryptoNoteAdapter->parseAmount(m_ui->m_feeSpin->cleanText()) - m_nodeFee;
   for (TransferFrame* transfer : m_transfers) {
     QString address = transfer->getAddress();
     if (!m_cryptoNoteAdapter->isValidAddress(address)) {
@@ -401,7 +411,7 @@ void SendFrame::sendClicked() {
     }
 
     transferSum += amount;
-    if (transferSum + fee + remote_node_fee > actualBalance) {
+    if (transferSum + fee + m_nodeFee > actualBalance) {
       transfer->setInsufficientFundsError();
       m_ui->m_sendScrollarea->ensureWidgetVisible(transfer);
       return;
@@ -417,10 +427,10 @@ void SendFrame::sendClicked() {
   }
 
   // Remote node fee
-  if(on_remote && !remote_node_fee_address.isEmpty()) {
+  if(on_remote && !m_nodeFeeAddress.isEmpty()) {
     CryptoNote::WalletOrder walletTransfer;
-    walletTransfer.address = remote_node_fee_address.toStdString();
-    walletTransfer.amount = remote_node_fee;
+    walletTransfer.address = m_nodeFeeAddress.toStdString();
+    walletTransfer.amount = m_nodeFee;
     transactionParameters.destinations.push_back(walletTransfer);
   }
 
@@ -480,7 +490,7 @@ void SendFrame::mixinValueChanged(int _value) {
 }
 
 void SendFrame::priorityValueChanged(int _value) {
-  m_ui->m_feeSpin->setValue(m_cryptoNoteAdapter->formatAmount(m_cryptoNoteAdapter->getMinimalFee() * _value + remote_node_fee).toDouble());
+  m_ui->m_feeSpin->setValue(m_cryptoNoteAdapter->formatAmount(m_cryptoNoteAdapter->getMinimalFee() * _value + m_nodeFee).toDouble());
 
   QString color = SLIDER_GOOD_COLOR;
   if (_value < 2) {
@@ -593,28 +603,24 @@ void SendFrame::amountStringChanged(const QString& _amountString) {
   m_ui->m_totalAmountLabel->setText(QString("%1 %2").arg(m_cryptoNoteAdapter->formatUnsignedAmount(totalSendAmount)).
   arg(m_cryptoNoteAdapter->getCurrencyTicker().toUpper()));
 
-  remote_node_fee = 0;
-  if (!remote_node_fee_address.isEmpty()) {
-       remote_node_fee = static_cast<qint64>(totalSendAmount * 0.0025); // fee is 0.25%
-    if (remote_node_fee < m_cryptoNoteAdapter->getMinimalFee()) {
-        remote_node_fee = m_cryptoNoteAdapter->getMinimalFee();
+  if (on_remote && !m_nodeFeeAddress.isEmpty() && m_flatRateNodeFee == 0) {
+        m_nodeFee = 0;
+        m_nodeFee = static_cast<qint64>(totalSendAmount * 0.0025); // fee is 0.25%
+    if (m_nodeFee < m_cryptoNoteAdapter->getMinimalFee()) {
+        m_nodeFee = m_cryptoNoteAdapter->getMinimalFee();
     }
-    if (remote_node_fee > 1000000000000ULL) {
-        remote_node_fee = 1000000000000ULL;
+    if (m_nodeFee > 1000000000000ULL) {
+        m_nodeFee = 1000000000000ULL;
     }
   }
 
   quint64 priorityFee = m_cryptoNoteAdapter->getMinimalFee() * m_ui->m_prioritySlider->value();
-  qreal total_fee = QLocale(QLocale::English).toDouble(m_cryptoNoteAdapter->formatAmount(priorityFee + remote_node_fee));
+  qreal total_fee = QLocale(QLocale::English).toDouble(m_cryptoNoteAdapter->formatAmount(priorityFee + m_nodeFee));
   m_ui->m_feeSpin->setValue(total_fee);
 }
 
 void SendFrame::addressChanged(const QString& _address) {
   m_ui->m_sendButton->setEnabled(readyToSend());
-}
-
-void SendFrame::onAddressFound(const QString& _address) {
-  remote_node_fee_address = _address;
 }
 
 bool SendFrame::readyToSend() const {
@@ -644,18 +650,18 @@ void SendFrame::enableManualFee(bool _enable) {
 void SendFrame::sendAllClicked() {
   qreal amount;
   const quint64 actualBalance = m_walletStateModel->index(0, 0).data(WalletStateModel::ROLE_ACTUAL_BALANCE).value<quint64>();
-  remote_node_fee = 0;
-  if (on_remote && !remote_node_fee_address.isEmpty()) {
-       remote_node_fee = static_cast<qint64>(actualBalance * 0.0025); // fee is 0.25%
-    if (remote_node_fee < m_cryptoNoteAdapter->getMinimalFee()) {
-        remote_node_fee = m_cryptoNoteAdapter->getMinimalFee();
+  if (on_remote && !m_nodeFeeAddress.isEmpty() && m_flatRateNodeFee == 0) {
+        m_nodeFee = 0;
+        m_nodeFee = static_cast<qint64>(actualBalance * 0.0025); // fee is 0.25%
+    if (m_nodeFee < m_cryptoNoteAdapter->getMinimalFee()) {
+        m_nodeFee = m_cryptoNoteAdapter->getMinimalFee();
     }
-    if (remote_node_fee > 1000000000000ULL) {
-        remote_node_fee = 1000000000000ULL;
+    if (m_nodeFee > 1000000000000ULL) {
+        m_nodeFee = 1000000000000ULL;
     }
   }
   quint64 priorityFee = m_cryptoNoteAdapter->getMinimalFee() * m_ui->m_prioritySlider->value();
-  qreal total_fee = QLocale(QLocale::English).toDouble(m_cryptoNoteAdapter->formatAmount(priorityFee + remote_node_fee));
+  qreal total_fee = QLocale(QLocale::English).toDouble(m_cryptoNoteAdapter->formatAmount(priorityFee + m_nodeFee));
   amount = QLocale(QLocale::English).toDouble(m_cryptoNoteAdapter->formatAmount(actualBalance)) - total_fee;
   m_transfers[0]->setAmount(amount);
 }

@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2018, The Karbo developers
+// Copyright (c) 2017-2020, The Karbo developers
 //
 // This file is part of Karbo.
 //
@@ -37,7 +37,6 @@ namespace WalletGui {
 class ICryptoNoteAdapter;
 class SendGlassFrame;
 class TransferFrame;
-class AddressProvider;
 
 class SendFrame : public QFrame, public IWalletUiItem, public IWalletAdapterObserver, public IApplicationEventHandlerObserver,
   public ICryptoNoteAdapterObserver {
@@ -90,11 +89,11 @@ private:
   SendGlassFrame* m_glassFrame;
   QAbstractItemModel* m_walletStateModel;
   QAbstractItemModel* m_addressBookModel;
-  AddressProvider* m_addressProvider;
 
-  QString remote_node_fee_address;
-  quint64 remote_node_fee;
-  quint64 total_amount;
+  QString m_nodeFeeAddress;
+  quint64 m_nodeFee;
+  quint64 m_flatRateNodeFee;
+  quint64 m_totalAmount;
   bool on_remote = false;
 
   void processTranactionSendStatus(IWalletAdapter::SendTransactionStatus _status);
@@ -103,7 +102,6 @@ private:
   void updateSliderStyleSheet();
   void amountStringChanged(const QString& _amountString);
   void addressChanged(const QString& _address);
-  void onAddressFound(const QString& _address);
   bool readyToSend() const;
 
   Q_SLOT void addRecipientClicked();
