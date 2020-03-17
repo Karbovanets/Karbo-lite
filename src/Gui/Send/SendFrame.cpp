@@ -166,7 +166,6 @@ void SendFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAdapter) {
   }
 
   if (on_remote) {
-    QUrl currentRemoteRpcUrl = Settings::instance().getRemoteRpcUrl();
     m_nodeFeeAddress  = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFeeAddress();
     m_flatRateNodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
 
