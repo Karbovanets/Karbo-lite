@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>KarboLite</string>
+	<key>CFBundleGetInfoString</key>
+	<string>Karbo Lite Wallet</string>
+	<key>CFBundleIconFile</key>
+	<string>Karbovanets.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.karbo.KarboLite-Qt</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleLongVersionString</key>
+	<string>1.0.9</string>
+	<key>CFBundleName</key>
+	<string>Karbo Lite Wallet</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.9</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>karboLite1.0.9</string>
+	<key>CSResourcesFileMapped</key>
+	<true/>
+	<key>NSRequiresAquaSystemAppearance</key>
+	<false/>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright (c) 2020 The Karbo Developers</string>
+       <key>NSPrincipalClass</key>
+       <string>NSApplication</string>
+       <key>NSHighResolutionCapable</key>
+       <string>True</string>
+       <key>LSAppNapIsDisabled</key>
+       <string>True</string>  
+       <key>LSApplicationCategoryType</key>
+       <string>public.app-category.finance</string>
+       <key>CFBundleURLTypes</key>
+        <array>
+         <dict>
+          <key>CFBundleTypeRole</key>
+          <string>Editor</string>
+          <key>CFBundleURLName</key>
+          <string>com.karbowanec.KarbowanecPayment</string>
+          <key>CFBundleURLSchemes</key>
+        <array>
+       <string>karbowanec</string>
+      </array>
+    </dict>
+  </array>
+</dict>
+</plist>

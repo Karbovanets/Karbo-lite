@@ -277,3 +277,20 @@ endif (APPLE)
 add_definitions(-DUSE_LITE_WALLET)
 
 qt5_use_modules(${PROJECT_NAME} Widgets Gui Network)
+
+# Installation
+
+# We need cpack only for macOS here
+set(CPACK_PACKAGE_NAME ${CN_PROJECT_NAME})
+set(CPACK_PACKAGE_VERSION ${CN_VERSION})
+set(CPACK_PACKAGE_VENDOR "Karbowanec-project")
+set(CPACK_PACKAGE_CONTACT "https://karbo.org")
+set(CPACK_STRIP_FILES ON)
+if (APPLE)
+    set(CPACK_GENERATOR DragNDrop)
+	set(CPACK_BUNDLE_PLIST ${CMAKE_SOURCE_DIR}/Info.plist)
+    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
+	install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION .)
+endif (APPLE)
+
+include(CPack)
