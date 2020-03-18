@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2018, The Karbo developers
+// Copyright (c) 2017-2020, The Karbo developers
 //
 // This file is part of Karbovanets.
 //
@@ -41,6 +41,8 @@
 #include "CryptoNoteProtocol/CryptoNoteProtocolHandler.h"
 
 #include "CryptoNoteCore/TransactionExtra.h"
+
+#include "version.h"
 
 // http://stackoverflow.com/questions/2941491/compare-versions-as-strings/2941895#2941895
 class Version
@@ -484,7 +486,7 @@ void CryptoNoteAdapter::onLocalDaemonNotFound() {
       initRemoteRpcNode();
     } else {
       WalletLogger::info(tr("[CryptoNote wrapper] Could not connect to any node!!!"));
-      initLocalRpcNode();
+      initLocalRpcNode(); // fallback
     }
   }
 }
@@ -533,19 +535,19 @@ bool CryptoNoteAdapter::isNodeAvailable(QUrl _node) {
 
     // check if node is up-to-date
     WalletLogger::info(tr("[CryptoNote wrapper] Checking remote node %1:%2 version").arg(_node.host()).arg(_node.port()));
-    Version neededVersion = Settings::instance().getVersion().toStdString();
+    Version neededVersion = PROJECT_VERSION;
     if (err.empty()) {
       std::string ver = res.version;
       if (!ver.empty()) {
         ver.erase (ver.begin()+5, ver.end());
         Version nodeVersion = ver;
-        if(neededVersion < nodeVersion) {
-          WalletLogger::info(tr("[CryptoNote wrapper] Remote node %1:%2 version %3 is OK").arg(_node.host()).arg(_node.port()).arg(QString::fromStdString(res.version)));
-          return true;
+        if(nodeVersion < neededVersion) {
+          WalletLogger::info(tr("[CryptoNote wrapper] Remote node %1:%2 version %3 is outdated.").arg(_node.host()).arg(_node.port()).arg(QString::fromStdString(res.version)));
+          return false;
         }
       }
-      WalletLogger::info(tr("[CryptoNote wrapper] Remote node %1:%2 version %3 is outdated.").arg(_node.host()).arg(_node.port()).arg(QString::fromStdString(res.version)));
-      return false;
+      WalletLogger::info(tr("[CryptoNote wrapper] Remote node %1:%2 version %3 is OK").arg(_node.host()).arg(_node.port()).arg(QString::fromStdString(res.version)));
+      return true;
     }
   }
   return false;
