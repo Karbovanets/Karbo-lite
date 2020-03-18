@@ -140,9 +140,7 @@ void OverviewHeaderFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAd
     if (nodeFee != 0) {
       m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 %2")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))).arg(m_cryptoNoteAdapter->getCurrencyTicker()));
     } else {
-      if (!nodeFeeAddr.isEmpty()) {
-        m_ui->m_overviewNodeFeeLabel->setText("0.25%");
-      }
+      m_ui->m_overviewNodeFeeLabel->setText("0.25%");
     }
   } else {
     m_ui->m_overviewNodeFeeLabel->setText("free");
@@ -266,9 +264,7 @@ void OverviewHeaderFrame::m_nodeStateModelDataChanged(const QModelIndex& _topLef
       if (nodeFee != 0) {
         m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 %2")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))).arg(m_cryptoNoteAdapter->getCurrencyTicker()));
       } else {
-        if (!nodeFeeAddr.isEmpty()) {
-          m_ui->m_overviewNodeFeeLabel->setText("0.25%");
-        }
+        m_ui->m_overviewNodeFeeLabel->setText("0.25%");
       }
     } else {
       m_ui->m_overviewNodeFeeLabel->setText("free");
