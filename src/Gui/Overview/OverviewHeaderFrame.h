@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2018, The Karbo developers
+// Copyright (c) 2017-2020, The Karbo developers
 //
 // This file is part of Karbo.
 //
@@ -36,7 +36,7 @@ namespace WalletGui {
 class OverviewHeaderGlassFrame;
 
 class OverviewHeaderFrame : public QFrame, public IWalletUiItem, 
-  public ICryptoNoteAdapterObserver {
+  public INodeAdapterObserver, public ICryptoNoteAdapterObserver {
   Q_OBJECT
   Q_DISABLE_COPY(OverviewHeaderFrame)
 
@@ -53,6 +53,14 @@ public:
   virtual void setNodeStateModel(QAbstractItemModel* _model) override;
   virtual void setWalletStateModel(QAbstractItemModel* _model) override;
   virtual void setTransactionPoolModel(QAbstractItemModel *_model) override;
+
+  // INodeAdapterObserver
+  Q_SLOT virtual void initCompleted(int _status) override;
+  Q_SLOT virtual void deinitCompleted() override;
+  Q_SLOT virtual void peerCountUpdated(quintptr _count) override;
+  Q_SLOT virtual void localBlockchainUpdated(CryptoNote::BlockHeaderInfo _lastLocalBlockInfo) override;
+  Q_SLOT virtual void lastKnownBlockHeightUpdated(quint32 _height) override;
+  Q_SLOT virtual void connectionStatusUpdated(bool _connected) override;
 
   // ICryptoNoteAdapterObserver
   Q_SLOT virtual void cryptoNoteAdapterInitCompleted(int _status) override;
@@ -71,7 +79,9 @@ private:
   OverviewHeaderGlassFrame* m_balancesGlassFrame;
   OverviewHeaderGlassFrame* m_transactionPoolGlassFrame;
 
-  bool m_isConnected = false;
+  bool m_isConnected = true;
+  QString m_nodeHost;
+  quint16 m_nodePort;
 
   void copyAvailableBalance();
   void copyLockedBalance();
@@ -80,6 +90,8 @@ private:
   void changeConnectionStateAppearance();
   void walletStateModelDataChanged(const QModelIndex& _topLeft, const QModelIndex& _bottomRight, const QVector<int>& _roles);
   void m_nodeStateModelDataChanged(const QModelIndex& _topLeft, const QModelIndex& _bottomRight, const QVector<int>& _roles);
+
+  void touchNodeInfo();
 
   Q_SLOT void poolTransactionClicked(const QModelIndex& _index);
 };

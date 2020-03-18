@@ -93,7 +93,7 @@ const char OVERVIEW_HEADER_STYLE_SHEET_TEMPLATE[] =
 }
 
 OverviewHeaderFrame::OverviewHeaderFrame(QWidget* _parent) : QFrame(_parent), m_ui(new Ui::OverviewHeaderFrame),
-  m_cryptoNoteAdapter(nullptr), m_nodeStateModel(nullptr),
+  m_cryptoNoteAdapter(nullptr),  m_nodeStateModel(nullptr),
   m_walletStateModel(nullptr), m_transactionPoolModel(nullptr), m_overViewTransactionPoolModel(nullptr),
   m_syncMovie(new QMovie(":icons/light/wallet-sync", QByteArray(), this)),
   m_balancesGlassFrame(new OverviewHeaderGlassFrame(m_syncMovie, nullptr)),
@@ -131,27 +131,10 @@ void OverviewHeaderFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAd
   m_ui->m_overviewLockedBalanceTickerLabel->setText(m_cryptoNoteAdapter->getCurrencyTicker().toUpper());
   m_ui->m_overviewTotalBalanceTickerLabel->setText(m_cryptoNoteAdapter->getCurrencyTicker().toUpper());
   m_cryptoNoteAdapter->addObserver(this);
+  INodeAdapter* nodeAdapter = m_cryptoNoteAdapter->getNodeAdapter();
+  nodeAdapter->addObserver(this);
 
-  m_ui->m_overviewMasternode->setText(QString("%1:%2").arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodeHost()).arg(m_cryptoNoteAdapter->getNodeAdapter()->getNodePort()));
-
-  QString nodeFeeAddr = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFeeAddress();
-  if(!nodeFeeAddr.isEmpty()) {
-    quint64 nodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
-    if (nodeFee != 0) {
-      m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 %2")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))).arg(m_cryptoNoteAdapter->getCurrencyTicker()));
-    } else {
-      m_ui->m_overviewNodeFeeLabel->setText("0.25%");
-    }
-  } else {
-    m_ui->m_overviewNodeFeeLabel->setText("free");
-  }
-
-  QString nodeVersionStr =  m_cryptoNoteAdapter->getNodeAdapter()->getNodeVersion();
-  if (!nodeVersionStr.isEmpty()) {
-    m_ui->m_overviewNodeVersionLabel->setText(nodeVersionStr);
-  } else {
-   m_ui->m_overviewNodeVersionLabel->setText("n/a");
-  }
+  touchNodeInfo();
 }
 
 void OverviewHeaderFrame::setMainWindow(QWidget* _mainWindow) {
@@ -186,16 +169,7 @@ void OverviewHeaderFrame::setWalletStateModel(QAbstractItemModel* _model) {
 }
 
 void OverviewHeaderFrame::setTransactionPoolModel(QAbstractItemModel* _model) {
-/*  m_transactionPoolModel = _model;
-  connect(m_transactionPoolModel, &QAbstractItemModel::modelReset, this, &OverviewHeaderFrame::transactionPoolChanged);
-  m_overViewTransactionPoolModel = new OverviewTransactionPoolModel(m_cryptoNoteAdapter, this);
-  m_overViewTransactionPoolModel->setSourceModel(m_transactionPoolModel);
-  m_ui->m_overviewTransactionPoolView->setModel(m_overViewTransactionPoolModel);
-  int hashColumn = TransactionPoolModel::findProxyColumn(m_overViewTransactionPoolModel, TransactionPoolModel::COLUMN_HASH);
-  int amountColumn = TransactionPoolModel::findProxyColumn(m_overViewTransactionPoolModel, TransactionPoolModel::COLUMN_AMOUNT);
-  m_ui->m_overviewTransactionPoolView->header()->setSectionResizeMode(hashColumn, QHeaderView::Stretch);
-  m_ui->m_overviewTransactionPoolView->header()->setSectionResizeMode(amountColumn, QHeaderView::ResizeToContents);
-  m_ui->m_overviewTransactionPoolView->setItemDelegateForColumn(hashColumn, new LinkLikeColumnDelegate(this));*/
+  // Do nothing
 }
 
 void OverviewHeaderFrame::cryptoNoteAdapterInitCompleted(int _status) {
@@ -204,6 +178,32 @@ void OverviewHeaderFrame::cryptoNoteAdapterInitCompleted(int _status) {
 
 void OverviewHeaderFrame::cryptoNoteAdapterDeinitCompleted() {
   // Do nothing
+}
+
+void OverviewHeaderFrame::initCompleted(int _status) {
+  touchNodeInfo();
+}
+
+void OverviewHeaderFrame::deinitCompleted() {
+  touchNodeInfo();
+}
+
+void OverviewHeaderFrame::peerCountUpdated(quintptr _count) {
+  // Do nothing
+}
+
+void OverviewHeaderFrame::localBlockchainUpdated(CryptoNote::BlockHeaderInfo _lastLocalBlockInfo) {
+  // Do nothing
+}
+
+void OverviewHeaderFrame::lastKnownBlockHeightUpdated(quint32 _height) {
+  // Do nothing
+}
+
+void OverviewHeaderFrame::connectionStatusUpdated(bool _connected) {
+  m_isConnected = _connected;
+
+  touchNodeInfo();
 }
 
 void OverviewHeaderFrame::copyAvailableBalance() {
@@ -249,37 +249,15 @@ void OverviewHeaderFrame::walletStateModelDataChanged(const QModelIndex& _topLef
 
 void OverviewHeaderFrame::m_nodeStateModelDataChanged(const QModelIndex& _topLeft, const QModelIndex& _bottomRight,
   const QVector<int>& _roles) {
-  QString host = m_nodeStateModel->index(0, NodeStateModel::COLUMN_NODE_HOST).data(NodeStateModel::ROLE_NODE_HOST).toString();
-  QString port = m_nodeStateModel->index(0, NodeStateModel::COLUMN_NODE_PORT).data(NodeStateModel::ROLE_NODE_PORT).toString();
-  m_ui->m_overviewMasternode->setText(QString("%1:%2").arg(host).arg(port));
+  //QString host = m_nodeStateModel->index(0, NodeStateModel::COLUMN_NODE_HOST).data(NodeStateModel::ROLE_NODE_HOST).toString();
+  //QString port = m_nodeStateModel->index(0, NodeStateModel::COLUMN_NODE_PORT).data(NodeStateModel::ROLE_NODE_PORT).toString();
+  //m_ui->m_overviewMasternode->setText(QString("%1:%2").arg(host).arg(port));
 
   m_isConnected = m_nodeStateModel->index(0, NodeStateModel::COLUMN_CONNECTION_STATE).data(NodeStateModel::ROLE_CONNECTION_STATE).toBool();
-  m_ui->m_overviewConnectionState->setText(m_isConnected ? "connected" : "disconnected");
-  changeConnectionStateAppearance();
+  //m_ui->m_overviewConnectionState->setText(m_isConnected ? "connected" : "disconnected");
+  //changeConnectionStateAppearance();
 
-  if (m_isConnected) {
-    QString nodeFeeAddr = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFeeAddress();
-    if(!nodeFeeAddr.isEmpty()) {
-      quint64 nodeFee = m_cryptoNoteAdapter->getNodeAdapter()->getNodeFee();
-      if (nodeFee != 0) {
-        m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 %2")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))).arg(m_cryptoNoteAdapter->getCurrencyTicker()));
-      } else {
-        m_ui->m_overviewNodeFeeLabel->setText("0.25%");
-      }
-    } else {
-      m_ui->m_overviewNodeFeeLabel->setText("free");
-    }
-
-    QString nodeVersionStr =  m_cryptoNoteAdapter->getNodeAdapter()->getNodeVersion();
-    if (!nodeVersionStr.isEmpty()) {
-      m_ui->m_overviewNodeVersionLabel->setText(nodeVersionStr);
-    } else {
-      m_ui->m_overviewNodeVersionLabel->setText("n/a");
-    }
-  } else {
-    m_ui->m_overviewNodeFeeLabel->setText("n/a");
-    m_ui->m_overviewNodeVersionLabel->setText("n/a");
-  }
+  touchNodeInfo();
 }
 
 void OverviewHeaderFrame::changeConnectionStateAppearance() {
@@ -302,6 +280,55 @@ void OverviewHeaderFrame::poolTransactionClicked(const QModelIndex& _index) {
 
   PoolTransactionDetailsDialog dlg(m_transactionPoolModel, sourceIndex, m_mainWindow);
   dlg.exec();
+}
+
+void OverviewHeaderFrame::touchNodeInfo() {
+  INodeAdapter* nodeAdapter = m_cryptoNoteAdapter->getNodeAdapter();
+  if (nodeAdapter == nullptr) {
+    m_ui->m_overviewNodeFeeLabel->setText("n/a");
+    m_ui->m_overviewNodeVersionLabel->setText("n/a");
+
+    m_isConnected = false;
+
+    m_ui->m_overviewConnectionState->setText(m_isConnected ? "connected" : "disconnected");
+    changeConnectionStateAppearance();
+
+    return;
+  }
+
+  m_nodeHost = nodeAdapter->getNodeHost();
+  m_nodePort = nodeAdapter->getNodePort();
+
+  m_ui->m_overviewMasternode->setText(QString("%1:%2").arg(m_nodeHost).arg(m_nodePort));
+
+  m_ui->m_overviewConnectionState->setText(m_isConnected ? "connected" : "disconnected");
+  changeConnectionStateAppearance();
+
+  if (m_isConnected) {
+    QString nodeFeeAddr = nodeAdapter->getNodeFeeAddress();
+    qDebug() << "Node fee addr: " << nodeFeeAddr;
+    if(!nodeFeeAddr.isEmpty()) {
+      quint64 nodeFee = nodeAdapter->getNodeFee();
+      qDebug() << "Node fee: " << nodeFee;
+      if (nodeFee != 0) {
+        m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 %2")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))).arg(m_cryptoNoteAdapter->getCurrencyTicker()));
+      } else {
+        m_ui->m_overviewNodeFeeLabel->setText("0.25%");
+      }
+    } else {
+      m_ui->m_overviewNodeFeeLabel->setText("free");
+    }
+
+    QString nodeVersionStr = nodeAdapter->getNodeVersion();
+    if (!nodeVersionStr.isEmpty()) {
+      m_ui->m_overviewNodeVersionLabel->setText(nodeVersionStr);
+    } else {
+     m_ui->m_overviewNodeVersionLabel->setText("n/a");
+    }
+  } else {
+    m_ui->m_overviewNodeFeeLabel->setText("n/a");
+    m_ui->m_overviewNodeVersionLabel->setText("n/a");
+  }
 }
 
 }
