@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2018, The Karbo developers
+// Copyright (c) 2017-2020, The Karbo developers
 //
 // This file is part of Karbo.
 //
@@ -203,7 +203,12 @@ bool TransactionsModel::setData(const QModelIndex& _index, const QVariant& _valu
 void TransactionsModel::walletOpened() {
   Q_ASSERT(m_transactions.isEmpty());
   Q_ASSERT(m_showTransfers.isEmpty());
-  IWalletAdapter* walletAdapter = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter();
+  INodeAdapter* nodeAdapter = m_cryptoNoteAdapter->getNodeAdapter();
+  if (nodeAdapter == nullptr) {
+    return;
+  }
+  IWalletAdapter* walletAdapter = nodeAdapter->getWalletAdapter();
+
   QHash<quintptr, FullTransactionInfo> transactionInfos;
   if (!walletAdapter->getAllTransactions(transactionInfos)) {
     return;
@@ -287,6 +292,9 @@ void TransactionsModel::transactionUpdated(quintptr _transactionIndex, const Ful
 void TransactionsModel::cryptoNoteAdapterInitCompleted(int _status) {
   if (_status == 0) {
     INodeAdapter* nodeAdapter = m_cryptoNoteAdapter->getNodeAdapter();
+    if (nodeAdapter == nullptr) {
+      return;
+    }
     IWalletAdapter* walletAdapter = nodeAdapter->getWalletAdapter();
     walletAdapter->addObserver(this);
   }
@@ -515,13 +523,22 @@ QVariant TransactionsModel::getUserRolesData(const QModelIndex &_index, int _rol
 }
 
 void TransactionsModel::showAllCachedTransactions() {
-  IWalletAdapter* walletAdapter = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter();
+  INodeAdapter* nodeAdapter = m_cryptoNoteAdapter->getNodeAdapter();
+  if (nodeAdapter == nullptr) {
+    return;
+  }
+  IWalletAdapter* walletAdapter = nodeAdapter->getWalletAdapter();
   if (!walletAdapter->isOpen() || m_transactions.isEmpty()) {
     return;
   }
 
   quintptr firstIndex = (m_lastVisibleTransactionIndex == CryptoNote::WALLET_INVALID_TRANSACTION_ID ? 0 : m_lastVisibleTransactionIndex + 1);
   quintptr lastIndex = m_transactions.size() - 1;
+
+  if (lastIndex < firstIndex) {
+    return;
+  }
+
   beginInsertRows(QModelIndex(), firstIndex, lastIndex);
   m_showTransfers.resize(lastIndex + 1);
   m_showTransfers.fill(false, firstIndex, lastIndex);
@@ -531,7 +548,11 @@ void TransactionsModel::showAllCachedTransactions() {
 }
 
 void TransactionsModel::updateTransaction(quintptr _transactionIndex, const FullTransactionInfo& _transaction) {
-  IWalletAdapter* walletAdapter = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter();
+  INodeAdapter* nodeAdapter = m_cryptoNoteAdapter->getNodeAdapter();
+  if (nodeAdapter == nullptr) {
+    return;
+  }
+  IWalletAdapter* walletAdapter = nodeAdapter->getWalletAdapter();
   if (!walletAdapter->isOpen()) {
     return;
   }

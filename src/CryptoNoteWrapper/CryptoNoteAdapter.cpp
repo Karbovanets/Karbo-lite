@@ -161,7 +161,7 @@ void CryptoNoteAdapter::deinit() {
 }
 
 INodeAdapter* CryptoNoteAdapter::getNodeAdapter() const {
-  Q_ASSERT(m_nodeAdapter != nullptr);
+  //Q_ASSERT(m_nodeAdapter != nullptr);
   return m_nodeAdapter;
 }
 
