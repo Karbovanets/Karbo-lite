@@ -22,7 +22,7 @@ BEGIN
             VALUE "LegalCopyright",     PROJECT_COPYRIGHT
             VALUE "OriginalFilename",   VER_ORIGINALFILENAME_STR
             VALUE "ProductName",        PROJECT_NAME
-            VALUE "ProductVersion",     PROJECT_VERSION
+            VALUE "ProductVersion",     WALLET_VERSION
         END
     END
 
