@@ -537,7 +537,8 @@ bool CryptoNoteAdapter::isNodeAvailable(QUrl _node) {
 
     // check if node is up-to-date
     WalletLogger::info(tr("[CryptoNote wrapper] Checking remote node %1:%2 version").arg(_node.host()).arg(_node.port()));
-    Version neededVersion = PROJECT_VERSION;
+
+    Version neededVersion = Version(PROJECT_VERSION);
     if (err.empty()) {
       std::string ver = res.version;
       if (!ver.empty()) {
