@@ -378,7 +378,7 @@ bool Settings::isEncrypted() const {
 }
 
 QString Settings::getVersion() const {
-  return QString("%1").arg(CN_VERSION);
+  return QString("%1").arg(WALLET_VERSION);
 }
 
 QString Settings::getCurrentTheme() const {

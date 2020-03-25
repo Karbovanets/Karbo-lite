@@ -8,17 +8,17 @@ execute_process(COMMAND git log -1 --pretty=format:%h
 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 OUTPUT_VARIABLE GIT_REVISION)
 
-execute_process(COMMAND git log -1 --pretty=format:%h
-WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/cryptonote/"
-OUTPUT_VARIABLE CN_REVISION)
-
-set(VERSION "${CN_REVISION}")
-configure_file("cryptonote/src/version.h.in" "version.h")
+set(VERSION "")
+include(cn_version.cmake)
 configure_file("src/CryptoNoteWalletConfig.h.in" "CryptoNoteWalletConfig.h")
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/src/Info.plist.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/Info.plist"
+    @ONLY
+)
 
 add_definitions (-DGIT_REVISION="${GIT_REVISION}")
-add_definitions (-DCN_VERSION="${CN_VERSION}")
-add_definitions (-DCN_REVISION="${CN_REVISION}")
+add_definitions (-DWALLET_VERSION="${WALLET_VERSION}")
 
 set(CRYPTONOTE_LIB cryptonote)
 
@@ -267,11 +267,13 @@ target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${QTMAIN} ${CRYPTONOTE_
 
 if (APPLE)
   qt5_use_modules(${PROJECT_NAME} PrintSupport)
+  set_target_properties(${PROJECT_NAME} PROPERTIES
+    MACOSX_BUNDLE TRUE
+    MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
 elseif (UNIX)
   target_link_libraries(${PROJECT_NAME} -lpthread)
 elseif (WIN32)
   target_link_libraries(${PROJECT_NAME} Imm32 Iphlpapi Winmm UxTheme d3d9 dxguid Rpcrt4 Wtsapi32 WSock32 ws2_32 Dwmapi)
-
 endif (APPLE)
 
 add_definitions(-DUSE_LITE_WALLET)
@@ -288,7 +290,7 @@ set(CPACK_PACKAGE_CONTACT "https://karbo.org")
 set(CPACK_STRIP_FILES ON)
 if (APPLE)
     set(CPACK_GENERATOR DragNDrop)
-	set(CPACK_BUNDLE_PLIST ${CMAKE_SOURCE_DIR}/Info.plist)
+	set(CPACK_BUNDLE_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
     set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
 	install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION .)
 endif (APPLE)

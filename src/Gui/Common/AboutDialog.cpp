@@ -31,7 +31,7 @@ AboutDialog::AboutDialog(QWidget* _parent) : QDialog(_parent, static_cast<Qt::Wi
   m_ui->setupUi(this);
 
   QString aboutText = m_ui->m_aboutLabel->text();
-  m_ui->m_aboutLabel->setText(aboutText.arg(CN_VERSION " (" GIT_REVISION ")")
+  m_ui->m_aboutLabel->setText(aboutText.arg(WALLET_VERSION " (" GIT_REVISION ")")
                                        .arg(PROJECT_VERSION_LONG)
                                        .arg(QDateTime::currentDateTime().date().year()));
 }

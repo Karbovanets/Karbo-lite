@@ -15,43 +15,43 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
-	<string>1.0.9</string>
+	<string>@WALLET_VERSION@</string>
 	<key>CFBundleName</key>
 	<string>Karbo Lite Wallet</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.9</string>
+	<string>@WALLET_VERSION@</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>karboLite1.0.9</string>
+	<string>karboLite@WALLET_VERSION@</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 	<key>NSRequiresAquaSystemAppearance</key>
 	<false/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright (c) 2020 The Karbo Developers</string>
-       <key>NSPrincipalClass</key>
-       <string>NSApplication</string>
-       <key>NSHighResolutionCapable</key>
-       <string>True</string>
-       <key>LSAppNapIsDisabled</key>
-       <string>True</string>  
-       <key>LSApplicationCategoryType</key>
-       <string>public.app-category.finance</string>
-       <key>CFBundleURLTypes</key>
-        <array>
-         <dict>
-          <key>CFBundleTypeRole</key>
-          <string>Editor</string>
-          <key>CFBundleURLName</key>
-          <string>com.karbowanec.KarbowanecPayment</string>
-          <key>CFBundleURLSchemes</key>
-        <array>
-       <string>karbowanec</string>
-      </array>
-    </dict>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>NSHighResolutionCapable</key>
+	<string>True</string>
+	<key>LSAppNapIsDisabled</key>
+	<string>True</string>  
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.finance</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.karbowanec.KarbowanecPayment</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>karbowanec</string>
+			</array>
+		</dict>
   </array>
 </dict>
 </plist>
