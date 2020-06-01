@@ -66,8 +66,11 @@ public:
   virtual bool isFusionTransaction(quintptr _transactionIndex) const override;
   virtual QByteArray getUserData() const override;
   virtual Crypto::SecretKey getTransactionSecretKey(quintptr _transactionIndex) const override;
+  virtual Crypto::SecretKey getTransactionSecretKey(Crypto::Hash& _transactionId) const override;
+  virtual QString getTransactionProof(Crypto::Hash& _txid, CryptoNote::AccountPublicAddress& _address) const override;
   virtual QString getBalanceProof(quint64& _amount, QString& _message) const override;
-
+  virtual QString signMessage(const QString &data) const override;
+  virtual bool verifyMessage(const QString &data, const QString &address, const QString &signature) const override;
   virtual SendTransactionStatus sendTransaction(const CryptoNote::TransactionParameters& _transactionParameters) override;
   virtual bool createFusionTransaction(quint64 _threshold, quint64 _mixin, const QString& _destinationAddress) override;
   virtual quintptr getOutputsToOptimizeCount(quint64 _threshold) const override;

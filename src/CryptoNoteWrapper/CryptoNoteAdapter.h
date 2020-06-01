@@ -68,7 +68,6 @@ public:
   virtual void removeObserver(ICryptoNoteAdapterObserver* _observer) override;
   virtual bool parseAccountAddressString(QString& _address, CryptoNote::AccountPublicAddress& _internalAddress) override;
   virtual bool getNodeInfo(QUrl _node, CryptoNote::COMMAND_RPC_GET_INFO::response& info);
-  QString getTxProof(Crypto::Hash& txid, CryptoNote::AccountPublicAddress& address, Crypto::SecretKey& tx_key) override;
   bool isNodeAvailable(QUrl _node);
   bool isNodeUpToDate(std::string _our, std::string _node);
   bool getWorkingRandomNode();

@@ -97,12 +97,17 @@ public:
   virtual quintptr getTransactionTransferCount(quintptr _transactionIndex) const = 0;
   virtual bool getTransaction(quintptr _transactionIndex, CryptoNote::WalletTransaction& _transaction) const = 0;
   virtual Crypto::SecretKey getTransactionSecretKey(quintptr transactionIndex) const = 0;
+  virtual Crypto::SecretKey getTransactionSecretKey(Crypto::Hash& _transactionId) const = 0;
+  virtual QString getTransactionProof(Crypto::Hash& _txid, CryptoNote::AccountPublicAddress& _address) const = 0;
   virtual bool getFullTransactionInfo(quintptr _transactionIndex, FullTransactionInfo& _transactionInfo) const = 0;
   virtual bool getAllTransactions(QHash<quintptr, FullTransactionInfo>& _transactionInfos) const = 0;
   virtual bool getTransactionTransfer(quintptr _transactionIndex, quintptr _transferIndex, CryptoNote::WalletTransfer& _transfer) const = 0;
   virtual bool isFusionTransaction(quintptr _transactionIndex) const = 0;
   virtual QByteArray getUserData() const = 0;
   virtual QString getBalanceProof(quint64& _amount, QString& _message) const = 0;
+  virtual QString signMessage(const QString &data) const = 0;
+  virtual bool verifyMessage(const QString &data, const QString &address, const QString &signature) const = 0;
+
 
   virtual SendTransactionStatus sendTransaction(const CryptoNote::TransactionParameters& _transactionParameters) = 0;
   virtual bool createFusionTransaction(quint64 _threshold, quint64 _mixin, const QString& _destinationAddress) = 0;

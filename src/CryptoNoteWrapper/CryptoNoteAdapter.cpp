@@ -27,9 +27,6 @@
 #include <QTimerEvent>
 #include <QUrl>
 
-#include "crypto/crypto.h"
-#include "Common/Base58.h"
-
 #include "CryptoNoteAdapter.h"
 #include "WalletLogger/WalletLogger.h"
 #include "IBlockChainExplorerAdapter.h"
@@ -571,27 +568,6 @@ bool CryptoNoteAdapter::getWorkingRandomNode(){
       getWorkingRandomNode();
     }
   }
-}
-
-QString CryptoNoteAdapter::getTxProof(Crypto::Hash& txid, CryptoNote::AccountPublicAddress& address, Crypto::SecretKey& tx_key) {
-  Crypto::KeyImage p = *reinterpret_cast<Crypto::KeyImage *>(&address.viewPublicKey);
-  Crypto::KeyImage k = *reinterpret_cast<Crypto::KeyImage *>(&tx_key);
-  Crypto::KeyImage pk = Crypto::scalarmultKey(p, k);
-  Crypto::PublicKey R;
-  Crypto::PublicKey rA = reinterpret_cast<const Crypto::PublicKey &>(pk);
-  Crypto::secret_key_to_public_key(tx_key, R);
-  Crypto::Signature sig;
-  try {
-    Crypto::generate_tx_proof(txid, R, address.viewPublicKey, rA, tx_key, sig);
-  }
-  catch (const std::runtime_error &e) {
-    WalletLogger::debug(tr("[CryptoNote wrapper] Proof generation error: %1").arg(*e.what()));
-    return "";
-  }
-  std::string sig_str = std::string("ProofV1") +
-        Tools::Base58::encode(std::string((const char *)&rA, sizeof(Crypto::PublicKey))) +
-        Tools::Base58::encode(std::string((const char *)&sig, sizeof(Crypto::Signature)));
-  return QString::fromStdString(sig_str);
 }
 
 }

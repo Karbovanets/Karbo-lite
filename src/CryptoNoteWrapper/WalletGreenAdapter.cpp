@@ -183,9 +183,29 @@ Crypto::SecretKey WalletGreenAdapter::getTransactionSecretKey(quintptr _transact
   return m_worker->getTransactionSecretKey(_transactionIndex);
 }
 
+Crypto::SecretKey WalletGreenAdapter::getTransactionSecretKey(Crypto::Hash& _transactionId) const {
+  Q_ASSERT(m_worker != nullptr);
+  return m_worker->getTransactionSecretKey(_transactionId);
+}
+
+QString WalletGreenAdapter::getTransactionProof(Crypto::Hash& _txid, CryptoNote::AccountPublicAddress& _address) const {
+  Q_ASSERT(m_worker != nullptr);
+  return m_worker->getTransactionProof(_txid, _address);
+}
+
 QString WalletGreenAdapter::getBalanceProof(quint64& _amount, QString& _message) const {
   Q_ASSERT(m_worker != nullptr);
   return m_worker->getBalanceProof(_amount, _message);
+}
+
+QString WalletGreenAdapter::signMessage(const QString &data) const {
+  Q_ASSERT(m_worker != nullptr);
+  return m_worker->signMessage(data);
+}
+
+bool WalletGreenAdapter::verifyMessage(const QString &data, const QString &address, const QString &signature) const {
+  Q_ASSERT(m_worker != nullptr);
+  return m_worker->verifyMessage(data, address, signature);
 }
 
 IWalletAdapter::SendTransactionStatus WalletGreenAdapter::sendTransaction(const CryptoNote::TransactionParameters& _transactionParameters) {

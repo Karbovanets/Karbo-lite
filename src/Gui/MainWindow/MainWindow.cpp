@@ -795,7 +795,7 @@ void MainWindow::encryptWallet() {
 void MainWindow::signMessage() {
   AccountKeys accountKeys = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAccountKeys(0);
   QString address = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAddress(0);
-  SignMessageDialog dlg(accountKeys, address, this);
+  SignMessageDialog dlg(m_cryptoNoteAdapter, accountKeys, address, this);
   dlg.sign();
   dlg.exec();
 }
@@ -803,7 +803,7 @@ void MainWindow::signMessage() {
 void MainWindow::verifyMessage() {
   AccountKeys accountKeys = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAccountKeys(0);
   QString address = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAddress(0);
-  SignMessageDialog dlg(accountKeys, address, this);
+  SignMessageDialog dlg(m_cryptoNoteAdapter, accountKeys, address, this);
   dlg.verify();
   dlg.exec();
 }

@@ -201,16 +201,14 @@ void TransactionDetailsDialog::copyableItemClicked(const QModelIndex& _index) {
 }
 
 QString TransactionDetailsDialog::getTxProof(const QModelIndex& _index) const {
-  CryptoNote::WalletTransfer transfer = m_index.data(TransactionsModel::ROLE_TRANSFERS).
-          value<QList<CryptoNote::WalletTransfer>>()[_index.row()];
   QString proof = "";
+  CryptoNote::WalletTransfer transfer = m_index.data(TransactionsModel::ROLE_TRANSFERS).value<QList<CryptoNote::WalletTransfer>>()[_index.row()];
   Crypto::Hash txHash;
   Common::podFromHex(m_index.data(TransactionsModel::ROLE_HASH).toByteArray().toHex().toStdString(), txHash);
-  Crypto::SecretKey txKey = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getTransactionSecretKey(static_cast<size_t>(m_index.row()));
   QString address_str = QString::fromStdString(transfer.address);
   CryptoNote::AccountPublicAddress addr;
-  if (m_cryptoNoteAdapter->parseAccountAddressString(address_str, addr) && transfer.amount > 0 && txKey != CryptoNote::NULL_SECRET_KEY) {
-    proof = m_cryptoNoteAdapter->getTxProof(txHash, addr, txKey);
+  if (m_cryptoNoteAdapter->parseAccountAddressString(address_str, addr) && transfer.amount > 0) {
+    proof = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getTransactionProof(txHash, addr);
   }
   return proof;
 }
