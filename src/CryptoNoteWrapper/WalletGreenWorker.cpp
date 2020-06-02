@@ -615,7 +615,7 @@ QString WalletGreenWorker::getTransactionProof(Crypto::Hash& _txid, CryptoNote::
   SemaphoreLocker locker(m_walletSemaphore);
   std::string tx_proof;
   bool r;
-  Crypto::SecretKey txKey = getTransactionSecretKey(_txid);
+  Crypto::SecretKey txKey = m_wallet->getTransactionSecretKey(_txid);
   m_dispatcher->remoteSpawn([this, _txid, _address, txKey, &tx_proof, &r]() {
     SemaphoreUnlocker unlocker(m_walletSemaphore);
     r = m_wallet->getTransactionProof(_txid, _address, txKey, tx_proof);
