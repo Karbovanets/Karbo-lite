@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.6)
 include(CryptoNoteWallet.cmake)
 include(QREncode.cmake)
 
-project(${CN_PROJECT_NAME})
+project(${WALLET_NAME})
 
 execute_process(COMMAND git log -1 --pretty=format:%h
 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -283,8 +283,8 @@ qt5_use_modules(${PROJECT_NAME} Widgets Gui Network)
 # Installation
 
 # We need cpack only for macOS here
-set(CPACK_PACKAGE_NAME ${CN_PROJECT_NAME})
-set(CPACK_PACKAGE_VERSION ${CN_VERSION})
+set(CPACK_PACKAGE_NAME ${WALLET_NAME})
+set(CPACK_PACKAGE_VERSION ${WALLET_VERSION})
 set(CPACK_PACKAGE_VENDOR "Karbowanec-project")
 set(CPACK_PACKAGE_CONTACT "https://karbo.org")
 set(CPACK_STRIP_FILES ON)
