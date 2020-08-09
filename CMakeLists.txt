@@ -3,11 +3,6 @@ cmake_minimum_required(VERSION 3.8)
 enable_language(C)
 enable_language(CXX)
 
-# Enable c++17
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 include(CryptoNoteWallet.cmake)
 include(QREncode.cmake)
 
@@ -266,7 +261,7 @@ elseif (UNIX)
 
     include_directories(/usr/include/malloc)
 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -maes -std=c++17 -stdlib=libc++")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -maes -std=c++11 -stdlib=libc++")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -maes -D_DARWIN_C_SOURCE")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework Cocoa -framework OpenGL -framework CoreFoundation -framework Carbon -framework IOKit -L/usr/lib")
 
@@ -283,7 +278,7 @@ elseif (UNIX)
   else(APPLE)
 
     set(PLATFORM_DIR Linux)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -maes -std=c++17")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -maes -std=c++11")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -maes -std=c11")
   endif (APPLE)
 endif ()
