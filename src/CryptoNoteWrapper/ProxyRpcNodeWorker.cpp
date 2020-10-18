@@ -18,6 +18,7 @@
 
 #include <QCoreApplication>
 #include <QDateTime>
+#include <QUrl>
 
 #include "ProxyRpcNodeWorker.h"
 #include "WalletLogger/WalletLogger.h"
