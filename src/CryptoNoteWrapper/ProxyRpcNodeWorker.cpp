@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2018, The Karbo developers
+// Copyright (c) 2017-2020, The Karbo developers
 //
 // This file is part of Karbo.
 //
@@ -18,6 +18,7 @@
 
 #include <QCoreApplication>
 #include <QDateTime>
+#include <QUrl>
 
 #include "ProxyRpcNodeWorker.h"
 #include "WalletLogger/WalletLogger.h"
@@ -28,9 +29,12 @@
 
 namespace WalletGui {
 
-ProxyRpcNodeWorker::ProxyRpcNodeWorker(const CryptoNote::Currency& _currency, Logging::ILogger& _loggerManager, Logging::ILogger& _walletLogger,
-  const QString& _nodeHost, quint16 _nodePort, QObject* _parent) : QObject(_parent), m_currency(_currency),
-  m_loggerManager(_loggerManager), m_walletLogger(_walletLogger), m_nodeHost(_nodeHost), m_nodePort(_nodePort)/*, m_blockchainExplorerAdapter(nullptr)*/ {
+ProxyRpcNodeWorker::ProxyRpcNodeWorker(const CryptoNote::Currency& _currency,
+                                       Logging::ILogger& _loggerManager, Logging::ILogger& _walletLogger,
+                                       const QUrl& _nodeUrl, QObject* _parent) :
+    QObject(_parent), m_currency(_currency),
+    m_loggerManager(_loggerManager), m_walletLogger(_walletLogger), m_nodeUrl(_nodeUrl)
+    /*, m_blockchainExplorerAdapter(nullptr)*/ {
 }
 
 ProxyRpcNodeWorker::~ProxyRpcNodeWorker() {
@@ -86,12 +90,12 @@ CryptoNote::BlockHeaderInfo ProxyRpcNodeWorker::getLastLocalBlockInfo() const {
 
 QString ProxyRpcNodeWorker::getNodeHost() const {
   Q_ASSERT(!m_node.isNull());
-  return m_nodeHost;
+  return m_nodeUrl.host();
 }
 
 quint16 ProxyRpcNodeWorker::getNodePort() const {
   Q_ASSERT(!m_node.isNull());
-  return m_nodePort;
+  return m_nodeUrl.port();
 }
 
 quint64 ProxyRpcNodeWorker::getMinimalFee() const {
@@ -149,7 +153,7 @@ IWalletAdapter* ProxyRpcNodeWorker::getWalletAdapter() {
 }
 
 void ProxyRpcNodeWorker::peerCountUpdated(size_t _count) {
-  //WalletLogger::info(tr("[RPC node] Event: Peer count updated: %1").arg(_count));
+  WalletLogger::debug(tr("[RPC node] Event: Peer count updated: %1").arg(_count));
   Q_EMIT peerCountUpdatedSignal(_count);
 }
 
@@ -170,7 +174,7 @@ void ProxyRpcNodeWorker::connectionStatusUpdated(bool _connected) {
 
 void ProxyRpcNodeWorker::initImpl() {
   Q_ASSERT(m_node.isNull());
-  m_node.reset(new CryptoNote::NodeRpcProxy(m_nodeHost.toStdString(), m_nodePort));
+  m_node.reset(new CryptoNote::NodeRpcProxy(m_nodeUrl.host().toStdString(), m_nodeUrl.port(), "/", m_nodeUrl.scheme().compare("https") == 0));
   m_node->addObserver(static_cast<CryptoNote::INodeObserver*>(this));
   m_node->addObserver(static_cast<CryptoNote::INodeRpcProxyObserver*>(this));
   WalletLogger::debug(tr("[RPC node] NodeRpcProxy initializing..."));

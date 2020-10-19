@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2018, The Karbo developers
+// Copyright (c) 2017-2020, The Karbo developers
 //
 // This file is part of Karbo.
 //
@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <QUrl>
 #include "CommonNodeAdapter.h"
 
 namespace Logging {
@@ -35,8 +36,7 @@ class ProxyRpcNodeAdapter : public CommonNodeAdapter {
   Q_DISABLE_COPY(ProxyRpcNodeAdapter)
 
 public:
-  ProxyRpcNodeAdapter(const CryptoNote::Currency& _currency, Logging::ILogger& _loggerManager, Logging::ILogger& _walletLogger,
-    const QString& _nodeHost, quint16 _nodePort, QObject* _parent);
+  ProxyRpcNodeAdapter(const CryptoNote::Currency& _currency, Logging::ILogger& _loggerManager, Logging::ILogger& _walletLogger, const QUrl& _nodeUrl, QObject* _parent);
   virtual ~ProxyRpcNodeAdapter();
 
 protected:
@@ -46,8 +46,7 @@ private:
   const CryptoNote::Currency& m_currency;
   Logging::ILogger& m_loggerManager;
   Logging::ILogger& m_walletLogger;
-  const QString m_nodeHost;
-  quint16 m_nodePort;
+  QUrl m_nodeUrl;
 };
 
 }

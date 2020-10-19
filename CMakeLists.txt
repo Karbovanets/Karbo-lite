@@ -1,4 +1,8 @@
-cmake_minimum_required(VERSION 2.8.6)
+cmake_minimum_required(VERSION 3.8)
+
+enable_language(C)
+enable_language(CXX)
+
 include(CryptoNoteWallet.cmake)
 include(QREncode.cmake)
 
@@ -52,12 +56,51 @@ endif ()
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
+# We have to look for Homebrew OpenSSL a bit differently
+# Borrowed from https://github.com/tarantool/tarantool/commit/6eab201af1843f53a833c8928dc58fceffa08147
+if (APPLE)
+    find_program(HOMEBREW_EXECUTABLE brew)
+    execute_process(COMMAND ${HOMEBREW_EXECUTABLE} --prefix openssl
+            OUTPUT_VARIABLE HOMEBREW_OPENSSL
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if (DEFINED HOMEBREW_OPENSSL)
+        if (NOT DEFINED OPENSSL_ROOT_DIR)
+            message(STATUS "Setting OpenSSL root to ${HOMEBREW_OPENSSL}")
+            set(OPENSSL_ROOT_DIR "${HOMEBREW_OPENSSL}")
+        endif ()
+    endif ()
+endif ()
+
+find_package(OpenSSL)
+
+if (NOT OPENSSL_FOUND)
+    find_package(PkgConfig)
+
+    if (PKG_CONFIG_FOUND)
+        pkg_search_module(OPENSSL openssl)
+    endif()
+endif()
+
+if (OPENSSL_FOUND)
+    ## On non MSVC build systems, we need to link ldl with the static OpenSSL library
+    if (NOT MSVC)
+        set(OPENSSL_LIBRARIES "${OPENSSL_LIBRARIES};dl")
+    endif ()
+
+    include_directories(${OPENSSL_INCLUDE_DIR})
+    message(STATUS "OpenSSL Found: ${OPENSSL_INCLUDE_DIR}")
+    message(STATUS "OpenSSL Libraries: ${OPENSSL_LIBRARIES}")
+else ()
+    message(STATUS "OpenSSL Found: No... Skipping...")
+endif ()
+
 set(CMAKE_AUTOMOC ON)
 
 file(GLOB_RECURSE CRYPTONOTE_SOURCES
   cryptonote/external/miniupnpc/connecthostport.c
   cryptonote/external/miniupnpc/igd_desc_parse.c
   cryptonote/external/miniupnpc/minisoap.c
+  cryptonote/external/miniupnpc/minissdpc.c
   cryptonote/external/miniupnpc/minissdpc.c
   cryptonote/external/miniupnpc/miniupnpc.c
   cryptonote/external/miniupnpc/miniwget.c
@@ -67,11 +110,14 @@ file(GLOB_RECURSE CRYPTONOTE_SOURCES
   cryptonote/external/miniupnpc/upnpcommands.c
   cryptonote/external/miniupnpc/upnpdev.c
   cryptonote/external/miniupnpc/upnperrors.c
+  cryptonote/external/miniupnpc/upnpdev.c
+  cryptonote/external/miniupnpc/upnperrors.c
   cryptonote/external/miniupnpc/upnpreplyparse.c
   cryptonote/src/BlockchainExplorer/BlockchainExplorer.cpp
   cryptonote/src/BlockchainExplorer/BlockchainExplorerErrors.cpp
   cryptonote/src/BlockchainExplorer/BlockchainExplorerDataBuilder.cpp
   cryptonote/src/Serialization/BlockchainExplorerDataSerialization.cpp
+  cryptonote/src/Checkpoints/Checkpoints.cpp
   cryptonote/src/Common/Base58.cpp
   cryptonote/src/Common/Base64.cpp
   cryptonote/src/Common/CommandLine.cpp
@@ -89,11 +135,12 @@ file(GLOB_RECURSE CRYPTONOTE_SOURCES
   cryptonote/src/Common/StringView.cpp
   cryptonote/src/Common/VectorOutputStream.cpp
   cryptonote/src/Common/ScopeExit.cpp
-  cryptonote/src/ConnectivityTool/ConnectivityTool.cpp
   cryptonote/src/crypto/blake256.c
   cryptonote/src/crypto/chacha8.cpp
   cryptonote/src/crypto/crypto-ops-data.c
   cryptonote/src/crypto/crypto-ops.c
+  cryptonote/src/crypto/crypto-util.c
+  cryptonote/src/crypto/crypto.cpp
   cryptonote/src/crypto/crypto-util.c
   cryptonote/src/crypto/crypto.cpp
   cryptonote/src/crypto/groestl.c
@@ -112,7 +159,6 @@ file(GLOB_RECURSE CRYPTONOTE_SOURCES
   cryptonote/src/crypto/tree-hash.c
   cryptonote/src/CryptoNoteCore/*.cpp
   cryptonote/src/CryptoNoteProtocol/*.cpp
-  cryptonote/src/Daemon/*.cpp
   cryptonote/src/HTTP/*.cpp
   cryptonote/src/InProcessNode/InProcessNode.cpp
   cryptonote/src/InProcessNode/InProcessNodeErrors.cpp
@@ -142,10 +188,9 @@ file(GLOB_RECURSE CRYPTONOTE_SOURCES
   cryptonote/src/System/EventLock.cpp
   cryptonote/src/System/InterruptedException.cpp
   cryptonote/src/System/Ipv4Address.cpp
+  cryptonote/src/System/SocketStream.cpp
   cryptonote/src/System/TcpStream.cpp
   cryptonote/src/JsonRpcServer/*.cpp
-  cryptonote/src/PaymentGate/*.cpp
-  cryptonote/src/PaymentGateService/*.cpp
 )
 
 file(GLOB_RECURSE Mnemonics cryptonote/src/Mnemonics/*)
@@ -244,11 +289,6 @@ set(CRYPTONOTE_SOURCES ${CRYPTONOTE_SOURCES} ${PLATFORM_SOURCES} ${CRYPTONOTE_PL
 
 add_definitions(-DUPNP_STATIC -DMINIUPNP_STATICLIB -DUPNPC_BUILD_STATIC)
 
-if(MSVC)
-#else(MSVC)
-#  add_subdirectory(cryptonote/external)
-endif(MSVC)
-
 add_library(${CRYPTONOTE_LIB} STATIC ${CRYPTONOTE_SOURCES})
 add_library(Mnemonics ${Mnemonics})
 set_target_properties(${CRYPTONOTE_LIB} PROPERTIES COMPILE_DEFINITIONS _GNU_SOURCE)
@@ -264,6 +304,13 @@ add_executable(${PROJECT_NAME} ${BUILD_PLATFORM} ${BUILD_RESOURCES} ${SOURCES} $
 
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS _GNU_SOURCE)
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${QTMAIN} ${CRYPTONOTE_LIB} ${Qt5DBus_LIBRARIES} ${QRENCODE_LIB} Mnemonics)
+
+if (OPENSSL_FOUND)
+  target_link_libraries(${PROJECT_NAME} ${OPENSSL_LIBRARIES})
+  if (MSVC)
+    target_link_libraries(${PROJECT_NAME} Rpcrt4 ws2_32 advapi32 crypt32 gdi32 user32)
+  endif ()
+endif ()
 
 if (APPLE)
   qt5_use_modules(${PROJECT_NAME} PrintSupport)
