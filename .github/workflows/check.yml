@@ -110,7 +110,7 @@ jobs:
           version: '5.12.0'
           modules: 'qttools5'
           install-deps: 'true'
-		  
+
       - name: Find Tag
         id: tagger
         uses: jimschubert/query-tag-action@v1
