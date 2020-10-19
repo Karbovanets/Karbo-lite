@@ -306,10 +306,8 @@ void OverviewHeaderFrame::touchNodeInfo() {
 
   if (m_isConnected) {
     QString nodeFeeAddr = nodeAdapter->getNodeFeeAddress();
-    qDebug() << "Node fee addr: " << nodeFeeAddr;
     if(!nodeFeeAddr.isEmpty()) {
       quint64 nodeFee = nodeAdapter->getNodeFee();
-      qDebug() << "Node fee: " << nodeFee;
       if (nodeFee != 0) {
         m_ui->m_overviewNodeFeeLabel->setText(QString(tr("%1 %2")).arg(m_cryptoNoteAdapter->formatAmount(nodeFee).remove(QRegExp("0+$"))).arg(m_cryptoNoteAdapter->getCurrencyTicker()));
       } else {

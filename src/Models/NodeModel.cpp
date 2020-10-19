@@ -18,9 +18,9 @@ NodeModel::NodeModel(QObject* _parent) : QStringListModel(_parent) {
 NodeModel::~NodeModel() {
 }
 
-void NodeModel::addNode(const QString& _host, quint16 _port) {
+void NodeModel::addNode(const QUrl& _url) {
   insertRow(rowCount());
-  setData(index(rowCount() - 1, 0), QString("%1:%2").arg(_host).arg(_port));
+  setData(index(rowCount() - 1, 0), QString("%1://%2:%3").arg(_url.scheme()).arg(_url.host()).arg(_url.port()));
 }
 
 QVariant NodeModel::data(const QModelIndex& _index, int _role) const {

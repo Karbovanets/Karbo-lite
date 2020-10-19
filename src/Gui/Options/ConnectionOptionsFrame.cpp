@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2018, The Karbo developers
+// Copyright (c) 2017-2020, The Karbo developers
 //
 // This file is part of Karbo.
 //
@@ -116,7 +116,8 @@ bool ConnectionOptionsFrame::needToRestartApplication() const {
 
 bool ConnectionOptionsFrame::canAccept() const {
   if (m_ui->m_remoteRadio->isChecked()) {
-    return isIpOrHostName(m_ui->remoteNodesComboBox->currentText().split(":")[0]);
+    QUrl remoteNodeUrl = QUrl::fromUserInput(m_ui->remoteNodesComboBox->currentText());
+    return isIpOrHostName(remoteNodeUrl.host());
   } else {
     return true;
   }
@@ -146,7 +147,7 @@ void ConnectionOptionsFrame::addNodeClicked() {
   if (isIpOrHostName(host)) {
     int index = m_ui->remoteNodesComboBox->findData(host);
     if (index == -1) {
-      m_nodeModel->addNode(host, port);
+      m_nodeModel->addNode(url);
     }
   } else {
     // error highlight
