@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2018, The Karbo developers
+// Copyright (c) 2017-2022, The Karbo developers
 //
 // This file is part of Karbo.
 //
@@ -51,19 +51,19 @@ const char HIDE_BUTTON_STYLE_SHEET_TEMPLATE[] =
 WalletSplashScreen::WalletSplashScreen(QWidget* _parent) :
   QSplashScreen(_parent, QPixmap(":images/splash"), Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint) {
   QFont font;
-  font.setPixelSize(Style::FONT_LARGE);
+  font.setPixelSize(Style::FONT_SMALL);
   setFont(font);
   if (Settings::instance().isSystemTrayAvailable() && QSystemTrayIcon::isSystemTrayAvailable()) {
     QHBoxLayout* layout = new QHBoxLayout(this);
     QPushButton* hideButton = new QPushButton(this);
     hideButton->setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(HIDE_BUTTON_STYLE_SHEET_TEMPLATE));
-    hideButton->setText(tr("Minimize to tray"));
+    hideButton->setText(tr("_"));
     hideButton->setCursor(Qt::PointingHandCursor);
     hideButton->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
     hideButton->adjustSize();
     setLayout(layout);
     layout->setContentsMargins(0, 0, 5, 5);
-    layout->addWidget(hideButton, 0, Qt::AlignBottom | Qt::AlignRight);
+    layout->addWidget(hideButton, 0, Qt::AlignTop | Qt::AlignRight);
     connect(hideButton, &QPushButton::clicked, this, &WalletSplashScreen::hide);
   }
 }

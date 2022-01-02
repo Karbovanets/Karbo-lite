@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2018, The Karbo developers
+// Copyright (c) 2017-2022, The Karbo developers
 //
 // This file is part of Karbovanets.
 //
@@ -59,7 +59,7 @@ namespace WalletGui {
 namespace {
 
 const char URI_SCHEME_NAME[] = "karbowanec";
-const QRegularExpression LOG_SPLASH_REG_EXP("\\[Core\\] Imported block with index");
+const QRegularExpression LOG_SPLASH_REG_EXP("\\] ");
 
 quint16 findPort() {
   QTcpServer srv;
@@ -234,7 +234,7 @@ bool WalletApplication::initCryptoNoteAdapter() {
       m_splash->show();
       m_splash->showMessage(QObject::tr("Loading..."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
       if (m_logWatcher == nullptr) {
-        m_logWatcher = new LogFileWatcher(Settings::instance().getDataDir().absoluteFilePath(CORE_LOG_FILE_NAME), this);
+        m_logWatcher = new LogFileWatcher(Settings::instance().getDataDir().absoluteFilePath(GUI_LOG_FILE_NAME), this);
         connect(m_logWatcher, &LogFileWatcher::newLogStringSignal, this, &WalletApplication::newLogString);
       }
     }
@@ -428,9 +428,10 @@ void WalletApplication::prepareToQuit() {
 }
 
 void WalletApplication::newLogString(const QString& _string) {
-  QRegularExpressionMatch match = LOG_SPLASH_REG_EXP.match(_string);
+  auto match = QRegularExpressionMatch{};
+  _string.lastIndexOf(QRegularExpression { LOG_SPLASH_REG_EXP }, -1, &match);
   if (match.hasMatch()) {
-    QString message = _string.mid(match.capturedEnd()).prepend(tr("Import"));
+    QString message = _string.mid(match.capturedEnd());
     if (m_splash != nullptr) {
       m_splash->showMessage(message, Qt::AlignLeft | Qt::AlignBottom, Qt::white);
     }

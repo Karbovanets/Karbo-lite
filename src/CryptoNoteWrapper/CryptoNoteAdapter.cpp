@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2017, The Bytecoin developers
-// Copyright (c) 2017-2020, The Karbo developers
+// Copyright (c) 2017-2022, The Karbo developers
 //
 // This file is part of Karbovanets.
 //
@@ -86,7 +86,7 @@ namespace WalletGui {
 
 namespace {
 
-const int AUTO_CONNECTION_INTERVAL = 1000;
+const int AUTO_CONNECTION_INTERVAL = 100;
 const char OLD_CORE_LOG_FILE_NAME[] = "karbowallet.log";
 
 }
@@ -381,6 +381,7 @@ void CryptoNoteAdapter::lastKnownBlockHeightUpdated(quint32 _height) {
 }
 
 void CryptoNoteAdapter::connectionStatusUpdated(bool _connected) {
+  WalletLogger::debug(tr("[CryptoNote wrapper] Connection status updated: %1").arg(_connected));
   if (m_nodeAdapter->getNodeType() == NodeType::RPC && m_autoConnectionTimerId != -1 && !_connected) {
     onLocalDaemonNotFound();
   }
@@ -388,6 +389,7 @@ void CryptoNoteAdapter::connectionStatusUpdated(bool _connected) {
 
 void CryptoNoteAdapter::timerEvent(QTimerEvent* _event) {
   if (_event->timerId() == m_autoConnectionTimerId) {
+    WalletLogger::debug(tr("[CryptoNote wrapper] Timeout event"));
     onLocalDaemonNotFound();
     return;
   }
@@ -429,7 +431,7 @@ void CryptoNoteAdapter::initNode() {
 
 void CryptoNoteAdapter::initAutoConnection() {
   WalletLogger::info(tr("[CryptoNote wrapper] Auto connection is On"));
-  WalletLogger::debug(tr("[CryptoNote wrapper] Searching local daemon: 127.0.0.1:%1").arg(CryptoNote::RPC_DEFAULT_PORT));
+  WalletLogger::info(tr("[CryptoNote wrapper] Searching local daemon: 127.0.0.1:%1").arg(CryptoNote::RPC_DEFAULT_PORT));
   m_nodeAdapter = new ProxyRpcNodeAdapter(m_currency, m_coreLogger, m_walletLogger, QUrl::fromUserInput("http://127.0.0.1:" + CryptoNote::RPC_DEFAULT_PORT), this);
   m_nodeAdapter->addObserver(this);
   m_autoConnectionTimerId = startTimer(AUTO_CONNECTION_INTERVAL);
@@ -446,16 +448,20 @@ void CryptoNoteAdapter::initLocalRpcNode() {
 void CryptoNoteAdapter::initRemoteRpcNode() {
   WalletLogger::info(tr("[CryptoNote wrapper] Starting with remote node: %1:%2").arg(m_remoteDaemonUrl.host()).arg(m_remoteDaemonUrl.port()));
 
-/*
   // check if the node is available first
   if (!isNodeAvailable(m_remoteDaemonUrl)) {
     QString message = tr("Node is not responding...");
     WalletLogger::info(tr("[CryptoNote wrapper] Node %1:%2 is not responding").arg(m_remoteDaemonUrl.host()).arg(m_remoteDaemonUrl.port()));
     Q_EMIT connectingToNodeStatus(message);
     // fallback to auto?
-    // initAutoConnection();
+    findNodeAttempts = 0;
+    if(getWorkingRandomNode()) {
+      initRemoteRpcNode();
+    } else {
+      WalletLogger::info(tr("[CryptoNote wrapper] Could not connect to any node!!!"));
+      initLocalRpcNode(); // fallback
+    }
   }
-*/
 
   m_nodeAdapter = new ProxyRpcNodeAdapter(m_currency, m_coreLogger, m_walletLogger, m_remoteDaemonUrl, this);
   m_nodeAdapter->addObserver(this);
@@ -464,16 +470,15 @@ void CryptoNoteAdapter::initRemoteRpcNode() {
 }
 
 void CryptoNoteAdapter::onLocalDaemonNotFound() {
-  WalletLogger::info(tr("[CryptoNote wrapper] Daemon on 127.0.0.1:%1 not found").arg(CryptoNote::RPC_DEFAULT_PORT));
-
   killTimer(m_autoConnectionTimerId);
   m_autoConnectionTimerId = -1;
+  WalletLogger::info(tr("[CryptoNote wrapper] Local daemon on 127.0.0.1:%1 not found").arg(CryptoNote::RPC_DEFAULT_PORT));
   QObject* nodeAdapter = dynamic_cast<QObject*>(m_nodeAdapter);
   m_nodeAdapter->deinit();
   nodeAdapter->deleteLater();
   m_nodeAdapter = nullptr;
-  // check if the node is available first
-  if (isNodeAvailable(m_remoteDaemonUrl)) {
+  WalletLogger::info(tr("[CryptoNote wrapper] Trying to connect to remote node..."));
+  if (isNodeAvailable(m_remoteDaemonUrl)) { // check if the node is available first
     initRemoteRpcNode();
   } else {
     findNodeAttempts = 0;
