@@ -147,9 +147,9 @@ int CryptoNoteAdapter::init(ConnectionMethod _connectionMethod, quint16 _localDa
 void CryptoNoteAdapter::deinit() {
   WalletLogger::debug(tr("[CryptoNote wrapper] Deinitializing..."));
   Q_ASSERT(m_nodeAdapter != nullptr);
-  if (m_nodeAdapter->getBlockChainExplorerAdapter() != nullptr) {
+  /*if (m_nodeAdapter->getBlockChainExplorerAdapter() != nullptr) {
     m_nodeAdapter->getBlockChainExplorerAdapter()->deinit();
-  }
+  }*/
 
   m_nodeAdapter->deinit();
   dynamic_cast<QObject*>(m_nodeAdapter)->deleteLater();
@@ -466,6 +466,7 @@ void CryptoNoteAdapter::initRemoteRpcNode() {
   m_nodeAdapter = new ProxyRpcNodeAdapter(m_currency, m_coreLogger, m_walletLogger, m_remoteDaemonUrl, this);
   m_nodeAdapter->addObserver(this);
   m_nodeAdapter->init();
+
   Settings::instance().setOnRemote(true);
 }
 
@@ -473,10 +474,8 @@ void CryptoNoteAdapter::onLocalDaemonNotFound() {
   killTimer(m_autoConnectionTimerId);
   m_autoConnectionTimerId = -1;
   WalletLogger::info(tr("[CryptoNote wrapper] Local daemon on 127.0.0.1:%1 not found").arg(CryptoNote::RPC_DEFAULT_PORT));
-  QObject* nodeAdapter = dynamic_cast<QObject*>(m_nodeAdapter);
-  m_nodeAdapter->deinit();
-  nodeAdapter->deleteLater();
-  m_nodeAdapter = nullptr;
+  deinit();
+
   WalletLogger::info(tr("[CryptoNote wrapper] Trying to connect to remote node..."));
   if (isNodeAvailable(m_remoteDaemonUrl)) { // check if the node is available first
     initRemoteRpcNode();
@@ -529,6 +528,8 @@ bool CryptoNoteAdapter::getNodeInfo(QUrl _node, CryptoNote::COMMAND_RPC_GET_INFO
 
 bool CryptoNoteAdapter::isNodeAvailable(QUrl _node) {
   WalletLogger::info(tr("[CryptoNote wrapper] Checking remote node: %1:%2 ...").arg(_node.host()).arg(_node.port()));
+  Version neededVersion = Version(PROJECT_VERSION);
+
   CryptoNote::COMMAND_RPC_GET_INFO::response res;
   if (getNodeInfo(_node, res)) {
     std::string err = interpret_rpc_response(true, res.status);
@@ -536,7 +537,6 @@ bool CryptoNoteAdapter::isNodeAvailable(QUrl _node) {
     // check if node is up-to-date
     WalletLogger::info(tr("[CryptoNote wrapper] Checking remote node %1:%2 version").arg(_node.host()).arg(_node.port()));
 
-    Version neededVersion = Version(PROJECT_VERSION);
     if (err.empty()) {
       std::string ver = res.version;
       if (!ver.empty()) {
