@@ -28,6 +28,7 @@
 #include <QThread>
 #include <QTimerEvent>
 #include <QUrl>
+#include <QVersionNumber>
 
 #include "CryptoNoteAdapter.h"
 #include "WalletLogger/WalletLogger.h"
@@ -42,47 +43,6 @@
 #include "CryptoNoteCore/TransactionExtra.h"
 
 #include "version.h"
-
-// http://stackoverflow.com/questions/2941491/compare-versions-as-strings/2941895#2941895
-class Version
-{
-    // An internal utility structure just used to make the std::copy in the constructor easy to write.
-    struct VersionDigit
-    {
-        int value;
-        operator int() const {return value;}
-    };
-    friend std::istream& operator>>(std::istream& str, Version::VersionDigit& digit);
-    public:
-        Version(std::string const& versionStr)
-        {
-            // To Make processing easier in VersionDigit prepend a '.'
-            std::stringstream   versionStream(std::string(".") + versionStr);
-
-            // Copy all parts of the version number into the version Info vector.
-            std::copy(  std::istream_iterator<VersionDigit>(versionStream),
-                        std::istream_iterator<VersionDigit>(),
-                        std::back_inserter(versionInfo)
-                     );
-        }
-
-        // Test if two version numbers are the same.
-        bool operator<(Version const& rhs) const
-        {
-            return std::lexicographical_compare(versionInfo.begin(), versionInfo.end(), rhs.versionInfo.begin(), rhs.versionInfo.end());
-        }
-
-    private:
-        std::vector<int>    versionInfo;
-};
-
-// Read a single digit from the version.
-std::istream& operator>>(std::istream& str, Version::VersionDigit& digit)
-{
-    str.get();
-    str >> digit.value;
-    return str;
-}
 
 namespace WalletGui {
 
@@ -534,7 +494,12 @@ bool CryptoNoteAdapter::getNodeInfo(QUrl _node, CryptoNote::COMMAND_RPC_GET_INFO
 
 bool CryptoNoteAdapter::isNodeAvailable(QUrl _node) {
   WalletLogger::info(tr("[CryptoNote wrapper] Checking node: %1:%2 ...").arg(_node.host()).arg(_node.port()));
-  Version neededVersion = Version(PROJECT_VERSION);
+
+  QString ourVersionStr = PROJECT_VERSION;
+  if (ourVersionStr.startsWith(QStringLiteral("v.")))
+      ourVersionStr.remove(0, 2);
+  else if (ourVersionStr.startsWith('v'))
+      ourVersionStr.remove(0, 1);
 
   CryptoNote::COMMAND_RPC_GET_INFO::response res;
   bool r = false;
@@ -571,11 +536,19 @@ bool CryptoNoteAdapter::isNodeAvailable(QUrl _node) {
     WalletLogger::info(tr("[CryptoNote wrapper] Checking remote node %1:%2 version").arg(_node.host()).arg(_node.port()));
 
     if (err.empty()) {
-      std::string ver = res.version;
-      if (!ver.empty()) {
-        ver.erase (ver.begin()+5, ver.end());
-        Version nodeVersion = ver;
-        if(nodeVersion < neededVersion) {
+      QString remoteVersionStr = QString::fromStdString(res.version);
+      if (!remoteVersionStr.isEmpty()) {
+        remoteVersionStr.remove(5, remoteVersionStr.length());
+
+        int suffixIndex;
+        QVersionNumber ourVersion = QVersionNumber::fromString(ourVersionStr, &suffixIndex);
+        QVersionNumber remoteVersion = QVersionNumber::fromString(remoteVersionStr, &suffixIndex);
+
+        WalletLogger::debug(tr("[CryptoNote wrapper] needed version %1").arg(ourVersionStr));
+        WalletLogger::debug(tr("[CryptoNote wrapper] remote version %1").arg(remoteVersionStr));
+
+        bool r = QVersionNumber::compare(remoteVersion, ourVersion) < 0;
+        if (r) {
           WalletLogger::info(tr("[CryptoNote wrapper] Remote node %1:%2 version %3 is outdated.").arg(_node.host()).arg(_node.port()).arg(QString::fromStdString(res.version)));
           //return false;
         }
