@@ -577,10 +577,13 @@ bool CryptoNoteAdapter::isNodeAvailable(QUrl _node) {
         Version nodeVersion = ver;
         if(nodeVersion < neededVersion) {
           WalletLogger::info(tr("[CryptoNote wrapper] Remote node %1:%2 version %3 is outdated.").arg(_node.host()).arg(_node.port()).arg(QString::fromStdString(res.version)));
-          return false;
+          //return false;
+        }
+        else {
+          WalletLogger::info(tr("[CryptoNote wrapper] Remote node %1:%2 version %3 is OK").arg(_node.host()).arg(_node.port()).arg(QString::fromStdString(res.version)));
         }
       }
-      WalletLogger::info(tr("[CryptoNote wrapper] Remote node %1:%2 version %3 is OK").arg(_node.host()).arg(_node.port()).arg(QString::fromStdString(res.version)));
+
       return true;
     }
   }
