@@ -433,8 +433,6 @@ void CryptoNoteAdapter::initRemoteRpcNode() {
   m_nodeAdapter = new ProxyRpcNodeAdapter(m_currency, m_coreLogger, m_walletLogger, m_remoteDaemonUrl, this);
   m_nodeAdapter->addObserver(this);
   m_nodeAdapter->init();
-
-  Settings::instance().setOnRemote(true);
 }
 
 void CryptoNoteAdapter::onLocalDaemonNotFound() {

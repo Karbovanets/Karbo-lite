@@ -75,7 +75,12 @@ Settings& Settings::instance() {
 
 
 Settings::Settings() : m_p2pBindPort(0), m_cmdLineParser(nullptr) {
-  m_defaultNodeList << "http://node.karbowanec.com:32348" << "http://node.karbovanets.org:32348" << "http://node.karbo.cloud:32348" << "http://node.karbo.io:32348";
+  m_defaultNodeList
+          << "http://node.karbowanec.com:32348"
+          << "http://node.karbovanets.org:32348"
+          << "http://node.karbo.org:32348"
+          << "http://node.karbo.io:32348"
+  ;
 
   Style* lightStyle = new LightStyle();
   Style* darkStyle = new DarkStyle();
@@ -893,14 +898,6 @@ void Settings::notifyObservers() {
   for (ISettingsObserver* observer : m_observers) {
     observer->settingsUpdated();
   }
-}
-
-void Settings::setOnRemote(bool _on) {
-    m_onRemote = _on;
-}
-
-bool Settings::isOnRemote() {
-    return m_onRemote;
 }
 
 }

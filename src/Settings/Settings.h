@@ -116,10 +116,6 @@ public:
   void addObserver(ISettingsObserver* _settingsObserver);
   void removeObserver(ISettingsObserver* _settingsObserver);
 
-  void setOnRemote(bool _on);
-  bool isOnRemote();
-  bool m_onRemote = false;
-
 #ifdef Q_OS_WIN
   void setUrlHandler();
 #endif

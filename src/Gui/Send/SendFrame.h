@@ -94,7 +94,6 @@ private:
   quint64 m_nodeFee;
   quint64 m_flatRateNodeFee;
   quint64 m_totalAmount;
-  bool on_remote = false;
 
   void processTranactionSendStatus(IWalletAdapter::SendTransactionStatus _status);
   void setPaymentIdError(bool _error);
@@ -103,6 +102,7 @@ private:
   void amountStringChanged(const QString& _amountString);
   void addressChanged(const QString& _address);
   bool readyToSend() const;
+  void calculateNodeFee();
 
   Q_SLOT void addRecipientClicked();
   Q_SLOT void clearAll();
