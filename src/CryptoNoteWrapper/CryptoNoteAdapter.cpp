@@ -33,13 +33,12 @@
 #include "CryptoNoteAdapter.h"
 #include "WalletLogger/WalletLogger.h"
 #include "IBlockChainExplorerAdapter.h"
-//#include "InProcessNodeAdapter.h"
 #include "ProxyRpcNodeAdapter.h"
 #include "Settings/Settings.h"
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"
-#include "Rpc/HttpClient.h"
+#include "Rpc/JsonRpc.h"
+#include "HTTP/httplib.h"
 #include "CryptoNoteProtocol/CryptoNoteProtocolHandler.h"
-
 #include "CryptoNoteCore/TransactionExtra.h"
 
 #include "version.h"
@@ -413,12 +412,12 @@ void CryptoNoteAdapter::initLocalRpcNode() {
 }
 
 void CryptoNoteAdapter::initRemoteRpcNode() {
-  WalletLogger::info(tr("[CryptoNote wrapper] Starting with remote node: %1:%2").arg(m_remoteDaemonUrl.host()).arg(m_remoteDaemonUrl.port()));
+  WalletLogger::info(tr("[CryptoNote wrapper] Starting with remote node: %1").arg(m_remoteDaemonUrl.toString()));
 
   // check if the node is available first
   if (!isNodeAvailable(m_remoteDaemonUrl)) {
     QString message = tr("Node is not responding...");
-    WalletLogger::info(tr("[CryptoNote wrapper] Node %1:%2 is not responding").arg(m_remoteDaemonUrl.host()).arg(m_remoteDaemonUrl.port()));
+    WalletLogger::info(tr("[CryptoNote wrapper] Node %1 is not responding").arg(m_remoteDaemonUrl.toString()));
     Q_EMIT connectingToNodeStatus(message);
     // fallback to auto?
     findNodeAttempts = 0;
@@ -470,28 +469,40 @@ bool CryptoNoteAdapter::getNodeInfo(QUrl _node, CryptoNote::COMMAND_RPC_GET_INFO
   CryptoNote::COMMAND_RPC_GET_INFO::request req;
   CryptoNote::COMMAND_RPC_GET_INFO::response res;
   try {
-    CryptoNote::HttpClient httpClient(m_dispatcher, _node.host().toStdString(), _node.port(), _node.scheme().compare("https") == 0);
-    CryptoNote::invokeJsonCommand(httpClient, "/getinfo", req, res);
+    std::string node_str = _node.toString().toStdString(); // should be scheme + host + port
+    httplib::Client httpClient(node_str);
+    httpClient.enable_server_certificate_verification(false);
+    const auto rsp = httpClient.Get("/getinfo");
+    if (rsp) {
+      if (rsp->status == 200) {
+        if (!loadFromJson(res, rsp->body)) {
+          WalletLogger::info(tr("[CryptoNote wrapper] Failed to parse JSON response"));
+        }
+      }
+      else {
+        WalletLogger::info(tr("[CryptoNote wrapper] Failed to invoke request, status: %1").arg(rsp->status));
+      }
+    }
+    else {
+      WalletLogger::info(tr("[CryptoNote wrapper] Failed to invoke request, no response"));
+    }
+
     std::string err = interpret_rpc_response(true, res.status);
     if (err.empty()) {
       info = res;
       return true;
     } else {
       WalletLogger::info(tr("[CryptoNote wrapper] Failed to invoke request: %1").arg(QString::fromStdString(err)));
-      return false;
     }
   }
-  catch (const CryptoNote::ConnectException&) {
-    WalletLogger::info(tr("[CryptoNote wrapper] Failed to connect to node."));
-    return false;
-  } catch (const std::exception& e) {
+  catch (const std::exception& e) {
     WalletLogger::info(tr("[CryptoNote wrapper] Failed to invoke rpc method: %1").arg(e.what()));
-    return false;
   }
+  return false;
 }
 
 bool CryptoNoteAdapter::isNodeAvailable(QUrl _node) {
-  WalletLogger::info(tr("[CryptoNote wrapper] Checking node: %1:%2 ...").arg(_node.host()).arg(_node.port()));
+  WalletLogger::info(tr("[CryptoNote wrapper] Checking node: %1 ...").arg(_node.toString()));
 
   QString ourVersionStr = PROJECT_VERSION;
   if (ourVersionStr.startsWith(QStringLiteral("v.")))
@@ -511,7 +522,7 @@ bool CryptoNoteAdapter::isNodeAvailable(QUrl _node) {
 
       std::future_status status;
 
-      status = future.wait_for(std::chrono::milliseconds(200));
+      status = future.wait_for(std::chrono::milliseconds(1000));
 
       if (status == std::future_status::timeout) {
         WalletLogger::info(tr("[CryptoNote wrapper] Timeout response from node %1").arg(_node.toString()));
@@ -571,12 +582,13 @@ bool CryptoNoteAdapter::getWorkingRandomNode(){
   } else {
     if (findNodeAttempts > 10) {
       WalletLogger::info(tr("[CryptoNote wrapper] Failed to find any working node after 10 attempts."));
-      return false;
     } else {
       findNodeAttempts++;
       getWorkingRandomNode();
     }
   }
+
+  return false;
 }
 
 }
